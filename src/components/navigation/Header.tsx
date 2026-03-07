@@ -4,9 +4,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/cartStore';
+import { useLoyaltyStore } from '@/store/loyaltyStore';
 import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
+import dynamic from 'next/dynamic';
+const NavbarLoyaltyBadge = dynamic(() => import('@/components/loyalty/NavbarLoyaltyBadge'), { ssr: false });
 
 export default function Header() {
   const pathname = usePathname();
@@ -235,8 +238,9 @@ export default function Header() {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.trim() !== '';
 
     const supabase = hasSupabase ? createClient() : null;
-    // Clear cart specific to this user session
+    // Clear cart and loyalty state for this user session
     useCartStore.getState().clearCart();
+    useLoyaltyStore.getState().clearLoyalty();
 
     if (supabase) {
       await supabase.auth.signOut();
@@ -300,6 +304,13 @@ export default function Header() {
 
           {/* Cart Icon & Auth Links & Mobile Menu */}
           <div className="flex items-center gap-4 relative z-[60]">
+
+            {/* Loyalty Badge (Desktop) */}
+            {user && !loading && (
+              <div className="hidden md:flex items-center">
+                <NavbarLoyaltyBadge />
+              </div>
+            )}
 
             {/* Auth Button (Desktop) */}
             <div className="hidden md:flex items-center relative" ref={buttonRef}>

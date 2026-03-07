@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PaymentMethodSelector from "@/components/checkout/PaymentMethodSelector";
 import OrderSummary from "@/components/checkout/OrderSummary";
+import CheckoutLoyalty from "@/components/loyalty/CheckoutLoyalty";
 import { createClient } from "@/lib/supabase/client";
 
 export default function CheckoutPage() {
@@ -30,13 +31,16 @@ export default function CheckoutPage() {
   const [productSizes, setProductSizes] = useState<{ [productId: string]: Array<{ size: string; available: number }> }>({});
   const [loadingSizes, setLoadingSizes] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [appliedRewardCode, setAppliedRewardCode] = useState<string | null>(null);
+  const [rewardDiscount, setRewardDiscount] = useState(0);
 
   // Wait for client-side hydration before accessing cart
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  const total = isMounted ? getTotal() : 0;
+  const subtotal = isMounted ? getTotal() : 0;
+  const total = Math.max(0, subtotal - rewardDiscount);
 
 
 
@@ -267,6 +271,7 @@ export default function CheckoutPage() {
           })),
           customer_info: customerInfo,
           sale_type: "online",
+          reward_code: appliedRewardCode || undefined,
         }),
       });
 
@@ -275,6 +280,8 @@ export default function CheckoutPage() {
       }
 
       const { order_id } = await orderResponse.json();
+
+      // Reward code is now validated and marked as used server-side in /api/orders/create
 
       // Initiate payment
       const paymentResponse = await fetch("/api/payments/initiate", {
@@ -591,9 +598,24 @@ export default function CheckoutPage() {
           </button>
         </div>
 
-        {/* Order Summary */}
-        <div className="lg:col-span-1">
+        {/* Order Summary + Loyalty */}
+        <div className="lg:col-span-1 space-y-4">
           <OrderSummary items={isMounted ? items : []} total={total} />
+          {rewardDiscount > 0 && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-3 flex items-center justify-between text-sm">
+              <span className="text-green-700 font-medium">Reward Discount</span>
+              <span className="text-green-700 font-bold">-KES {rewardDiscount.toLocaleString()}</span>
+            </div>
+          )}
+          {isAuthenticated && isMounted && (
+            <CheckoutLoyalty
+              orderTotal={subtotal}
+              onRewardCodeApplied={(code, discount) => {
+                setAppliedRewardCode(code);
+                setRewardDiscount(discount);
+              }}
+            />
+          )}
         </div>
       </form>
 

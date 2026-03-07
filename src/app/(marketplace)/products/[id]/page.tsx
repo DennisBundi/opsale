@@ -1,6 +1,9 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import ProductDetailClient from './ProductDetailClient';
+import ReviewSummary from '@/components/reviews/ReviewSummary';
+import ReviewList from '@/components/reviews/ReviewList';
+import ReviewForm from '@/components/reviews/ReviewForm';
 
 export default async function ProductDetailPage({
   params,
@@ -82,5 +85,20 @@ export default async function ProductDetailPage({
     sizes: sizes,
   };
 
-  return <ProductDetailClient product={productData} />;
+  return (
+    <>
+      <ProductDetailClient product={productData} />
+      {/* Reviews Section */}
+      <section className="container mx-auto px-4 py-12 border-t border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-900 mb-8">Customer Reviews</h2>
+        <ReviewSummary productId={params.id} />
+        <div className="mt-8">
+          <ReviewForm productId={params.id} />
+        </div>
+        <div className="mt-8">
+          <ReviewList productId={params.id} />
+        </div>
+      </section>
+    </>
+  );
 }

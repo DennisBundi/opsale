@@ -24,23 +24,12 @@ export default class ChunkLoadErrorBoundary extends Component<Props, State> {
     };
   }
 
-  static getDerivedStateFromError(error: Error): State {
-    // Check if it's a ChunkLoadError
-    const isChunkError = 
-      error.name === 'ChunkLoadError' ||
-      error.message?.includes('Loading chunk') ||
-      error.message?.includes('Failed to fetch dynamically imported module');
-
-    if (isChunkError) {
-      return {
-        hasError: true,
-        error,
-        retryCount: 0,
-      };
-    }
-
-    // Re-throw other errors
-    throw error;
+  static getDerivedStateFromError(error: Error): Partial<State> {
+    return {
+      hasError: true,
+      error,
+      retryCount: 0,
+    };
   }
 
   componentDidCatch(error: Error, errorInfo: any) {

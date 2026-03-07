@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { InventoryService } from '@/services/inventoryService';
+import { LoyaltyService } from '@/services/loyaltyService';
 
 export const dynamic = 'force-dynamic';
 
@@ -164,6 +165,51 @@ export async function POST(request: NextRequest) {
         }, {
           onConflict: 'provider_reference',
         });
+
+      // Award loyalty points for purchase
+      try {
+        const { data: completedOrder } = await adminClient
+          .from('orders')
+          .select('user_id, total_amount')
+          .eq('id', order.id)
+          .single();
+
+        if (completedOrder?.user_id) {
+          const pointsAwarded = await LoyaltyService.awardPurchasePoints(
+            completedOrder.user_id,
+            order.id,
+            completedOrder.total_amount
+          );
+          if (pointsAwarded > 0) {
+            console.log(`Awarded ${pointsAwarded} loyalty points for order ${order.id}`);
+          }
+
+          // Check and complete any pending referral for this user
+          const { data: pendingReferral } = await adminClient
+            .from('referrals')
+            .select('id, referrer_id')
+            .eq('referred_id', completedOrder.user_id)
+            .eq('status', 'pending')
+            .single();
+
+          if (pendingReferral) {
+            await adminClient
+              .from('referrals')
+              .update({ status: 'completed', completed_at: new Date().toISOString() })
+              .eq('id', pendingReferral.id);
+
+            const referralPoints = await LoyaltyService.awardReferralPoints(
+              pendingReferral.referrer_id,
+              pendingReferral.id
+            );
+            if (referralPoints > 0) {
+              console.log(`Awarded ${referralPoints} referral points to referrer for order ${order.id}`);
+            }
+          }
+        }
+      } catch (loyaltyError) {
+        console.error('Error awarding loyalty points:', loyaltyError);
+      }
 
       console.log('Order completed successfully:', order.id);
       return NextResponse.json({ ResultCode: 0, ResultDesc: 'Success' });

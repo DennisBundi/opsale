@@ -86,26 +86,6 @@ const nextConfig = {
       }] : []),
     ];
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Improve chunk loading reliability
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          chunks: 'all',
-          cacheGroups: {
-            ...config.optimization.splitChunks?.cacheGroups,
-            default: {
-              minChunks: 1,
-              priority: -20,
-              reuseExistingChunk: true,
-            },
-          },
-        },
-      };
-    }
-    return config;
-  },
 };
 
 module.exports = nextConfig;

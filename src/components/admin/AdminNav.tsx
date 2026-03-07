@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import type { Employee } from '@/types';
 
 type UserRole = 'admin' | 'manager' | 'seller';
-type DashboardSection = 'dashboard' | 'products' | 'orders' | 'inventory' | 'employees' | 'payments' | 'pos' | 'profile' | 'settings';
+type DashboardSection = 'dashboard' | 'products' | 'orders' | 'inventory' | 'employees' | 'payments' | 'pos' | 'profile' | 'settings' | 'reviews' | 'loyalty';
 
 // Client-side version of canAccessSection (duplicated to avoid server-side imports)
 function canAccessSection(userRole: UserRole | null, section: DashboardSection): boolean {
@@ -33,6 +33,11 @@ function canAccessSection(userRole: UserRole | null, section: DashboardSection):
   // Only admin can access employees section
   if (section === 'employees') {
     return userRole === 'admin';
+  }
+
+  // Admin and manager can access reviews and loyalty
+  if (['reviews', 'loyalty'].includes(section)) {
+    return userRole === 'admin' || userRole === 'manager';
   }
 
   return false;
@@ -125,6 +130,8 @@ export default function AdminNav({ userRole: propUserRole, employee: propEmploye
     { href: '/dashboard/inventory', label: 'Inventory', icon: '📋', section: 'inventory' as const },
     { href: '/dashboard/employees', label: 'Employees', icon: '👥', section: 'employees' as const },
     { href: '/dashboard/payments', label: 'Payments', icon: '💳', section: 'payments' as const },
+    { href: '/dashboard/reviews', label: 'Reviews', icon: '⭐', section: 'reviews' as const },
+    { href: '/dashboard/loyalty', label: 'Loyalty', icon: '🎁', section: 'loyalty' as const },
     { href: '/pos', label: 'POS System', icon: '💰', section: 'pos' as const },
     { href: '/dashboard/profile', label: 'Profile', icon: '👤', section: 'profile' as const },
     { href: '/dashboard/settings', label: 'Settings', icon: '⚙️', section: 'settings' as const },
@@ -188,7 +195,7 @@ export default function AdminNav({ userRole: propUserRole, employee: propEmploye
 
       {/* Sidebar */}
       <aside className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 transition-all duration-300 z-30 ${sidebarOpen ? 'w-20 lg:w-64' : 'w-20 lg:w-20'
-        } translate-x-0 overflow-hidden`}>
+        } translate-x-0`}>
         <nav className="h-full py-6 px-4 overflow-y-auto flex flex-col">
           {/* Navigation Items */}
           <ul className="space-y-2 flex-1">

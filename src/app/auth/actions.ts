@@ -148,6 +148,7 @@ export async function signup(formData: FormData) {
     const email = formData.get('email') as string
     const password = formData.get('password') as string
     const fullName = formData.get('fullName') as string
+    const referralCode = formData.get('referralCode') as string | null
 
     if (!email || !password || !fullName) {
         return { error: 'All fields are required' }
@@ -225,6 +226,54 @@ export async function signup(formData: FormData) {
                 email: email,
                 full_name: fullName
             })
+
+            // Create Leez Rewards loyalty account
+            try {
+                const { LoyaltyService } = await import('@/services/loyaltyService')
+                await LoyaltyService.createAccount(user.id, fullName)
+                console.log('[Signup] Loyalty account created for user:', user.id)
+
+                // Apply referral code if provided
+                if (referralCode && referralCode.trim()) {
+                    try {
+                        const loyaltyAdmin = createAdminClient()
+                        // Find referrer by referral code
+                        const { data: referrerAccount } = await loyaltyAdmin
+                            .from('loyalty_accounts')
+                            .select('user_id')
+                            .eq('referral_code', referralCode.trim().toUpperCase())
+                            .single()
+
+                        if (referrerAccount && referrerAccount.user_id !== user.id) {
+                            // Create referral record
+                            await loyaltyAdmin.from('referrals').insert({
+                                referrer_id: referrerAccount.user_id,
+                                referred_id: user.id,
+                                referral_code: referralCode.trim().toUpperCase(),
+                                status: 'pending',
+                            })
+
+                            // Generate welcome reward code (KSh 50 off)
+                            const welcomeCode = `WELCOME-${Math.random().toString(36).substring(2, 8).toUpperCase()}`
+                            const expiresAt = new Date()
+                            expiresAt.setDate(expiresAt.getDate() + 30)
+
+                            await loyaltyAdmin.from('reward_codes').insert({
+                                user_id: user.id,
+                                code: welcomeCode,
+                                type: 'referral_welcome',
+                                discount_amount: 50,
+                                expires_at: expiresAt.toISOString(),
+                            })
+                            console.log('[Signup] Referral applied, welcome code generated:', welcomeCode)
+                        }
+                    } catch (refErr) {
+                        console.warn('[Signup] Referral code application failed:', refErr)
+                    }
+                }
+            } catch (loyaltyErr) {
+                console.warn('[Signup] Loyalty account creation failed:', loyaltyErr)
+            }
 
             // Check if admin email and assign role
             if (ADMIN_EMAILS.includes(email.toLowerCase())) {

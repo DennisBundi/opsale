@@ -754,7 +754,7 @@ export default async function HomePage() {
       <section className="bg-gradient-to-br from-gray-50 to-white py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-in">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-2 rounded-full mb-4 font-bold text-sm shadow-lg">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-2 rounded-none mb-4 font-bold text-sm shadow-lg">
               <svg
                 className="w-5 h-5"
                 fill="none"
@@ -860,7 +860,7 @@ export default async function HomePage() {
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-12 animate-fade-in">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-full mb-4 font-bold text-sm shadow-lg">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-none mb-4 font-bold text-sm shadow-lg">
               <svg
                 className="w-5 h-5 animate-pulse"
                 fill="none"

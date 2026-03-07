@@ -11,6 +11,7 @@ import { Suspense } from 'react';
 function SignUpContent() {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/';
+  const referralCode = searchParams.get('ref') || '';
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -121,7 +122,16 @@ function SignUpContent() {
             </p>
           </div>
 
+          {referralCode && (
+            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-2xl text-green-800 text-sm font-medium text-center">
+              You were referred! You'll get KSh 50 off your first order.
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-5 relative z-10">
+            {referralCode && (
+              <input type="hidden" name="referralCode" value={referralCode} />
+            )}
             <div>
               <label
                 htmlFor="fullName"
