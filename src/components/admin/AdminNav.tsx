@@ -56,9 +56,14 @@ export default function AdminNav({ userRole: propUserRole, employee: propEmploye
   const [userRole, setUserRole] = useState<UserRole | null>(propUserRole || null);
   const [employee, setEmployee] = useState<Employee | null>(propEmployee || null);
 
+  // Always sync from props when they change
+  useEffect(() => {
+    if (propUserRole) setUserRole(propUserRole);
+    if (propEmployee) setEmployee(propEmployee);
+  }, [propUserRole, propEmployee]);
+
   useEffect(() => {
     const supabase = createClient();
-    // Only try to get user if Supabase is properly configured
     const hasSupabase = process.env.NEXT_PUBLIC_SUPABASE_URL &&
       process.env.NEXT_PUBLIC_SUPABASE_URL !== 'placeholder' &&
       process.env.NEXT_PUBLIC_SUPABASE_URL.trim() !== '';
@@ -66,15 +71,14 @@ export default function AdminNav({ userRole: propUserRole, employee: propEmploye
     if (hasSupabase) {
       supabase.auth.getUser().then(async ({ data }) => {
         setUser(data.user);
-        
-        // Fetch user role if not provided via props
+
+        // Only fetch role from API if not provided via props
         if (!propUserRole && data.user) {
           try {
             const response = await fetch('/api/auth/role');
             const { role } = await response.json();
             setUserRole(role);
-            
-            // Fetch employee info if role exists
+
             if (role) {
               const { data: empData } = await supabase
                 .from('employees')
@@ -90,25 +94,16 @@ export default function AdminNav({ userRole: propUserRole, employee: propEmploye
           }
         }
       }).catch(() => {
-        // Silently fail in preview mode
-        setUser(null);
+        // Silently fail - keep prop-based role intact
+        if (!propUserRole) setUser(null);
       });
     } else {
-      // Preview mode - set a dummy user
       setUser({ email: 'admin@preview.com' });
       if (!propUserRole) {
         setUserRole('admin');
       }
     }
-    
-    // Use prop values if provided
-    if (propUserRole) {
-      setUserRole(propUserRole);
-    }
-    if (propEmployee) {
-      setEmployee(propEmployee);
-    }
-  }, [propUserRole, propEmployee]);
+  }, [propUserRole]);
 
   const handleSignOut = async () => {
     const hasSupabase = process.env.NEXT_PUBLIC_SUPABASE_URL &&
