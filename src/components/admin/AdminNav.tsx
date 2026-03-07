@@ -5,37 +5,31 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { Employee } from '@/types';
 
 type UserRole = 'admin' | 'manager' | 'seller';
 type DashboardSection = 'dashboard' | 'products' | 'orders' | 'inventory' | 'employees' | 'payments' | 'pos' | 'profile' | 'settings' | 'reviews' | 'loyalty';
 
-// Client-side version of canAccessSection (duplicated to avoid server-side imports)
 function canAccessSection(userRole: UserRole | null, section: DashboardSection): boolean {
   if (!userRole) return false;
 
-  // Sellers can access: orders, pos, products, profile, settings (NOT payments, inventory, employees, dashboard)
   if (userRole === 'seller') {
     return ['orders', 'pos', 'products', 'profile', 'settings'].includes(section);
   }
 
-  // Admin and manager can access these sections
   if (['orders', 'payments', 'pos', 'profile', 'settings', 'products'].includes(section)) {
     return true;
   }
 
-  // Only admin and manager can access these sections
   if (['dashboard', 'inventory'].includes(section)) {
     return userRole === 'admin' || userRole === 'manager';
   }
 
-  // Only admin can access employees section
   if (section === 'employees') {
     return userRole === 'admin';
   }
 
-  // Admin and manager can access reviews and loyalty
   if (['reviews', 'loyalty'].includes(section)) {
     return userRole === 'admin' || userRole === 'manager';
   }
@@ -53,13 +47,19 @@ export default function AdminNav({ userRole: propUserRole, employee: propEmploye
   const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  // Use a ref to preserve the prop value and never let async code override it
+  const resolvedRole = useRef<UserRole | null>(propUserRole || null);
   const [userRole, setUserRole] = useState<UserRole | null>(propUserRole || null);
   const [employee, setEmployee] = useState<Employee | null>(propEmployee || null);
 
-  // Always sync from props when they change
   useEffect(() => {
-    if (propUserRole) setUserRole(propUserRole);
-    if (propEmployee) setEmployee(propEmployee);
+    if (propUserRole) {
+      resolvedRole.current = propUserRole;
+      setUserRole(propUserRole);
+    }
+    if (propEmployee) {
+      setEmployee(propEmployee);
+    }
   }, [propUserRole, propEmployee]);
 
   useEffect(() => {
@@ -68,42 +68,45 @@ export default function AdminNav({ userRole: propUserRole, employee: propEmploye
       process.env.NEXT_PUBLIC_SUPABASE_URL !== 'placeholder' &&
       process.env.NEXT_PUBLIC_SUPABASE_URL.trim() !== '';
 
-    if (hasSupabase) {
-      supabase.auth.getUser().then(async ({ data }) => {
-        setUser(data.user);
-
-        // Only fetch role from API if not provided via props
-        if (!propUserRole && data.user) {
-          try {
-            const response = await fetch('/api/auth/role');
-            const { role } = await response.json();
-            setUserRole(role);
-
-            if (role) {
-              const { data: empData } = await supabase
-                .from('employees')
-                .select('*')
-                .eq('user_id', data.user.id)
-                .single();
-              if (empData) {
-                setEmployee(empData as Employee);
-              }
-            }
-          } catch (error) {
-            console.error('Error fetching role:', error);
-          }
-        }
-      }).catch(() => {
-        // Silently fail - keep prop-based role intact
-        if (!propUserRole) setUser(null);
-      });
-    } else {
+    if (!hasSupabase) {
       setUser({ email: 'admin@preview.com' });
-      if (!propUserRole) {
+      if (!resolvedRole.current) {
+        resolvedRole.current = 'admin';
         setUserRole('admin');
       }
+      return;
     }
-  }, [propUserRole]);
+
+    // Always fetch user for display, and always fetch role as fallback
+    // This ensures the nav works even if server props are lost during hydration recovery
+    supabase.auth.getUser().then(async ({ data }) => {
+      setUser(data.user);
+
+      if (data.user) {
+        try {
+          const response = await fetch('/api/auth/role');
+          const { role } = await response.json();
+          if (role) {
+            resolvedRole.current = role;
+            setUserRole(role);
+
+            const { data: empData } = await supabase
+              .from('employees')
+              .select('*')
+              .eq('user_id', data.user.id)
+              .single();
+            if (empData) {
+              setEmployee(empData as Employee);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching role:', error);
+        }
+      }
+    }).catch(() => {
+      // Auth failed — keep whatever role we have from props
+    });
+  }, []); // Run once on mount
 
   const handleSignOut = async () => {
     const hasSupabase = process.env.NEXT_PUBLIC_SUPABASE_URL &&
@@ -132,16 +135,12 @@ export default function AdminNav({ userRole: propUserRole, employee: propEmploye
     { href: '/dashboard/settings', label: 'Settings', icon: '⚙️', section: 'settings' as const },
   ];
 
-  // Filter nav items based on user role
   let navItems = allNavItems.filter(item => canAccessSection(userRole, item.section));
-  
-  // For sellers, reorder so Products appears first (before Orders)
+
   if (userRole === 'seller') {
     navItems = navItems.sort((a, b) => {
-      // Products should be first
       if (a.section === 'products') return -1;
       if (b.section === 'products') return 1;
-      // Keep original order for other items
       return 0;
     });
   }
@@ -195,8 +194,6 @@ export default function AdminNav({ userRole: propUserRole, employee: propEmploye
           {/* Navigation Items */}
           <ul className="space-y-2 flex-1">
             {navItems.map((item) => {
-              // For dashboard, only match exact path
-              // For other routes, match exact path or child routes
               const isActive = item.href === '/dashboard'
                 ? pathname === item.href
                 : pathname === item.href || pathname?.startsWith(item.href + '/');
@@ -223,9 +220,9 @@ export default function AdminNav({ userRole: propUserRole, employee: propEmploye
               <div className="px-3 mb-3">
                 <div className="text-sm font-medium text-gray-900 truncate">{user.email}</div>
                 <div className="text-xs text-gray-500 mt-0.5">
-                  {userRole === 'admin' ? 'Administrator' : 
-                   userRole === 'manager' ? 'Manager' : 
-                   userRole === 'seller' ? 'Sales Person' : 
+                  {userRole === 'admin' ? 'Administrator' :
+                   userRole === 'manager' ? 'Manager' :
+                   userRole === 'seller' ? 'Sales Person' :
                    'User'}
                   {employee && ` • ${employee.employee_code}`}
                 </div>
@@ -243,9 +240,6 @@ export default function AdminNav({ userRole: propUserRole, employee: propEmploye
           )}
         </nav>
       </aside>
-
-      {/* Mobile Sidebar Overlay - Removed since sidebar is always visible on mobile */}
     </>
   );
 }
-
