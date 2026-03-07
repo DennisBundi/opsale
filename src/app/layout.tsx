@@ -6,7 +6,6 @@ import CartNotificationProvider from "@/components/cart/CartNotificationProvider
 import PWARegister from "@/components/PWARegister";
 import InstallPrompt from "@/components/InstallPrompt";
 import PWAMetaTags from "@/components/PWAMetaTags";
-import ChunkLoadErrorBoundary from "@/components/ChunkLoadErrorBoundary";
 
 export const metadata: Metadata = {
   title: "Leeztruestyles - Fashion Marketplace",
@@ -43,9 +42,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="flex flex-col min-h-screen">
-        <ChunkLoadErrorBoundary>
+    <html lang="en" suppressHydrationWarning>
+      <body className="flex flex-col min-h-screen" suppressHydrationWarning>
           <PWAMetaTags />
           <PWARegister />
           <Header />
@@ -53,7 +51,6 @@ export default function RootLayout({
           <Footer />
           <CartNotificationProvider />
           <InstallPrompt />
-        </ChunkLoadErrorBoundary>
       </body>
     </html>
   );

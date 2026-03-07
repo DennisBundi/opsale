@@ -44,6 +44,7 @@ const createOrderSchema = z
       .enum(["tiktok", "instagram", "whatsapp", "walkin"])
       .optional(), // Required for POS orders
     sale_datetime: z.string().optional(), // Optional custom sale datetime (ISO)
+    reward_code: z.string().optional(), // Optional reward code for discount
   })
   .refine(
     (data) => {
@@ -87,6 +88,55 @@ export async function POST(request: NextRequest) {
         { error: "Authentication required. Please sign in to place an order." },
         { status: 401 }
       );
+    }
+
+    // Validate reward code server-side if provided
+    let rewardDiscount = 0;
+    let validatedRewardCode: string | null = null;
+    if (validated.reward_code && validated.sale_type === "online") {
+      const { data: rewardCode, error: codeError } = await supabase
+        .from("reward_codes")
+        .select("*")
+        .eq("code", validated.reward_code.trim().toUpperCase())
+        .eq("is_used", false)
+        .single();
+
+      if (codeError || !rewardCode) {
+        return NextResponse.json(
+          { error: "Invalid or already used reward code" },
+          { status: 400 }
+        );
+      }
+
+      if (rewardCode.user_id !== user.id) {
+        return NextResponse.json(
+          { error: "This reward code does not belong to your account" },
+          { status: 403 }
+        );
+      }
+
+      if (new Date(rewardCode.expires_at) < new Date()) {
+        return NextResponse.json(
+          { error: "This reward code has expired" },
+          { status: 400 }
+        );
+      }
+
+      // Calculate discount
+      if (rewardCode.discount_percent) {
+        rewardDiscount = Math.round(
+          (rewardCode.discount_percent / 100) *
+            validated.items.reduce(
+              (sum: number, item: any) =>
+                sum + item.price * item.quantity,
+              0
+            )
+        );
+      } else if (rewardCode.discount_amount) {
+        rewardDiscount = rewardCode.discount_amount;
+      }
+
+      validatedRewardCode = rewardCode.code;
     }
 
     // Optional custom sale datetime for POS (override created_at)
@@ -266,11 +316,12 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    // Calculate total
-    const total = allOrderItems.reduce(
+    // Calculate total (apply reward discount if validated)
+    const subtotal = allOrderItems.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
     );
+    const total = Math.max(0, subtotal - rewardDiscount);
 
     // For POS orders, get the employee record to set seller_id
     let sellerId: string | null = null;
@@ -519,6 +570,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Mark reward code as used if one was validated
+    if (validatedRewardCode) {
+      await supabase
+        .from("reward_codes")
+        .update({ is_used: true })
+        .eq("code", validatedRewardCode)
+        .eq("user_id", user.id);
+    }
+
     // Create or update user record with customer info
     await supabase.from("users").upsert({
       id: user.id,
@@ -562,6 +622,25 @@ export async function POST(request: NextRequest) {
             // Don't fail the entire order creation - inventory can be adjusted manually if needed
           }
         }
+      }
+    }
+
+    // Award loyalty points for completed POS orders
+    if (validated.sale_type === "pos" && order) {
+      try {
+        const { LoyaltyService } = await import("@/services/loyaltyService");
+        const pointsAwarded = await LoyaltyService.awardPurchasePoints(
+          user.id,
+          order.id,
+          total
+        );
+        if (pointsAwarded > 0) {
+          console.log(
+            `Awarded ${pointsAwarded} loyalty points for POS order ${order.id}`
+          );
+        }
+      } catch (loyaltyError) {
+        console.error("Error awarding loyalty points for POS order:", loyaltyError);
       }
     }
 

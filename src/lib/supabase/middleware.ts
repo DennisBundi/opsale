@@ -39,18 +39,49 @@ export async function updateSession(request: NextRequest) {
 
   // IMPORTANT: Try getSession first (reads from cookies), then getUser
   // This is more reliable for freshly logged-in users
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  let user = null;
+  let session = null;
 
-  let user = session?.user || null;
+  try {
+    const {
+      data: { session: sessionData },
+    } = await supabase.auth.getSession()
+    session = sessionData;
+    user = session?.user || null;
+  } catch (error: any) {
+    // Handle expected errors (expired/invalid refresh tokens)
+    // This is normal when sessions expire - silently continue
+    if (error?.code === 'refresh_token_not_found' || error?.code === 'invalid_refresh_token') {
+      // Expected error - session expired, continue without user
+      if (process.env.NODE_ENV === 'development') {
+        // Only log in development to reduce noise
+        console.debug('[Middleware] Session expired or invalid refresh token - continuing without user');
+      }
+    } else {
+      // Unexpected error - log it
+      console.error('[Middleware] Unexpected auth error:', error);
+    }
+  }
 
   // If no user from session, try getUser as fallback
   if (!user) {
-    const {
-      data: { user: userFromGetUser },
-    } = await supabase.auth.getUser()
-    user = userFromGetUser;
+    try {
+      const {
+        data: { user: userFromGetUser },
+      } = await supabase.auth.getUser()
+      user = userFromGetUser;
+    } catch (error: any) {
+      // Handle expected errors (expired/invalid refresh tokens)
+      if (error?.code === 'refresh_token_not_found' || error?.code === 'invalid_refresh_token') {
+        // Expected error - session expired, continue without user
+        if (process.env.NODE_ENV === 'development') {
+          console.debug('[Middleware] getUser failed - session expired');
+        }
+      } else {
+        // Unexpected error - log it
+        console.error('[Middleware] Unexpected getUser error:', error);
+      }
+    }
   }
 
   if (

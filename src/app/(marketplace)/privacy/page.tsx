@@ -165,10 +165,25 @@ export default function PrivacyPolicyPage() {
                 If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:
               </p>
               <div className="bg-gray-50 rounded-xl p-6 mt-4">
-                <p className="text-gray-700"><strong>Email:</strong> privacy@leeztruestyles.com</p>
-                <p className="text-gray-700"><strong>Phone:</strong> +254 700 000 000</p>
+                <p className="text-gray-700">
+                  <strong>Email:</strong>{' '}
+                  <a href="mailto:leeztruestyles44@gmail.com" className="text-primary hover:underline">
+                    leeztruestyles44@gmail.com
+                  </a>
+                </p>
+                <p className="text-gray-700">
+                  <strong>Phone:</strong>{' '}
+                  <a href="tel:+254797877254" className="text-primary hover:underline">
+                    +254 797 877 254
+                  </a>
+                </p>
                 <p className="text-gray-700"><strong>Address:</strong> Nairobi, Kenya</p>
-                <p className="text-gray-700 mt-4"><strong>Data Protection Officer:</strong> dpo@leeztruestyles.com</p>
+                <p className="text-gray-700 mt-4">
+                  <strong>Data Protection Officer:</strong>{' '}
+                  <a href="mailto:leeztruestyles44@gmail.com" className="text-primary hover:underline">
+                    leeztruestyles44@gmail.com
+                  </a>
+                </p>
               </div>
             </section>
           </div>

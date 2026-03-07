@@ -141,8 +141,18 @@ export default function TermsOfServicePage() {
                 If you have any questions about these Terms of Service, please contact us at:
               </p>
               <div className="bg-gray-50 rounded-xl p-6 mt-4">
-                <p className="text-gray-700"><strong>Email:</strong> legal@leeztruestyles.com</p>
-                <p className="text-gray-700"><strong>Phone:</strong> +254 700 000 000</p>
+                <p className="text-gray-700">
+                  <strong>Email:</strong>{' '}
+                  <a href="mailto:leeztruestyles44@gmail.com" className="text-primary hover:underline">
+                    leeztruestyles44@gmail.com
+                  </a>
+                </p>
+                <p className="text-gray-700">
+                  <strong>Phone:</strong>{' '}
+                  <a href="tel:+254797877254" className="text-primary hover:underline">
+                    +254 797 877 254
+                  </a>
+                </p>
                 <p className="text-gray-700"><strong>Address:</strong> Nairobi, Kenya</p>
               </div>
             </section>

@@ -4,15 +4,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/cartStore';
+import { useLoyaltyStore } from '@/store/loyaltyStore';
 import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
+import dynamic from 'next/dynamic';
+const NavbarLoyaltyBadge = dynamic(() => import('@/components/loyalty/NavbarLoyaltyBadge'), { ssr: false });
 
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
-  const itemCount = useCartStore((state) => state.getItemCount());
-
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -22,6 +23,9 @@ export default function Header() {
   const [showSignOutModal, setShowSignOutModal] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
+
+  // Read cart count only after mount to prevent hydration mismatch
+  const itemCount = useCartStore((state) => isMounted ? state.getItemCount() : 0);
 
   useEffect(() => {
     setIsMounted(true);
@@ -235,8 +239,9 @@ export default function Header() {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.trim() !== '';
 
     const supabase = hasSupabase ? createClient() : null;
-    // Clear cart specific to this user session
+    // Clear cart and loyalty state for this user session
     useCartStore.getState().clearCart();
+    useLoyaltyStore.getState().clearLoyalty();
 
     if (supabase) {
       await supabase.auth.signOut();
@@ -300,6 +305,13 @@ export default function Header() {
 
           {/* Cart Icon & Auth Links & Mobile Menu */}
           <div className="flex items-center gap-4 relative z-[60]">
+
+            {/* Loyalty Badge (Desktop) */}
+            {user && !loading && (
+              <div className="hidden md:flex items-center">
+                <NavbarLoyaltyBadge />
+              </div>
+            )}
 
             {/* Auth Button (Desktop) */}
             <div className="hidden md:flex items-center relative" ref={buttonRef}>
