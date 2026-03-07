@@ -14,8 +14,6 @@ const NavbarLoyaltyBadge = dynamic(() => import('@/components/loyalty/NavbarLoya
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
-  const itemCount = useCartStore((state) => state.getItemCount());
-
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -25,6 +23,9 @@ export default function Header() {
   const [showSignOutModal, setShowSignOutModal] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
+
+  // Read cart count only after mount to prevent hydration mismatch
+  const itemCount = useCartStore((state) => isMounted ? state.getItemCount() : 0);
 
   useEffect(() => {
     setIsMounted(true);

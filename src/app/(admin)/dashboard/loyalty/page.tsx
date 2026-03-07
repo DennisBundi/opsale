@@ -14,6 +14,7 @@ interface LoyaltyStats {
 export default function LoyaltyAnalyticsPage() {
   const [stats, setStats] = useState<LoyaltyStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchStats();
@@ -25,8 +26,9 @@ export default function LoyaltyAnalyticsPage() {
       if (!res.ok) throw new Error("Failed to fetch analytics");
       const data = await res.json();
       setStats(data);
-    } catch (error) {
-      console.error("Error fetching loyalty stats:", error);
+    } catch (err) {
+      console.error("Error fetching loyalty stats:", err);
+      setError("Could not load analytics. Make sure the loyalty tables have been created in Supabase.");
     } finally {
       setLoading(false);
     }
@@ -46,6 +48,14 @@ export default function LoyaltyAnalyticsPage() {
         <h1 className="text-2xl font-bold text-gray-900">Leez Rewards Analytics</h1>
         <p className="text-gray-600 mt-1">Overview of the loyalty program performance.</p>
       </div>
+
+      {error && (
+        <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-800 text-sm">
+          <p className="font-semibold mb-1">Setup Required</p>
+          <p>{error}</p>
+          <p className="mt-2 text-xs">Run the migration at <code className="bg-yellow-100 px-1 rounded">supabase/migrations/add_leez_rewards_tables.sql</code> in your Supabase SQL Editor.</p>
+        </div>
+      )}
 
       {/* Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
