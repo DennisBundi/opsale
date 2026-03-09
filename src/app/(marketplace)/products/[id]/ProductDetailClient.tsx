@@ -54,7 +54,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   const displayImages = currentVariant?.images || product.images || [];
   
   // Calculate current stock based on selected size
-  let currentStock = availableStock;
+  let currentStock = availableStock ?? 0;
   if (selectedSize && product.sizes) {
     const selectedSizeOption = product.sizes.find((s) => s.size === selectedSize);
     if (selectedSizeOption) {
@@ -467,11 +467,8 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             </ul>
           </div>
 
-          <AddToCartButton 
-            product={{
-              ...product,
-              sizes: product.sizes, // Pass sizes so AddToCartButton can validate
-            }}
+          <AddToCartButton
+            product={product}
             availableStock={currentStock}
             selectedColor={selectedColor}
             selectedSize={selectedSize}

@@ -176,8 +176,8 @@ export default function POSCart({
               size: extendedProduct.customData.size,
               category_id: extendedProduct.customData.category_id || null,
               description: extendedProduct.customData.description || null,
-              images: extendedProduct.customData.images || [], // Include images from custom product
-            },
+              images: (extendedProduct.customData as any).images || [], // Include images from custom product
+            } as any,
             quantity: quantity,
             price: customPrice, // Use discounted price if set
           });
@@ -201,9 +201,9 @@ export default function POSCart({
             product_id: item.product.id,
             quantity: quantity,
             price: price,
-            size: item.size,
-            color: item.color,
-          });
+            size: item.size || undefined,
+            color: item.color || undefined,
+          } as any);
         }
       });
 

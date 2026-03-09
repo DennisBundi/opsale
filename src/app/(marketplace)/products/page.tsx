@@ -203,7 +203,7 @@ export default async function ProductsPage({
       <div className="mb-8 space-y-4 animate-slide-up">
         <SearchBar />
         <div className="flex flex-wrap gap-4 justify-center items-center">
-          <CategoryFilter categories={categories || []} />
+          <CategoryFilter categories={(categories || []) as any} />
           <PriceFilter />
           <ColorFilter availableColors={Array.from(allAvailableColors).sort()} />
           <ClearFiltersButton />

@@ -82,6 +82,13 @@ export default function DashboardPage() {
     return () => { mounted = false; };
   }, [router]);
 
+  useEffect(() => {
+    if (!isRedirecting) {
+      fetchDashboardData();
+      fetchRecentOrders();
+    }
+  }, [isRedirecting]);
+
   // Don't render dashboard content if redirecting
   if (isRedirecting) {
     return (
@@ -93,11 +100,6 @@ export default function DashboardPage() {
       </div>
     );
   }
-
-  useEffect(() => {
-    fetchDashboardData();
-    fetchRecentOrders();
-  }, []);
 
   const fetchDashboardData = async () => {
     try {

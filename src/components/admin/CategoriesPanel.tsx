@@ -194,7 +194,7 @@ export default function CategoriesPanel({ categories, loading, onRefresh, onClos
             <div className="p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-2">Delete Category</h3>
               <p className="text-gray-600 mb-6">
-                Are you sure you want to delete the category <strong>"{deleteModal.category.name}"</strong>? 
+                Are you sure you want to delete the category <strong>&ldquo;{deleteModal.category.name}&rdquo;</strong>?
                 This action cannot be undone.
               </p>
               <div className="flex gap-3">

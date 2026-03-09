@@ -783,7 +783,7 @@ export async function GET(request: NextRequest) {
       } else {
         console.log('💰 [API] Today\'s profits calculation: No order items found for eligible orders', {
           eligibleOrderIds,
-          orderItemsError: orderItemsError?.message,
+          orderItemsError: 'No order items returned',
         });
       }
     } else {

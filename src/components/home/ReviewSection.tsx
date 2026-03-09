@@ -203,7 +203,7 @@ export default function ReviewSection() {
             What Our Customers Say
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Don't just take our word for it. Here's what our happy customers have to say about their shopping experience.
+            Don&apos;t just take our word for it. Here&apos;s what our happy customers have to say about their shopping experience.
           </p>
         </div>
 
@@ -244,7 +244,7 @@ export default function ReviewSection() {
 
                     {/* Comment */}
                     <p className="text-gray-700 mb-6 leading-relaxed">
-                      "{review.comment}"
+                      &ldquo;{review.comment}&rdquo;
                     </p>
 
                     {/* Customer Info */}
@@ -300,7 +300,7 @@ export default function ReviewSection() {
                       ))}
                     </div>
                     <p className="text-gray-700 mb-6 leading-relaxed">
-                      "{review.comment}"
+                      &ldquo;{review.comment}&rdquo;
                     </p>
                     <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                       <div>

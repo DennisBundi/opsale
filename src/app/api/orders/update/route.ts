@@ -96,7 +96,7 @@ export async function PUT(request: NextRequest) {
         field: err.path.join('.'),
         message: err.message,
         code: err.code,
-        received: err.path.length > 0 ? (body as any)[err.path[0]] : undefined,
+        received: undefined,
       }));
       
       return NextResponse.json(

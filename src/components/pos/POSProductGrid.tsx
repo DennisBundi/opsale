@@ -70,7 +70,7 @@ export default function POSProductGrid({ products }: POSProductGridProps) {
         !item.color
     );
     const currentCartQuantity = currentCartItem ? currentCartItem.quantity : 0;
-    const availableStock = product.available_stock;
+    const availableStock = (product as any).available_stock;
     
     if (availableStock !== undefined && currentCartQuantity + 1 > availableStock) {
       alert(
@@ -110,7 +110,7 @@ export default function POSProductGrid({ products }: POSProductGridProps) {
       const currentCartQuantity = currentCartItem ? currentCartItem.quantity : 0;
       
       // Calculate available stock (consider size-specific stock if size is selected)
-      let stockLimit: number | undefined = selectedProduct.available_stock;
+      let stockLimit: number | undefined = (selectedProduct as any).available_stock;
       if (size && availableSizes.length > 0) {
         const sizeOption = availableSizes.find((s) => s.size === size);
         if (sizeOption && sizeOption.available !== undefined) {

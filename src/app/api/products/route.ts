@@ -907,12 +907,12 @@ export async function PUT(request: NextRequest) {
               // Insert new sizes (these are calculated from color stocks if color_stocks was provided)
               const sizeInserts = sizeEntries
                 .filter(
-                  ([size, qty]) => ["S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"].includes(size) && qty > 0
+                  ([size, qty]: [string, unknown]) => ["S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"].includes(size) && (qty as number) > 0
                 )
-                .map(([size, qty]) => ({
+                .map(([size, qty]: [string, unknown]) => ({
                   product_id: product.id,
                   size,
-                  stock_quantity: qty,
+                  stock_quantity: qty as number,
                   reserved_quantity: 0,
                 }));
 

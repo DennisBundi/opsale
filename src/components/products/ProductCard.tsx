@@ -31,10 +31,10 @@ export default function ProductCard({ product }: ProductCardProps) {
   // Get all product images
   const productImages = product.images && Array.isArray(product.images) 
     ? product.images.filter((img: any) => img && typeof img === 'string' && img.trim() !== '')
-    : product.image 
-    ? [product.image]
-    : product.image_url
-    ? [product.image_url]
+    : (product as any).image
+    ? [(product as any).image]
+    : (product as any).image_url
+    ? [(product as any).image_url]
     : [];
 
   // Handle image cycling on hover
@@ -135,7 +135,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         addItem(productForCart);
         
         // Trigger cart animation
-        const button = e.currentTarget;
+        const button = e.currentTarget as HTMLElement;
         triggerAnimation(productForCart, button);
       } catch (error) {
         if (error instanceof Error) {

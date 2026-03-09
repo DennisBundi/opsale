@@ -207,7 +207,7 @@ export async function POST(request: NextRequest) {
           source: "pos", // Mark as POS-created product
         }));
 
-        const insertProducts = async (records: typeof productsToInsert) =>
+        const insertProducts = async (records: Record<string, unknown>[]) =>
           adminSupabase.from("products").insert(records).select();
 
         let { data: createdProducts, error: productsError } =
