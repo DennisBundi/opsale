@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Reserve inventory for pending payment
+    // Check stock availability (don't reserve — avoids reservation leaks from abandoned payments)
     const { data: orderItems } = await supabase
       .from('order_items')
       .select('product_id, quantity')
@@ -113,13 +113,10 @@ export async function POST(request: NextRequest) {
 
     if (orderItems) {
       for (const item of orderItems) {
-        const reserved = await InventoryService.reserveStock(
-          item.product_id,
-          item.quantity
-        );
-        if (!reserved) {
+        const available = await InventoryService.getStock(item.product_id);
+        if (available < item.quantity) {
           return NextResponse.json(
-            { error: `Insufficient stock for product ${item.product_id}` },
+            { error: `Insufficient stock for one of your items. Please refresh and try again.` },
             { status: 400 }
           );
         }
@@ -160,12 +157,6 @@ export async function POST(request: NextRequest) {
     }
 
     if (!paymentResponse.success) {
-      // Release reserved inventory on payment failure
-      if (orderItems) {
-        for (const item of orderItems) {
-          await InventoryService.releaseStock(item.product_id, item.quantity);
-        }
-      }
       logger.error('Payment initiation failed:', paymentResponse.error);
       return NextResponse.json(
         { error: paymentResponse.error || 'Payment initiation failed' },

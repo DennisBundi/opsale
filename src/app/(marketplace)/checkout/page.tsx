@@ -300,13 +300,14 @@ export default function CheckoutPage() {
 
       if (paymentData.authorization_url) {
         // Redirect to Paystack payment page
-        window.location.assign(paymentData.authorization_url);
+        window.location.href = paymentData.authorization_url;
         return;
       } else {
-        // Fallback: show M-Pesa STK push modal
-        setCreatedOrderId(order_id);
-        setShowMpesaModal(true);
-        setLoading(false);
+        // authorization_url missing — payment initialized but no redirect URL
+        console.error('Payment response missing authorization_url:', paymentData);
+        throw new Error(
+          'Payment was initialized but no payment page URL was returned. Please try again or contact support.'
+        );
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
