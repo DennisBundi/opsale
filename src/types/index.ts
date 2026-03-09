@@ -88,6 +88,7 @@ export interface PaymentRequest {
   method: "mpesa" | "card";
   phone?: string; // Required for M-Pesa
   email?: string; // Required for card
+  callback_url?: string;
 }
 
 export interface PaymentResponse {

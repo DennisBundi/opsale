@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { PaymentService } from '@/services/paymentService';
 import { InventoryService } from '@/services/inventoryService';
 import { rateLimit } from '@/lib/rateLimit';
+import { logger } from '@/lib/logger';
 import type { PaymentRequest } from '@/types';
 import { z } from 'zod';
 
@@ -26,16 +27,14 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    console.log('Payment initiate request body:', JSON.stringify(body, null, 2));
-    
+
     let validated;
     try {
       validated = paymentRequestSchema.parse(body);
     } catch (error) {
-      console.error('Validation error:', error);
       if (error instanceof z.ZodError) {
         return NextResponse.json(
-          { error: 'Invalid request data', details: error.errors },
+          { error: 'Invalid request data' },
           { status: 400 }
         );
       }
@@ -44,20 +43,11 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields based on payment method
     if (validated.method === 'mpesa' && !validated.phone) {
-      console.error('M-Pesa payment missing phone number');
       return NextResponse.json(
         { error: 'Phone number required for M-Pesa payment' },
         { status: 400 }
       );
     }
-    
-    console.log('Validated payment request:', {
-      order_id: validated.order_id,
-      amount: validated.amount,
-      method: validated.method,
-      hasPhone: !!validated.phone,
-      hasEmail: !!validated.email,
-    });
 
     if (validated.method === 'card' && !validated.email) {
       return NextResponse.json(
@@ -75,19 +65,15 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (orderError || !order) {
-      console.error('Order fetch error:', orderError);
       return NextResponse.json(
-        { error: 'Order not found', details: orderError?.message },
+        { error: 'Order not found' },
         { status: 404 }
       );
     }
 
-    console.log('Order found:', { id: order.id, status: order.status, total_amount: order.total_amount });
-
     if (order.status !== 'pending') {
-      console.error('Order is not pending:', order.status);
       return NextResponse.json(
-        { error: 'Order is not pending payment', currentStatus: order.status },
+        { error: 'Order is not pending payment' },
         { status: 400 }
       );
     }
@@ -113,6 +99,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Derive callback URL so Paystack redirects users back after payment
+    const origin = request.headers.get('origin') || request.headers.get('referer')?.replace(/\/[^/]*$/, '') || 'http://localhost:3000';
+    const callbackUrl = `${origin}/checkout/callback`;
+
     // Initiate payment
     const paymentRequest: PaymentRequest = {
       order_id: validated.order_id,
@@ -120,40 +110,29 @@ export async function POST(request: NextRequest) {
       method: validated.method,
       phone: validated.phone,
       email: validated.email,
+      callback_url: callbackUrl,
     };
 
     let paymentResponse;
 
-    console.log('Initiating payment with method:', validated.method);
-    
     if (validated.method === 'mpesa') {
-      // Validate phone number format before sending to Daraja
       if (!validated.phone) {
         return NextResponse.json(
           { error: 'Phone number is required for M-Pesa payment' },
           { status: 400 }
         );
       }
-      
+
       paymentResponse = await PaymentService.initiateMpesaPayment(paymentRequest);
-      
-      // Log detailed Daraja errors if payment failed
+
       if (!paymentResponse.success) {
-        console.error('M-Pesa payment initiation failed:', {
-          order_id: validated.order_id,
-          amount: validated.amount,
-          phone: validated.phone,
-          error: paymentResponse.error,
-        });
+        logger.error('M-Pesa payment initiation failed for order:', validated.order_id);
       }
     } else {
       paymentResponse = await PaymentService.initiateCardPayment(paymentRequest);
     }
 
-    console.log('Payment response:', { success: paymentResponse.success, error: paymentResponse.error });
-
     if (!paymentResponse.success) {
-      console.error('Payment initiation failed:', paymentResponse.error);
       // Release reserved inventory on payment failure
       if (orderItems) {
         for (const item of orderItems) {
@@ -185,16 +164,15 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid request data' },
         { status: 400 }
       );
     }
 
-    console.error('Payment initiation error:', error);
+    logger.error('Payment initiation error:', error);
     return NextResponse.json(
       { error: 'Failed to initiate payment' },
       { status: 500 }
     );
   }
 }
-
