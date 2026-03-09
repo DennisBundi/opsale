@@ -1,5 +1,16 @@
 import { createClient } from "@/lib/supabase/server";
 import Image from "next/image";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'About Us - Leeztruestyles',
+  description: 'Learn about Leeztruestyles, your trusted fashion destination in Kenya. Quality fashion, fast delivery, and excellent customer service.',
+  openGraph: {
+    title: 'About Us - Leeztruestyles',
+    description: 'Learn about Leeztruestyles, your trusted fashion destination in Kenya.',
+    type: 'website',
+  },
+};
 
 export default async function AboutPage() {
   const supabase = await createClient();

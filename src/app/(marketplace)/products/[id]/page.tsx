@@ -1,9 +1,49 @@
+import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import ProductDetailClient from './ProductDetailClient';
 import ReviewSummary from '@/components/reviews/ReviewSummary';
 import ReviewList from '@/components/reviews/ReviewList';
 import ReviewForm from '@/components/reviews/ReviewForm';
+
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://leeztruestyles.com';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const supabase = await createClient();
+  const { data: product } = await supabase
+    .from('products')
+    .select('name, description, price, sale_price, images')
+    .eq('id', params.id)
+    .single();
+
+  if (!product) {
+    return { title: 'Product Not Found - Leeztruestyles' };
+  }
+
+  const price = product.sale_price || product.price;
+  const imageUrl = Array.isArray(product.images) && product.images[0]
+    ? product.images[0]
+    : undefined;
+
+  return {
+    title: `${product.name} - Leeztruestyles`,
+    description: product.description
+      ? product.description.slice(0, 160)
+      : `Shop ${product.name} at Leeztruestyles. KSh ${price}. Fast delivery across Kenya.`,
+    openGraph: {
+      title: `${product.name} - Leeztruestyles`,
+      description: product.description
+        ? product.description.slice(0, 160)
+        : `Shop ${product.name} at Leeztruestyles.`,
+      type: 'website',
+      ...(imageUrl && { images: [{ url: imageUrl }] }),
+    },
+  };
+}
 
 export default async function ProductDetailPage({
   params,
@@ -12,30 +52,24 @@ export default async function ProductDetailPage({
 }) {
   const supabase = await createClient();
 
-  // Fetch product from Supabase
-  const { data: product, error: productError } = await supabase
-    .from('products')
-    .select('*')
-    .eq('id', params.id)
-    .single();
+  // Parallel fetch: product, inventory, colors, sizes
+  const [productResult, inventoryResult, colorsResult, sizesResult] = await Promise.all([
+    supabase.from('products').select('*').eq('id', params.id).single(),
+    supabase.from('inventory').select('stock_quantity, reserved_quantity').eq('product_id', params.id).single(),
+    supabase.from('product_colors').select('color').eq('product_id', params.id),
+    supabase.from('product_sizes').select('size, stock_quantity, reserved_quantity').eq('product_id', params.id).order('size', { ascending: true }),
+  ]);
 
-  if (productError || !product) {
+  const product = productResult.data;
+  if (productResult.error || !product) {
     notFound();
   }
 
-  // Fetch inventory with error handling
-  const { data: inventory, error: inventoryError } = await supabase
-    .from('inventory')
-    .select('stock_quantity, reserved_quantity')
-    .eq('product_id', params.id)
-    .single();
+  const inventory = inventoryResult.data;
+  const productColors = colorsResult.data;
+  const productSizes = sizesResult.data;
 
-  if (inventoryError && inventoryError.code !== 'PGRST116') {
-    // PGRST116 is "not found" which is okay if inventory doesn't exist yet
-    console.error('Error fetching inventory:', inventoryError);
-  }
-
-  // Fetch category
+  // Fetch category (depends on product data)
   let categoryName = 'Uncategorized';
   if (product.category_id) {
     const { data: category } = await supabase
@@ -43,40 +77,22 @@ export default async function ProductDetailPage({
       .select('name')
       .eq('id', product.category_id)
       .single();
-    
     if (category) {
       categoryName = category.name;
     }
   }
 
-  // Fetch product colors
-  const { data: productColors } = await supabase
-    .from('product_colors')
-    .select('color')
-    .eq('product_id', params.id);
-
-  // Fetch product sizes with stock
-  const { data: productSizes } = await supabase
-    .from('product_sizes')
-    .select('size, stock_quantity, reserved_quantity')
-    .eq('product_id', params.id)
-    .order('size', { ascending: true });
-
-  // Calculate available stock - use undefined if inventory doesn't exist
   const availableStock = inventory
     ? Math.max(0, (inventory.stock_quantity || 0) - (inventory.reserved_quantity || 0))
     : undefined;
 
-  // Format sizes with available stock
   const sizes = productSizes ? productSizes.map((ps: any) => ({
     size: ps.size,
     available: Math.max(0, (ps.stock_quantity || 0) - (ps.reserved_quantity || 0)),
   })) : [];
 
-  // Format colors
   const colors = productColors ? productColors.map((pc: any) => pc.color) : [];
 
-  // Prepare product data for client component
   const productData = {
     ...product,
     available_stock: availableStock,
@@ -85,8 +101,39 @@ export default async function ProductDetailPage({
     sizes: sizes,
   };
 
+  // JSON-LD structured data for product
+  const imageUrl = Array.isArray(product.images) && product.images[0]
+    ? product.images[0]
+    : undefined;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.description || '',
+    ...(imageUrl && { image: imageUrl }),
+    offers: {
+      '@type': 'Offer',
+      price: product.sale_price || product.price,
+      priceCurrency: 'KES',
+      availability: availableStock === undefined || availableStock > 0
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
+      url: `${baseUrl}/products/${params.id}`,
+    },
+    brand: {
+      '@type': 'Brand',
+      name: 'Leeztruestyles',
+    },
+  };
+
   return (
     <>
+      {/* Safe: JSON.stringify escapes all HTML/script content in the structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
       <ProductDetailClient product={productData} />
       {/* Reviews Section */}
       <section className="container mx-auto px-4 py-12 border-t border-gray-200">

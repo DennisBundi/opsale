@@ -1,3 +1,15 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Returns & Exchanges - Leeztruestyles',
+  description: 'Our return and exchange policy. Learn how to return or exchange items purchased from Leeztruestyles.',
+  openGraph: {
+    title: 'Returns & Exchanges - Leeztruestyles',
+    description: 'Return and exchange policy for Leeztruestyles purchases.',
+    type: 'website',
+  },
+};
+
 export default function ReturnsPage() {
   return (
     <div className="container mx-auto px-4 py-16">

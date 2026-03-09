@@ -1,14 +1,13 @@
 
 'use client'
 
-import React, { useState, useEffect, useRef, Suspense, useTransition } from 'react';
+import React, { useState, useRef, Suspense, useTransition } from 'react';
 import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { login } from '@/app/auth/actions';
 
 function SignInContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const redirectParam = searchParams.get('redirect');
   const errorParam = searchParams.get('error');
   const [error, setError] = useState<string | null>(errorParam ? decodeURIComponent(errorParam) : null);
@@ -16,48 +15,21 @@ function SignInContent() {
   const formRef = useRef<HTMLFormElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    console.log('[SignIn] Component mounted');
-    const form = formRef.current;
-    const button = buttonRef.current;
-    if (form) {
-      console.log('[SignIn] Form element found');
-    }
-    if (button) {
-      console.log('[SignIn] Button element found:', button);
-      // Test if button is clickable
-      button.addEventListener('click', (e) => {
-        console.log('[SignIn] Native click listener fired!');
-      }, { once: true });
-    }
-  }, []);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('[SignIn] ===== FORM SUBMISSION STARTED =====');
     setError(null);
 
     const formData = new FormData(e.currentTarget);
-    console.log('[SignIn] FormData extracted:', {
-      email: formData.get('email'),
-      hasPassword: !!formData.get('password')
-    });
 
     startTransition(async () => {
       try {
-        console.log('[SignIn] Starting login process...');
         await login(formData);
-        // If login succeeds, redirect() will be called in the server action
-        console.log('[SignIn] Login completed - redirect should happen');
       } catch (err: any) {
         // Next.js redirect() throws NEXT_REDIRECT error - this is expected
         if (err?.digest?.startsWith('NEXT_REDIRECT')) {
-          console.log('[SignIn] Redirect detected - letting Next.js handle it');
-          throw err; // Re-throw so Next.js handles the redirect
+          throw err;
         }
-        // Actual error - display to user
-        console.error('[SignIn] Login error:', err);
         setError(err?.message || 'An error occurred during login. Please try again.');
       }
     });
@@ -143,17 +115,11 @@ function SignInContent() {
                 ref={buttonRef}
                 type="submit"
                 disabled={isPending}
-                onClick={(e) => {
-                  console.log('[SignIn] Button onClick triggered!', { isPending, type: e.type, target: e.target });
-                  // Don't prevent default - let form onSubmit handle it
-                }}
                 onMouseDown={(e) => {
-                  console.log('[SignIn] Button onMouseDown triggered!');
-                  e.stopPropagation(); // Prevent event bubbling to Header
+                  e.stopPropagation();
                 }}
                 onMouseUp={(e) => {
-                  console.log('[SignIn] Button onMouseUp triggered!');
-                  e.stopPropagation(); // Prevent event bubbling to Header
+                  e.stopPropagation();
                 }}
                 style={{ 
                   pointerEvents: 'auto', 

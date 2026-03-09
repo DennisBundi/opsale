@@ -10,29 +10,73 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**.supabase.co',
+        hostname: 'pklbqruulnpalzxurznr.supabase.co',
       },
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
-      {
-        protocol: 'https',
-        hostname: 'unsplash.com',
-      },
     ],
-    // Allow unoptimized images for external sources
     unoptimized: false,
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
-  // PWA configuration - ensure service worker and manifest are served correctly
+  // Rewrite root to /home so visitors don't see a redirect
+  async rewrites() {
+    return [
+      {
+        source: '/',
+        destination: '/home',
+      },
+    ];
+  },
   async headers() {
     return [
+      // Security headers for all routes
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              `script-src 'self' 'unsafe-inline' ${process.env.NODE_ENV === 'development' ? "'unsafe-eval'" : ''} https://js.paystack.co`,
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob: https://pklbqruulnpalzxurznr.supabase.co https://images.unsplash.com",
+              "font-src 'self'",
+              "connect-src 'self' https://pklbqruulnpalzxurznr.supabase.co wss://pklbqruulnpalzxurznr.supabase.co https://api.paystack.co",
+              "frame-src 'self' https://js.paystack.co https://checkout.paystack.com",
+              "object-src 'none'",
+              "base-uri 'self'",
+            ].join('; '),
+          },
+        ],
+      },
+      // PWA - service worker
       {
         source: '/sw.js',
         headers: [
@@ -60,13 +104,13 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: process.env.NODE_ENV === 'development' 
+            value: process.env.NODE_ENV === 'development'
               ? 'no-cache, no-store, must-revalidate, proxy-revalidate'
               : 'public, max-age=31536000, immutable',
           },
         ],
       },
-      // In development, prevent caching of chunks to avoid stale code issues
+      // In development, prevent caching of chunks
       ...(process.env.NODE_ENV === 'development' ? [{
         source: '/_next/static/chunks/:path*',
         headers: [
@@ -89,4 +133,3 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
-

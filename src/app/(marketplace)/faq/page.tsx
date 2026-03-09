@@ -1,3 +1,15 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'FAQ - Leeztruestyles',
+  description: 'Frequently asked questions about ordering, payments, shipping, and returns at Leeztruestyles.',
+  openGraph: {
+    title: 'FAQ - Leeztruestyles',
+    description: 'Find answers to common questions about shopping at Leeztruestyles.',
+    type: 'website',
+  },
+};
+
 export default function FAQPage() {
   const faqs = [
     {

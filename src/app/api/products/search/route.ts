@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,8 +11,8 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category');
     const minPrice = searchParams.get('minPrice');
     const maxPrice = searchParams.get('maxPrice');
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '20');
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1') || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '20') || 20));
     const offset = (page - 1) * limit;
 
     const supabase = await createClient();
@@ -23,11 +24,14 @@ export async function GET(request: NextRequest) {
 
     // Search by name or description
     if (query) {
-      const searchTerm = `%${query}%`;
-      // Use or() with PostgREST syntax - format: column.operator.value
-      productsQuery = productsQuery.or(
-        `name.ilike.${searchTerm},description.ilike.${searchTerm}`
-      );
+      // Sanitize query to prevent PostgREST filter injection
+      const sanitized = query.replace(/[%_,().*]/g, '');
+      if (sanitized.length > 0) {
+        const searchTerm = `%${sanitized}%`;
+        productsQuery = productsQuery.or(
+          `name.ilike.${searchTerm},description.ilike.${searchTerm}`
+        );
+      }
     }
 
     // Filter by category
@@ -49,7 +53,7 @@ export async function GET(request: NextRequest) {
     const { data: products, error, count } = await productsQuery;
 
     if (error) {
-      console.error('Product search error:', error);
+      logger.error('Product search error:', error);
       return NextResponse.json(
         { error: 'Failed to search products' },
         { status: 500 }
@@ -65,7 +69,7 @@ export async function GET(request: NextRequest) {
         .in('product_id', productIds);
 
       if (inventoryError) {
-        console.error('Error fetching inventory in search:', inventoryError);
+        logger.error('Error fetching inventory in search:', inventoryError);
       }
 
       const inventoryMap = new Map(
@@ -113,7 +117,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Product search error:', error);
+    logger.error('Product search error:', error);
     return NextResponse.json(
       { error: 'Failed to search products' },
       { status: 500 }

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { rateLimit, rateLimitKey, RATE_LIMITS } from "@/lib/rateLimit";
+import { logger } from "@/lib/logger";
 
 const reviewSchema = z.object({
   product_id: z.string().uuid(),
@@ -23,12 +25,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Rate limit review submissions
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    const rlKey = rateLimitKey("review", ip, user.id);
+    if (!rateLimit(rlKey, RATE_LIMITS.reviewSubmit.maxRequests, RATE_LIMITS.reviewSubmit.windowMs)) {
+      return NextResponse.json(
+        { error: "Too many review submissions. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     // Validate body
     const body = await request.json();
     const parsed = reviewSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "Validation failed", details: parsed.error.flatten() },
+        { error: "Validation failed" },
         { status: 400 }
       );
     }
@@ -124,7 +136,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insertError) {
-      console.error("Failed to insert review:", insertError);
+      logger.error("Failed to insert review:", insertError);
       return NextResponse.json(
         { error: "Failed to submit review." },
         { status: 500 }
@@ -140,7 +152,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Review submission error:", error);
+    logger.error("Review submission error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

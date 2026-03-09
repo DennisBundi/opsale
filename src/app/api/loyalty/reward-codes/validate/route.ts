@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { rateLimit, rateLimitKey, RATE_LIMITS } from "@/lib/rateLimit";
 
 const validateSchema = z.object({
   code: z.string().min(1, "Code is required"),
@@ -17,19 +18,28 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Rate limit reward code validation
+  const ip = request.headers.get("x-forwarded-for") || "unknown";
+  const key = rateLimitKey("reward-validate", ip, user.id);
+  if (!rateLimit(key, RATE_LIMITS.rewardValidate.maxRequests, RATE_LIMITS.rewardValidate.windowMs)) {
+    return NextResponse.json(
+      { error: "Too many attempts. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   const body = await request.json();
   const parsed = validateSchema.safeParse(body);
 
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Invalid request", details: parsed.error.flatten() },
+      { error: "Invalid request" },
       { status: 400 }
     );
   }
 
   const code = parsed.data.code.trim().toUpperCase();
 
-  // Look up reward code — user can use their own codes or manually entered ones
   const { data: rewardCode, error: codeError } = await supabase
     .from("reward_codes")
     .select("*")
@@ -44,7 +54,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Check if the code belongs to this user
   if (rewardCode.user_id !== user.id) {
     return NextResponse.json(
       { error: "This reward code does not belong to your account" },
@@ -52,7 +61,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Check expiry
   if (new Date(rewardCode.expires_at) < new Date()) {
     return NextResponse.json(
       { error: "This reward code has expired" },

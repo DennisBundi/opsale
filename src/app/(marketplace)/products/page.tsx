@@ -5,6 +5,17 @@ import PriceFilter from "@/components/filters/PriceFilter";
 import ColorFilter from "@/components/filters/ColorFilter";
 import ClearFiltersButton from "@/components/filters/ClearFiltersButton";
 import { createClient } from "@/lib/supabase/server";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Products - Leeztruestyles',
+  description: 'Browse our curated collection of fashion-forward clothing and accessories. Filter by category, price, and color.',
+  openGraph: {
+    title: 'Products - Leeztruestyles',
+    description: 'Browse our curated collection of fashion-forward clothing and accessories.',
+    type: 'website',
+  },
+};
 
 interface SearchParams {
   q?: string;

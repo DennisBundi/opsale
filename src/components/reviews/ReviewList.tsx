@@ -20,7 +20,8 @@ export default function ReviewList({ productId }: ReviewListProps) {
         const res = await fetch(`/api/reviews/product/${productId}`);
         if (!res.ok) return;
         const data = await res.json();
-        setReviews(data.reviews || data || []);
+        const list = data.reviews ?? data;
+        setReviews(Array.isArray(list) ? list : []);
       } catch {
         // silently fail
       } finally {

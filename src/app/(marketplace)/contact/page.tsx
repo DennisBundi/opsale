@@ -1,3 +1,15 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Contact Us - Leeztruestyles',
+  description: 'Get in touch with Leeztruestyles. Email, phone, or visit us at Westlands Shopping Centre, Nairobi, Kenya.',
+  openGraph: {
+    title: 'Contact Us - Leeztruestyles',
+    description: 'Get in touch with Leeztruestyles for any inquiries or support.',
+    type: 'website',
+  },
+};
+
 export default function ContactPage() {
   return (
     <div className="container mx-auto px-4 py-16">

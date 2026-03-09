@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { PaymentService } from '@/services/paymentService';
 import { InventoryService } from '@/services/inventoryService';
 import { rateLimit } from '@/lib/rateLimit';
@@ -23,6 +24,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
         { status: 429 }
+      );
+    }
+
+    // Require authentication
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (!user || authError) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
       );
     }
 
@@ -57,10 +69,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify order exists and is pending
-    const supabase = await createClient();
     const { data: order, error: orderError } = await supabase
       .from('orders')
-      .select('*')
+      .select('id, status, user_id, total_amount')
       .eq('id', validated.order_id)
       .single();
 
@@ -71,9 +82,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Verify the authenticated user owns this order
+    if (order.user_id !== user.id) {
+      return NextResponse.json(
+        { error: 'Order not found' },
+        { status: 404 }
+      );
+    }
+
     if (order.status !== 'pending') {
       return NextResponse.json(
         { error: 'Order is not pending payment' },
+        { status: 400 }
+      );
+    }
+
+    // Verify the submitted amount matches the order total
+    if (validated.amount !== order.total_amount) {
+      return NextResponse.json(
+        { error: 'Payment amount does not match order total' },
         { status: 400 }
       );
     }
@@ -139,14 +166,16 @@ export async function POST(request: NextRequest) {
           await InventoryService.releaseStock(item.product_id, item.quantity);
         }
       }
+      logger.error('Payment initiation failed:', paymentResponse.error);
       return NextResponse.json(
         { error: paymentResponse.error || 'Payment initiation failed' },
         { status: 400 }
       );
     }
 
-    // Update order with payment reference
-    await supabase
+    // Update order with payment reference (use admin client to bypass RLS)
+    const adminClient = createAdminClient();
+    const { error: updateError } = await adminClient
       .from('orders')
       .update({
         payment_reference: paymentResponse.reference,
@@ -154,6 +183,10 @@ export async function POST(request: NextRequest) {
         status: 'processing',
       })
       .eq('id', validated.order_id);
+
+    if (updateError) {
+      logger.error('Failed to update order with payment reference:', updateError);
+    }
 
     return NextResponse.json({
       success: true,

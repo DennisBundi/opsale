@@ -1,3 +1,15 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Shipping Information - Leeztruestyles',
+  description: 'Learn about our shipping options, delivery times, and costs for orders across Kenya.',
+  openGraph: {
+    title: 'Shipping Information - Leeztruestyles',
+    description: 'Shipping options and delivery information for Leeztruestyles orders.',
+    type: 'website',
+  },
+};
+
 export default function ShippingPage() {
   return (
     <div className="container mx-auto px-4 py-16">

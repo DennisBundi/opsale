@@ -1,27 +1,76 @@
+import https from 'https';
 import type { PaymentRequest, PaymentResponse } from '@/types';
 
-const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY!;
-const PAYSTACK_PUBLIC_KEY = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY!;
+const PAYSTACK_BASE_URL = 'https://api.paystack.co';
+
+/**
+ * Make HTTPS request using Node.js built-in module.
+ * Bypasses Next.js fetch patching which causes timeouts on Windows.
+ */
+function paystackRequest(
+  method: 'GET' | 'POST',
+  path: string,
+  body?: Record<string, unknown>
+): Promise<{ status: boolean; message: string; data: Record<string, unknown> }> {
+  const key = process.env.PAYSTACK_SECRET_KEY;
+  if (!key) return Promise.reject(new Error('PAYSTACK_SECRET_KEY is not configured'));
+
+  const postData = body ? JSON.stringify(body) : undefined;
+
+  return new Promise((resolve, reject) => {
+    const url = new URL(path, PAYSTACK_BASE_URL);
+    const req = https.request(
+      {
+        hostname: url.hostname,
+        path: url.pathname,
+        method,
+        family: 4, // Force IPv4 — NAT64 IPv6 (64:ff9b::) is unreliable on Windows
+        headers: {
+          Authorization: `Bearer ${key}`,
+          'Content-Type': 'application/json',
+          ...(postData ? { 'Content-Length': Buffer.byteLength(postData) } : {}),
+        },
+        timeout: 30000,
+      },
+      (res) => {
+        let data = '';
+        res.on('data', (chunk) => (data += chunk));
+        res.on('end', () => {
+          try {
+            resolve(JSON.parse(data));
+          } catch {
+            reject(new Error(`Invalid JSON response: ${data.substring(0, 200)}`));
+          }
+        });
+      }
+    );
+
+    req.on('error', reject);
+    req.on('timeout', () => {
+      req.destroy();
+      reject(new Error('Request timed out'));
+    });
+
+    if (postData) req.write(postData);
+    req.end();
+  });
+}
 
 export class PaymentService {
   /**
    * Format phone number to 2547XXXXXXXX format (12 digits starting with 2547)
-   * Validates that the final format matches M-Pesa requirements
    */
   private static formatPhoneNumber(phone: string): string {
-    // Remove all non-digit characters
     let formatted = phone.replace(/\D/g, '');
 
-    // Handle standard cases
     if (formatted.startsWith('254')) {
-      formatted = formatted;
+      // already correct prefix
     } else if (formatted.startsWith('0')) {
       formatted = `254${formatted.substring(1)}`;
     } else if (formatted.startsWith('7') || formatted.startsWith('1')) {
       formatted = `254${formatted}`;
     }
 
-    // Validate final format: must be 254[7|1]XXXXXXXX (12 digits, starts with 2547 or 2541)
     if (!/^254[17]\d{8}$/.test(formatted)) {
       throw new Error(`Invalid phone number format. Expected 2547XXXXXXXX or 2541XXXXXXXX (12 digits), got: ${formatted}`);
     }
@@ -36,10 +85,7 @@ export class PaymentService {
     request: PaymentRequest
   ): Promise<PaymentResponse> {
     if (!request.phone) {
-      return {
-        success: false,
-        error: 'Phone number is required for M-Pesa payment',
-      };
+      return { success: false, error: 'Phone number is required for M-Pesa payment' };
     }
 
     let formattedPhone: string;
@@ -55,34 +101,26 @@ export class PaymentService {
     try {
       const email = request.email || `${formattedPhone}@customer.leeztruestyles.com`;
 
-      const response = await fetch('https://api.paystack.co/transaction/initialize', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
-          'Content-Type': 'application/json',
+      const data = await paystackRequest('POST', '/transaction/initialize', {
+        email,
+        amount: request.amount * 100,
+        currency: 'KES',
+        channels: ['mobile_money'],
+        callback_url: request.callback_url,
+        reference: `order_${request.order_id}_${Date.now()}`,
+        metadata: {
+          order_id: request.order_id,
+          phone: `+${formattedPhone}`,
+          custom_fields: [
+            {
+              display_name: 'Order ID',
+              variable_name: 'order_id',
+              value: request.order_id,
+            },
+          ],
         },
-        body: JSON.stringify({
-          email,
-          amount: request.amount * 100, // Convert to cents
-          currency: 'KES',
-          channels: ['mobile_money'],
-          callback_url: request.callback_url,
-          reference: `order_${request.order_id}_${Date.now()}`,
-          metadata: {
-            order_id: request.order_id,
-            phone: `+${formattedPhone}`,
-            custom_fields: [
-              {
-                display_name: 'Order ID',
-                variable_name: 'order_id',
-                value: request.order_id,
-              },
-            ],
-          },
-        }),
       });
 
-      const data = await response.json();
       console.log('Paystack M-Pesa response:', JSON.stringify(data));
 
       if (data.status) {
@@ -100,9 +138,10 @@ export class PaymentService {
       };
     } catch (error) {
       console.error('M-Pesa payment error:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
       return {
         success: false,
-        error: 'Failed to initiate M-Pesa payment',
+        error: `Failed to initiate M-Pesa payment: ${errorMessage}`,
       };
     }
   }
@@ -114,32 +153,23 @@ export class PaymentService {
     request: PaymentRequest
   ): Promise<PaymentResponse> {
     try {
-      const response = await fetch('https://api.paystack.co/transaction/initialize', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
-          'Content-Type': 'application/json',
+      const data = await paystackRequest('POST', '/transaction/initialize', {
+        email: request.email!,
+        amount: request.amount * 100,
+        currency: 'KES',
+        callback_url: request.callback_url,
+        reference: `order_${request.order_id}_${Date.now()}`,
+        metadata: {
+          order_id: request.order_id,
+          custom_fields: [
+            {
+              display_name: 'Order ID',
+              variable_name: 'order_id',
+              value: request.order_id,
+            },
+          ],
         },
-        body: JSON.stringify({
-          email: request.email!,
-          amount: request.amount * 100, // Convert to kobo/cents
-          currency: 'KES',
-          callback_url: request.callback_url,
-          reference: `order_${request.order_id}_${Date.now()}`,
-          metadata: {
-            order_id: request.order_id,
-            custom_fields: [
-              {
-                display_name: 'Order ID',
-                variable_name: 'order_id',
-                value: request.order_id,
-              },
-            ],
-          },
-        }),
       });
-
-      const data = await response.json();
 
       if (data.status) {
         return {
@@ -156,9 +186,10 @@ export class PaymentService {
       };
     } catch (error) {
       console.error('Card payment error:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
       return {
         success: false,
-        error: 'Failed to initialize payment',
+        error: `Failed to initialize payment: ${errorMessage}`,
       };
     }
   }
@@ -172,36 +203,16 @@ export class PaymentService {
     data?: any;
   }> {
     try {
-      const response = await fetch(
-        `https://api.paystack.co/transaction/verify/${reference}`,
-        {
-          headers: {
-            Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
-          },
-        }
-      );
-
-      const data = await response.json();
+      const data = await paystackRequest('GET', `/transaction/verify/${reference}`);
 
       if (data.status && data.data.status === 'success') {
-        return {
-          success: true,
-          status: 'success',
-          data: data.data,
-        };
+        return { success: true, status: 'success', data: data.data };
       }
 
-      return {
-        success: false,
-        status: data.data?.status || 'failed',
-      };
+      return { success: false, status: data.data?.status ?? 'failed' };
     } catch (error) {
       console.error('Payment verification error:', error);
-      return {
-        success: false,
-        status: 'failed',
-      };
+      return { success: false, status: 'failed' };
     }
   }
 }
-

@@ -315,48 +315,7 @@ export default function Header() {
 
             {/* Auth Button (Desktop) */}
             <div className="hidden md:flex items-center relative" ref={buttonRef}>
-              {loading && user === null ? (
-                // Show Sign Up button during loading
-                <div className="relative">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      const newState = !showSignOutModal;
-                      setShowSignOutModal(newState);
-                    }}
-                    className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium text-sm flex items-center gap-2 cursor-pointer"
-                    type="button"
-                  >
-                    Sign Up
-                    <svg className={`w-4 h-4 transition-transform ${showSignOutModal ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-
-                  {showSignOutModal && (
-                    <div 
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-1 z-50"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Link
-                        href="/signin"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
-                        onClick={() => setShowSignOutModal(false)}
-                      >
-                        Sign In
-                      </Link>
-                      <Link
-                        href="/signup"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
-                        onClick={() => setShowSignOutModal(false)}
-                      >
-                        Create Account
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              ) : user ? (
+              {user ? (
                 <div className="relative">
                   <button
                     onClick={(e) => {
@@ -512,25 +471,7 @@ export default function Header() {
               ))}
               {/* Mobile Auth Links */}
               <div className="px-4 pt-2 border-t border-gray-100 flex flex-col gap-2">
-                {loading && user === null ? (
-                  // Show Sign In options during loading for mobile
-                  <div className="flex flex-col gap-2">
-                    <Link
-                      href="/signin"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg font-medium transition-colors text-center cursor-pointer"
-                    >
-                      Sign In
-                    </Link>
-                    <Link
-                      href="/signup"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="px-4 py-2 bg-primary/80 text-white rounded-lg hover:bg-primary-dark transition-colors font-medium text-center cursor-pointer"
-                    >
-                      Create Account
-                    </Link>
-                  </div>
-                ) : user ? (
+                {user ? (
                   <>
                     <Link
                       href={userRole ? (userRole === 'seller' ? "/dashboard/products" : "/dashboard") : "/profile"}

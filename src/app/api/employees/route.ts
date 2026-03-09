@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
 
     if (!targetUser) {
       return NextResponse.json(
-        { error: 'User not found with this email. The user must sign up first.' },
+        { error: 'Unable to process this request. Please verify the email and try again.' },
         { status: 404 }
       );
     }
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid request data' },
         { status: 400 }
       );
     }
@@ -116,6 +116,16 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
+
+    // Require authentication and admin/manager role
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const userRole = await getUserRole(user.id);
+    if (!userRole || (userRole !== 'admin' && userRole !== 'manager')) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
     // Create admin client for getUserById
     const supabaseAdmin = createServiceClient(
@@ -138,7 +148,7 @@ export async function GET(request: NextRequest) {
     if (employeesError) {
       console.error('Employees fetch error:', employeesError);
       return NextResponse.json(
-        { error: 'Failed to fetch employees', details: employeesError.message },
+        { error: 'Failed to fetch employees' },
         { status: 500 }
       );
     }
@@ -198,7 +208,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Employees fetch error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch employees', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Failed to fetch employees' },
       { status: 500 }
     );
   }

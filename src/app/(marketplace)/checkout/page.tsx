@@ -127,7 +127,6 @@ export default function CheckoutPage() {
         );
 
         const result = await Promise.race([getUserPromise, timeoutPromise]) as any;
-        console.log("Checkout Auth Result:", result);
 
         if (!mounted) return;
 
@@ -139,7 +138,6 @@ export default function CheckoutPage() {
           // Fallback: check session if getUser failed but might be local
           const { data: { session } } = await supabase.auth.getSession();
           if (session?.user) {
-            console.log("Fallback Session User:", session.user);
             setIsAuthenticated(true);
             fillUserInfo(session.user);
           } else {
@@ -147,12 +145,10 @@ export default function CheckoutPage() {
           }
         }
       } catch (error) {
-        console.error("Auth check error/timeout:", error);
         if (mounted) {
           // Fallback to session check on error
           try {
             const { data: { session } } = await supabase.auth.getSession();
-            console.log("Checkout Auth Fallback:", session?.user?.id);
             if (session?.user) {
               setIsAuthenticated(true);
               fillUserInfo(session.user);
@@ -160,7 +156,6 @@ export default function CheckoutPage() {
               setIsAuthenticated(false);
             }
           } catch (innerError) {
-            console.error("Checkout session fallback failed:", innerError);
             setIsAuthenticated(false);
           }
         }
@@ -174,8 +169,6 @@ export default function CheckoutPage() {
     // Listen for auth changes (e.g. token refresh, login in another tab)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted) return;
-      console.log("Auth State Change:", event, session?.user?.id);
-
       const user = session?.user;
       if (user) {
         setIsAuthenticated(true);
@@ -305,11 +298,12 @@ export default function CheckoutPage() {
 
       const paymentData = await paymentResponse.json();
 
-      if (paymentMethod === "card" && paymentData.authorization_url) {
+      if (paymentData.authorization_url) {
         // Redirect to Paystack payment page
-        window.location.href = paymentData.authorization_url;
+        window.location.assign(paymentData.authorization_url);
+        return;
       } else {
-        // For M-Pesa, show success modal
+        // Fallback: show M-Pesa STK push modal
         setCreatedOrderId(order_id);
         setShowMpesaModal(true);
         setLoading(false);

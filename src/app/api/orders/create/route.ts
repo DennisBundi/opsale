@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getEmployee, getUserRole } from "@/lib/auth/roles";
 import { z } from "zod";
+import { rateLimit, rateLimitKey, RATE_LIMITS } from "@/lib/rateLimit";
+import { safeErrorResponse } from "@/lib/security/errorResponse";
+import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -65,14 +68,6 @@ const createOrderSchema = z
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-
-    // Log the request for debugging
-    console.log("Order creation request:", {
-      itemsCount: body.items?.length,
-      saleType: body.sale_type,
-      hasCustomerInfo: !!body.customer_info,
-    });
-
     const validated = createOrderSchema.parse(body);
 
     const supabase = await createClient();
@@ -87,6 +82,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Authentication required. Please sign in to place an order." },
         { status: 401 }
+      );
+    }
+
+    // Rate limit order creation
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    const rlKey = rateLimitKey("order", ip, user.id);
+    if (!rateLimit(rlKey, RATE_LIMITS.orderCreate.maxRequests, RATE_LIMITS.orderCreate.windowMs)) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
       );
     }
 
@@ -122,19 +127,21 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Calculate discount
+      // Calculate discount with validation
+      const itemSubtotal = validated.items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+
       if (rewardCode.discount_percent) {
-        rewardDiscount = Math.round(
-          (rewardCode.discount_percent / 100) *
-            validated.items.reduce(
-              (sum: number, item: any) =>
-                sum + item.price * item.quantity,
-              0
-            )
-        );
+        const percent = Math.min(Math.max(rewardCode.discount_percent, 0), 100);
+        rewardDiscount = Math.round((percent / 100) * itemSubtotal);
       } else if (rewardCode.discount_amount) {
-        rewardDiscount = rewardCode.discount_amount;
+        rewardDiscount = Math.max(rewardCode.discount_amount, 0);
       }
+
+      // Cap discount to subtotal so total never goes negative
+      rewardDiscount = Math.min(rewardDiscount, itemSubtotal);
 
       validatedRewardCode = rewardCode.code;
     }
@@ -212,9 +219,7 @@ export async function POST(request: NextRequest) {
             productsError.message.includes("source") ||
             productsError.message.includes("images")
           ) {
-            console.warn(
-              "⚠️ Optional columns not found on products table. Retrying without source/images."
-            );
+            logger.warn("Optional columns not found on products table. Retrying without source/images.");
             const fallbackProducts = productsToInsert.map(
               ({ source: _source, images: _images, ...rest }) => rest
             );
@@ -225,7 +230,7 @@ export async function POST(request: NextRequest) {
         }
 
         if (productsError || !createdProducts) {
-          console.error("Error creating custom products:", productsError);
+          logger.error("Error creating custom products:", productsError);
           throw new Error(
             productsError?.message || "Failed to create custom products"
           );
@@ -268,12 +273,9 @@ export async function POST(request: NextRequest) {
 
         customProductIds = createdProducts.map((p) => p.id);
       } catch (error) {
-        console.error("Error creating custom products:", error);
+        logger.error("Error creating custom products:", error);
         return NextResponse.json(
-          {
-            error: "Failed to create custom products",
-            details: error instanceof Error ? error.message : "Unknown error",
-          },
+          { error: "Failed to create custom products" },
           { status: 500 }
         );
       }
@@ -316,6 +318,39 @@ export async function POST(request: NextRequest) {
       }
     });
 
+    // Validate prices against database for existing products
+    if (existingProductItems.length > 0) {
+      const productIds = existingProductItems.map((item) => item.product_id);
+      const { data: dbProducts, error: priceError } = await supabase
+        .from("products")
+        .select("id, price")
+        .in("id", productIds);
+
+      if (priceError || !dbProducts) {
+        return NextResponse.json(
+          { error: "Failed to verify product prices" },
+          { status: 500 }
+        );
+      }
+
+      const priceMap = new Map(dbProducts.map((p) => [p.id, p.price]));
+      for (const item of existingProductItems) {
+        const dbPrice = priceMap.get(item.product_id);
+        if (dbPrice === undefined) {
+          return NextResponse.json(
+            { error: "Product not found" },
+            { status: 400 }
+          );
+        }
+        if (Math.abs(item.price - dbPrice) > 0.01) {
+          return NextResponse.json(
+            { error: "Product price mismatch. Please refresh and try again." },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
     // Calculate total (apply reward discount if validated)
     const subtotal = allOrderItems.reduce(
       (sum, item) => sum + item.price * item.quantity,
@@ -330,7 +365,7 @@ export async function POST(request: NextRequest) {
       // If seller_id is provided in the request, use it
       if (validated.seller_id) {
         sellerId = validated.seller_id;
-        console.log("Using seller_id from request:", sellerId);
+        logger.debug("Using seller_id from request:", sellerId);
         // Get the employee record to check their role
         const { data: employeeData } = await supabase
           .from("employees")
@@ -346,12 +381,9 @@ export async function POST(request: NextRequest) {
         if (employee) {
           sellerId = employee.id;
           sellerEmployee = employee;
-          console.log("Using seller_id from employee record:", sellerId);
+          logger.debug("Using seller_id from employee record:", sellerId);
         } else {
-          console.warn(
-            "POS order but no employee record found for user:",
-            user.id
-          );
+          logger.warn("POS order but no employee record found for user");
         }
       }
     }
@@ -368,22 +400,7 @@ export async function POST(request: NextRequest) {
         ? total * commissionRate
         : 0;
 
-    if (isSellerAdmin && validated.sale_type === "pos") {
-      console.log(
-        "Admin seller detected (seller_id:",
-        sellerId,
-        ") - commission will not be applied"
-      );
-    } else if (validated.sale_type === "pos" && sellerId) {
-      console.log(
-        "Non-admin seller (seller_id:",
-        sellerId,
-        ", role:",
-        sellerEmployee?.role,
-        ") - commission will be applied:",
-        commission
-      );
-    }
+    logger.debug("Commission calculation:", { isSellerAdmin, commission });
 
     // Create order with user_id and seller_id (if POS)
     // POS orders are marked as completed immediately since transactions are confirmed at physical location
@@ -405,18 +422,6 @@ export async function POST(request: NextRequest) {
     // Set seller_id for POS orders
     if (sellerId) {
       orderData.seller_id = sellerId;
-      console.log(
-        "Creating order with seller_id:",
-        sellerId,
-        "commission:",
-        commission
-      );
-    } else {
-      console.log(
-        "Creating order without seller_id (sale_type:",
-        validated.sale_type,
-        ")"
-      );
     }
 
     // Try to insert with commission first, fallback without if column doesn't exist
@@ -442,9 +447,7 @@ export async function POST(request: NextRequest) {
         (orderError.message.includes("commission") ||
           orderError.message.includes("social_platform"))
       ) {
-        console.warn(
-          "⚠️ Commission or social_platform column not found. Retrying without it. Please run migration: add_social_platform_to_orders.sql"
-        );
+        logger.warn("Commission or social_platform column not found. Retrying without it.");
         // Remove commission and social_platform for retry
         const {
           commission: _,
@@ -475,9 +478,7 @@ export async function POST(request: NextRequest) {
         orderError.message &&
         orderError.message.includes("social_platform")
       ) {
-        console.warn(
-          "⚠️ Social platform column not found. Retrying without it. Please run migration: add_social_platform_to_orders.sql"
-        );
+        logger.warn("Social platform column not found. Retrying without it.");
         const { social_platform: _, ...orderDataWithoutSocialPlatform } =
           orderData;
         const retryResult = await supabase
@@ -491,7 +492,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (orderError || !order) {
-      console.error("Order creation error:", orderError);
+      logger.error("Order creation error:", orderError);
       return NextResponse.json(
         { error: "Failed to create order" },
         { status: 500 }
@@ -535,12 +536,7 @@ export async function POST(request: NextRequest) {
       (itemsError.message.includes("color") ||
         itemsError.message.includes("Could not find the 'color' column"))
     ) {
-      console.warn(
-        "⚠️ Color column not found in order_items table. Retrying without color field."
-      );
-      console.warn(
-        "⚠️ Please run the migration: supabase/migrations/add_color_to_order_items.sql"
-      );
+      logger.warn("Color column not found in order_items table. Retrying without color field.");
 
       // Remove color from order items and retry
       const orderItemsWithoutColor = orderItems.map((item: any) => {
@@ -553,15 +549,11 @@ export async function POST(request: NextRequest) {
         .insert(orderItemsWithoutColor);
       itemsError = retryResult.error;
 
-      if (!itemsError) {
-        console.log(
-          "✅ Order items created successfully (without color field)"
-        );
-      }
+      // Retry succeeded without color field
     }
 
     if (itemsError) {
-      console.error("Order items creation error:", itemsError);
+      logger.error("Order items creation error:", itemsError);
       // Clean up order if items creation fails
       await supabase.from("orders").delete().eq("id", order.id);
       return NextResponse.json(
@@ -598,9 +590,7 @@ export async function POST(request: NextRequest) {
         .eq("order_id", order.id);
 
       if (posOrderItems) {
-        console.log(
-          `📦 Deducting inventory for POS order ${order.id} (${posOrderItems.length} items)`
-        );
+        logger.debug(`Deducting inventory for POS order ${order.id}`);
         for (const item of posOrderItems) {
           try {
             await InventoryService.deductStock(
@@ -610,14 +600,9 @@ export async function POST(request: NextRequest) {
               item.size || undefined,
               item.color || undefined
             );
-            console.log(
-              `✅ Deducted ${item.quantity} from product ${item.product_id} for POS order`
-            );
+            logger.debug(`Deducted ${item.quantity} from product ${item.product_id}`);
           } catch (error) {
-            console.error(
-              `❌ Error deducting inventory for product ${item.product_id}:`,
-              error
-            );
+            logger.error(`Error deducting inventory for product ${item.product_id}:`, error);
             // Continue with other items even if one fails
             // Don't fail the entire order creation - inventory can be adjusted manually if needed
           }
@@ -635,42 +620,25 @@ export async function POST(request: NextRequest) {
           total
         );
         if (pointsAwarded > 0) {
-          console.log(
-            `Awarded ${pointsAwarded} loyalty points for POS order ${order.id}`
-          );
+          logger.info(`Awarded ${pointsAwarded} loyalty points for POS order ${order.id}`);
         }
       } catch (loyaltyError) {
-        console.error("Error awarding loyalty points for POS order:", loyaltyError);
+        logger.error("Error awarding loyalty points for POS order:", loyaltyError);
       }
     }
 
     return NextResponse.json({ order_id: order.id });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error("Validation error:", error.errors);
-      // Format validation errors for better readability
-      const formattedErrors = error.errors.map((err) => ({
-        field: err.path.join("."),
-        message: err.message,
-        code: err.code,
-      }));
-
       return NextResponse.json(
-        {
-          error: "Invalid request data",
-          details: formattedErrors,
-          rawErrors: error.errors,
-        },
+        { error: "Invalid request data" },
         { status: 400 }
       );
     }
 
-    console.error("Order creation error:", error);
+    logger.error("Order creation error:", error);
     return NextResponse.json(
-      {
-        error: "Failed to create order",
-        details: error instanceof Error ? error.message : "Unknown error",
-      },
+      { error: "Failed to create order" },
       { status: 500 }
     );
   }

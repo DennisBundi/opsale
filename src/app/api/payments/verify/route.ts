@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 import { PaymentService } from '@/services/paymentService';
 import { InventoryService } from '@/services/inventoryService';
 import { LoyaltyService } from '@/services/loyaltyService';
@@ -7,6 +8,17 @@ import { logger } from '@/lib/logger';
 
 export async function GET(request: NextRequest) {
   try {
+    // Require authentication
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (!user || authError) {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
     const reference = request.nextUrl.searchParams.get('reference');
 
     if (!reference) {
@@ -21,7 +33,7 @@ export async function GET(request: NextRequest) {
 
     if (!verification.success || verification.status !== 'success') {
       return NextResponse.json(
-        { success: false, error: 'Payment not confirmed', status: verification.status },
+        { success: false, error: 'Payment not confirmed' },
         { status: 400 }
       );
     }
@@ -35,6 +47,14 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (orderError || !order) {
+      return NextResponse.json(
+        { success: false, error: 'Order not found for this payment' },
+        { status: 404 }
+      );
+    }
+
+    // Verify the authenticated user owns this order
+    if (order.user_id !== user.id) {
       return NextResponse.json(
         { success: false, error: 'Order not found for this payment' },
         { status: 404 }

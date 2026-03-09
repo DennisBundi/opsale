@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { InventoryService } from '@/services/inventoryService';
 import { getUserRole } from '@/lib/auth/roles';
 import { z } from 'zod';
+import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -125,22 +126,7 @@ export async function POST(request: NextRequest) {
       availableStock = await InventoryService.getStock(validated.product_id);
     }
     
-    console.log('Inventory deduction request:', {
-      product_id: validated.product_id,
-      quantity: validated.quantity,
-      size: validated.size || 'none',
-      color: validated.color || 'none',
-      available_stock: availableStock,
-      employee_id: employee?.id,
-    });
-    
     if (availableStock < validated.quantity) {
-      console.error('Insufficient stock:', {
-        available: availableStock,
-        requested: validated.quantity,
-        size: validated.size,
-        color: validated.color,
-      });
       return NextResponse.json(
         { 
           error: `Insufficient inventory. Available: ${availableStock}, Requested: ${validated.quantity}`,
@@ -209,17 +195,6 @@ export async function POST(request: NextRequest) {
         stockAfterAttempt = await InventoryService.getStock(validated.product_id);
       }
       
-      console.error('Deduction failed:', {
-        product_id: validated.product_id,
-        quantity: validated.quantity,
-        size: validated.size || 'none',
-        color: validated.color || 'none',
-        stock_before: availableStock,
-        stock_after: stockAfterAttempt,
-        success: false,
-      });
-      
-      // If deduction failed after stock check, it might be a race condition or database issue
       return NextResponse.json(
         { 
           error: 'Failed to deduct stock. This may be due to concurrent updates or database permissions. Please try again.',
@@ -274,16 +249,6 @@ export async function POST(request: NextRequest) {
       stockAfterDeduction = await InventoryService.getStock(validated.product_id);
     }
     
-    console.log('Deduction successful:', {
-      product_id: validated.product_id,
-      quantity: validated.quantity,
-      size: validated.size || 'none',
-      color: validated.color || 'none',
-      stock_before: availableStock,
-      stock_after: stockAfterDeduction,
-      deducted: availableStock - stockAfterDeduction,
-    });
-
     // If order_id is provided, update the order with seller_id
     if (validated.order_id && employee) {
       await supabase
@@ -304,7 +269,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.error('Inventory deduction error:', error);
+    logger.error('Inventory deduction error:', error);
     return NextResponse.json(
       { error: 'Failed to deduct stock' },
       { status: 500 }

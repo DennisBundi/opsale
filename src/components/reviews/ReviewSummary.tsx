@@ -23,7 +23,12 @@ export default function ReviewSummary({ productId }: ReviewSummaryProps) {
         const res = await fetch(`/api/reviews/product/${productId}/summary`);
         if (!res.ok) return;
         const json = await res.json();
-        setData(json);
+        const summary = json.data ?? json;
+        setData({
+          average_rating: summary.average_rating ?? 0,
+          total_reviews: summary.total_reviews ?? summary.total_count ?? 0,
+          breakdown: summary.breakdown ?? {},
+        });
       } catch {
         // silently fail
       } finally {
@@ -49,7 +54,7 @@ export default function ReviewSummary({ productId }: ReviewSummaryProps) {
     );
   }
 
-  if (!data || data.total_reviews === 0) {
+  if (!data || data.total_reviews === 0 || data.average_rating == null) {
     return (
       <div className="bg-white rounded-lg shadow-sm p-6 text-center">
         <p className="text-gray-500">No reviews yet. Be the first to review!</p>
@@ -65,10 +70,10 @@ export default function ReviewSummary({ productId }: ReviewSummaryProps) {
         {/* Average Rating */}
         <div className="flex flex-col items-center">
           <span className="text-4xl font-bold text-gray-900">
-            {data.average_rating.toFixed(1)}
+            {(data.average_rating ?? 0).toFixed(1)}
           </span>
           <StarRating
-            rating={Math.round(data.average_rating)}
+            rating={Math.round(data.average_rating ?? 0)}
             size="md"
             readonly
           />

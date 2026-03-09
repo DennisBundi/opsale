@@ -6,8 +6,13 @@ import CartNotification from "./CartNotification";
 import type { Product, CartItem } from "@/types";
 
 export default function CartNotificationProvider() {
-  const items = useCartStore((state) => state.items);
+  const [isMounted, setIsMounted] = useState(false);
+  const items = useCartStore((state) => isMounted ? state.items : []);
   const prevItemsRef = useRef<CartItem[]>([]);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   const [notification, setNotification] = useState<{
     product: Product | null;
     quantity: number;

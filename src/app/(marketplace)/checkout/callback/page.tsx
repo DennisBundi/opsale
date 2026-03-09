@@ -3,12 +3,15 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/cartStore';
+import { useLoyaltyStore } from '@/store/loyaltyStore';
 import Link from 'next/link';
 
 function CallbackContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const clearCart = useCartStore((state) => state.clearCart);
+  const fetchAccount = useLoyaltyStore((state) => state.fetchAccount);
+  const fetchRewardCodes = useLoyaltyStore((state) => state.fetchRewardCodes);
 
   const [status, setStatus] = useState<'verifying' | 'success' | 'failed'>('verifying');
   const [error, setError] = useState('');
@@ -30,6 +33,9 @@ function CallbackContent() {
         if (data.success && data.order_id) {
           setStatus('success');
           clearCart();
+          // Refresh loyalty data to reflect newly awarded points
+          fetchAccount();
+          fetchRewardCodes();
           router.push(`/checkout/success?order_id=${data.order_id}`);
         } else {
           setStatus('failed');

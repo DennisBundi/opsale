@@ -5,12 +5,13 @@ import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { signup } from '@/app/auth/actions';
+import { validateRedirect } from '@/lib/security/validateRedirect';
 
 import { Suspense } from 'react';
 
 function SignUpContent() {
   const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get('redirect') || '/';
+  const redirectUrl = validateRedirect(searchParams.get('redirect'), '/');
   const referralCode = searchParams.get('ref') || '';
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -18,7 +19,6 @@ function SignUpContent() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('[SignUp] Form submitted');
     setError(null);
     setSuccessMessage(null);
 
@@ -26,49 +26,33 @@ function SignUpContent() {
 
     startTransition(async () => {
       try {
-        console.log('[SignUp] Starting signup process...');
         const result = await signup(formData);
-        console.log('[SignUp] Signup result:', result);
-        
+
         if (result?.error) {
-          console.log('[SignUp] Signup error:', result.error);
           setError(result.error);
         } else if (result?.success || result?.message) {
-          console.log('[SignUp] Signup success:', result.message);
-          // Redirect after successful signup
           const redirectTo = redirectUrl || "/";
-          console.log('[SignUp] Redirecting to:', redirectTo);
-          console.log('[SignUp] Redirect URL from params:', redirectUrl);
-          
+
           // Clear caches before redirect to prevent chunk load errors
-          const clearCaches = async () => {
-            if (typeof window !== 'undefined' && 'caches' in window) {
-              try {
-                const names = await caches.keys();
-                await Promise.all(
-                  names
-                    .filter((name) => name.includes('next'))
-                    .map((name) => caches.delete(name))
-                );
-                console.log('[SignUp] Caches cleared');
-              } catch (err) {
-                console.warn('[SignUp] Failed to clear caches:', err);
-              }
+          if (typeof window !== 'undefined' && 'caches' in window) {
+            try {
+              const names = await caches.keys();
+              await Promise.all(
+                names
+                  .filter((name) => name.includes('next'))
+                  .map((name) => caches.delete(name))
+              );
+            } catch (_) {
+              // Ignore cache clear failures
             }
-          };
-          
-          // Clear caches first, then redirect with full page reload
-          clearCaches().then(() => {
-            setTimeout(() => {
-              console.log('[SignUp] Executing redirect to:', redirectTo);
-              // Use window.location.href with cache bypass to force fresh page load
-              const separator = redirectTo.includes('?') ? '&' : '?';
-              window.location.href = `${redirectTo}${separator}_t=${Date.now()}`;
-            }, 200);
-          });
+          }
+
+          setTimeout(() => {
+            const separator = redirectTo.includes('?') ? '&' : '?';
+            window.location.href = `${redirectTo}${separator}_t=${Date.now()}`;
+          }, 200);
         }
       } catch (err: any) {
-        console.error("[SignUp] Signup error:", err);
         setError(err?.message || "An error occurred during signup. Please try again.");
       }
     });
@@ -186,11 +170,13 @@ function SignUpContent() {
                   type="password"
                   autoComplete="new-password"
                   required
-                  minLength={6}
+                  minLength={8}
+                  pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}"
+                  title="At least 8 characters with uppercase, lowercase, and a number"
                   className="block w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-white/50 focus:bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-200 ease-in-out shadow-sm group-hover:shadow-md"
                   placeholder="••••••••"
                 />
-                <p className="mt-2 text-xs text-gray-500 ml-1">Must be at least 6 characters</p>
+                <p className="mt-2 text-xs text-gray-500 ml-1">At least 8 characters with uppercase, lowercase, and a number</p>
               </div>
             </div>
 
@@ -208,9 +194,6 @@ function SignUpContent() {
               <button
                 type="submit"
                 disabled={isPending}
-                onClick={(e) => {
-                  console.log('[SignUp] Button clicked, isPending:', isPending);
-                }}
                 className="w-full flex justify-center py-3.5 px-4 rounded-none text-base font-bold text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-lg shadow-primary/30 transform transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 relative z-10 pointer-events-auto"
               >
                 {isPending ? (

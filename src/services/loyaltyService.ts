@@ -1,6 +1,7 @@
 import { randomBytes } from "crypto";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logger } from "@/lib/logger";
 
 // Tier thresholds based on total_points_earned (lifetime)
 const TIER_THRESHOLDS = {
@@ -21,6 +22,7 @@ const POINTS_PER_KSH_10 = 1;
 const REFERRAL_POINTS = 200;
 const REVIEW_TEXT_POINTS = 50;
 const REVIEW_PHOTO_POINTS = 100;
+const SIGNUP_POINTS = 10;
 
 export type Tier = "bronze" | "silver" | "gold";
 export type TransactionType =
@@ -29,7 +31,8 @@ export type TransactionType =
   | "review"
   | "redemption"
   | "birthday"
-  | "adjustment";
+  | "adjustment"
+  | "signup";
 
 export interface LoyaltyAccount {
   id: string;
@@ -138,7 +141,7 @@ export class LoyaltyService {
       .single();
 
     if (error) {
-      console.error("Error creating loyalty account:", error);
+      logger.error("Error creating loyalty account:", error);
       return null;
     }
 
@@ -236,7 +239,7 @@ export class LoyaltyService {
     });
 
     if (txError) {
-      console.error("Error awarding purchase points:", txError);
+      logger.error("Error awarding purchase points:", txError);
       return 0;
     }
 
@@ -281,7 +284,7 @@ export class LoyaltyService {
     });
 
     if (txError) {
-      console.error("Error awarding referral points:", txError);
+      logger.error("Error awarding referral points:", txError);
       return 0;
     }
 
@@ -327,7 +330,7 @@ export class LoyaltyService {
     });
 
     if (txError) {
-      console.error("Error awarding review points:", txError);
+      logger.error("Error awarding review points:", txError);
       return 0;
     }
 
@@ -339,6 +342,38 @@ export class LoyaltyService {
 
     await this.addPoints(userId, points);
     return points;
+  }
+
+  /**
+   * Award signup bonus points to a new user
+   */
+  static async awardSignupPoints(userId: string): Promise<number> {
+    const admin = createAdminClient();
+
+    // Check if already awarded
+    const { data: existing } = await admin
+      .from("loyalty_transactions")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("type", "signup")
+      .maybeSingle();
+
+    if (existing) return 0;
+
+    const { error: txError } = await admin.from("loyalty_transactions").insert({
+      user_id: userId,
+      type: "signup",
+      points: SIGNUP_POINTS,
+      description: `Welcome bonus: earned ${SIGNUP_POINTS} pts for signing up`,
+    });
+
+    if (txError) {
+      logger.error("Error awarding signup points:", txError);
+      return 0;
+    }
+
+    await this.addPoints(userId, SIGNUP_POINTS);
+    return SIGNUP_POINTS;
   }
 
   /**
@@ -377,7 +412,7 @@ export class LoyaltyService {
     });
 
     if (codeError) {
-      console.error("Error creating reward code:", codeError);
+      logger.error("Error creating reward code:", codeError);
       return null;
     }
 
@@ -466,7 +501,7 @@ export class LoyaltyService {
     const { data, error, count } = await query;
 
     if (error) {
-      console.error("Error fetching transaction history:", error);
+      logger.error("Error fetching transaction history:", error);
       return { transactions: [], total: 0 };
     }
 
@@ -561,7 +596,7 @@ export class LoyaltyService {
     });
 
     if (error) {
-      console.error("Error generating birthday reward:", error);
+      logger.error("Error generating birthday reward:", error);
       return null;
     }
 
