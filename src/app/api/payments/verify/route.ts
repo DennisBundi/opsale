@@ -1,0 +1,124 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { PaymentService } from '@/services/paymentService';
+import { InventoryService } from '@/services/inventoryService';
+import { LoyaltyService } from '@/services/loyaltyService';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { logger } from '@/lib/logger';
+
+export async function GET(request: NextRequest) {
+  try {
+    const reference = request.nextUrl.searchParams.get('reference');
+
+    if (!reference) {
+      return NextResponse.json(
+        { success: false, error: 'Missing payment reference' },
+        { status: 400 }
+      );
+    }
+
+    // Verify with Paystack
+    const verification = await PaymentService.verifyPayment(reference);
+
+    if (!verification.success || verification.status !== 'success') {
+      return NextResponse.json(
+        { success: false, error: 'Payment not confirmed', status: verification.status },
+        { status: 400 }
+      );
+    }
+
+    // Find order by payment reference
+    const adminClient = createAdminClient();
+    const { data: order, error: orderError } = await adminClient
+      .from('orders')
+      .select('id, status, user_id, total_amount')
+      .eq('payment_reference', reference)
+      .single();
+
+    if (orderError || !order) {
+      return NextResponse.json(
+        { success: false, error: 'Order not found for this payment' },
+        { status: 404 }
+      );
+    }
+
+    // Idempotency: if already completed, just return success
+    if (order.status === 'completed') {
+      return NextResponse.json({ success: true, order_id: order.id });
+    }
+
+    // Update order status to completed
+    await adminClient
+      .from('orders')
+      .update({ status: 'completed' })
+      .eq('id', order.id);
+
+    // Deduct inventory
+    const { data: orderItems } = await adminClient
+      .from('order_items')
+      .select('product_id, quantity, size, color')
+      .eq('order_id', order.id);
+
+    if (orderItems) {
+      for (const item of orderItems) {
+        try {
+          await InventoryService.deductStock(
+            item.product_id,
+            item.quantity,
+            undefined,
+            item.size || undefined,
+            item.color || undefined
+          );
+        } catch (err) {
+          logger.error(`Inventory deduction error for product ${item.product_id}:`, err);
+        }
+      }
+    }
+
+    // Award loyalty points
+    try {
+      if (order.user_id) {
+        const pointsAwarded = await LoyaltyService.awardPurchasePoints(
+          order.user_id,
+          order.id,
+          order.total_amount
+        );
+        if (pointsAwarded > 0) {
+          logger.info(`Awarded ${pointsAwarded} loyalty points for order ${order.id}`);
+        }
+
+        // Check and complete any pending referral
+        const { data: pendingReferral } = await adminClient
+          .from('referrals')
+          .select('id, referrer_id')
+          .eq('referred_id', order.user_id)
+          .eq('status', 'pending')
+          .single();
+
+        if (pendingReferral) {
+          await adminClient
+            .from('referrals')
+            .update({ status: 'completed', completed_at: new Date().toISOString() })
+            .eq('id', pendingReferral.id);
+
+          const referralPoints = await LoyaltyService.awardReferralPoints(
+            pendingReferral.referrer_id,
+            pendingReferral.id
+          );
+          if (referralPoints > 0) {
+            logger.info(`Awarded ${referralPoints} referral points for order ${order.id}`);
+          }
+        }
+      }
+    } catch (loyaltyError) {
+      logger.error('Error awarding loyalty points:', loyaltyError);
+    }
+
+    return NextResponse.json({ success: true, order_id: order.id });
+  } catch (error) {
+    logger.error('Payment verification error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Verification failed' },
+      { status: 500 }
+    );
+  }
+}
