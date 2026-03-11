@@ -6,6 +6,15 @@ import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
+interface OrderApiResponse {
+  order?: AdminOrderDetail
+  error?: string
+}
+
+interface UpdateApiResponse {
+  error?: string
+}
+
 type OrderStatus = 'pending' | 'processing' | 'completed' | 'cancelled' | 'refunded'
 
 interface AdminOrderDetail {
@@ -48,12 +57,12 @@ export default function AdminOrderDetailPage() {
   const [order, setOrder] = useState<AdminOrderDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [statusFeedback, setStatusFeedback] = useState<string | null>(null)
+  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
   const [feedbackType, setFeedbackType] = useState<'success' | 'error' | null>(null)
   const [updatingStatus, setUpdatingStatus] = useState(false)
 
   useEffect(() => {
-    setStatusFeedback(null)
+    setFeedbackMessage(null)
     const supabase = createClient()
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) {
@@ -62,8 +71,11 @@ export default function AdminOrderDetailPage() {
         return
       }
       fetch(`/api/orders/${orderId}`)
-        .then((r) => r.json())
-        .then((data) => {
+        .then((r) => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}`)
+          return r.json()
+        })
+        .then((data: OrderApiResponse) => {
           if (data.error === 'Forbidden' || data.error === 'Unauthorized') {
             router.push('/')
             return
@@ -76,27 +88,30 @@ export default function AdminOrderDetailPage() {
           setError(message)
         })
         .finally(() => setLoading(false))
+    }).catch(() => {
+      setError('Failed to verify authentication.')
+      setLoading(false)
     })
   }, [router, orderId])
 
   async function handleStatusUpdate(newStatus: OrderStatus) {
     if (!order || newStatus === order.status || updatingStatus) return
     setUpdatingStatus(true)
-    setStatusFeedback(null)
+    setFeedbackMessage(null)
     try {
       const res = await fetch('/api/orders/update', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order_id: order.id, status: newStatus }),
       })
-      const data = await res.json()
+      const data: UpdateApiResponse = await res.json()
       if (!res.ok || data.error) throw new Error(data.error ?? 'Update failed')
       setOrder((prev) => (prev ? { ...prev, status: newStatus } : prev))
-      setStatusFeedback(`Status updated to "${newStatus}".`)
+      setFeedbackMessage(`Status updated to "${newStatus}".`)
       setFeedbackType('success')
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to update status.'
-      setStatusFeedback(message)
+      setFeedbackMessage(message)
       setFeedbackType('error')
     } finally {
       setUpdatingStatus(false)
@@ -207,8 +222,8 @@ export default function AdminOrderDetailPage() {
               </button>
             ))}
           </div>
-          {statusFeedback && (
-            <p className={`mt-2 text-xs ${feedbackType === 'success' ? 'text-green-600' : 'text-red-600'}`}>{statusFeedback}</p>
+          {feedbackMessage && (
+            <p className={`mt-2 text-xs ${feedbackType === 'success' ? 'text-green-600' : 'text-red-600'}`}>{feedbackMessage}</p>
           )}
         </div>
 

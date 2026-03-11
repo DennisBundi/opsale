@@ -65,10 +65,7 @@ export async function GET(
         return NextResponse.json({ error: 'Order not found' }, { status: 404 });
       }
       console.error('Order fetch error:', orderError);
-      return NextResponse.json(
-        { error: 'Failed to fetch order', details: orderError.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Failed to fetch order' }, { status: 500 });
     }
     if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
@@ -111,7 +108,7 @@ export async function GET(
     }
 
     // Format order items
-    const items = (order.order_items as any[]).map((item: any) => {
+    const items = ((order.order_items ?? []) as any[]).map((item: any) => {
       const product = item.products as any;
       const images: string[] = product?.images || [];
       return {
@@ -142,12 +139,6 @@ export async function GET(
     });
   } catch (error) {
     console.error('Order detail fetch error:', error);
-    return NextResponse.json(
-      {
-        error: 'Failed to fetch order',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch order' }, { status: 500 });
   }
 }
