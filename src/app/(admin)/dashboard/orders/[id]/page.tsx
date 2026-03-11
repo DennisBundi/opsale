@@ -84,7 +84,7 @@ export default function AdminOrderDetailPage() {
             return
           }
           if (data.error) throw new Error(data.error)
-          setOrder(data.order)
+          setOrder(data.order ?? null)
         })
         .catch((err: unknown) => {
           const message = err instanceof Error ? err.message : 'Failed to load order.'
