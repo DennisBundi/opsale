@@ -57,7 +57,7 @@ export default function PriceFilter() {
               handleApply();
             }
           }}
-          className="w-20 px-3 py-2 border-0 focus:outline-none focus:ring-0 text-sm"
+          className="w-20 px-3 py-2 border-0 focus:outline-none focus:ring-0 text-sm text-gray-900 placeholder:text-gray-400"
           min="0"
           step="0.01"
         />
@@ -72,7 +72,7 @@ export default function PriceFilter() {
               handleApply();
             }
           }}
-          className="w-20 px-3 py-2 border-0 focus:outline-none focus:ring-0 text-sm"
+          className="w-20 px-3 py-2 border-0 focus:outline-none focus:ring-0 text-sm text-gray-900 placeholder:text-gray-400"
           min="0"
           step="0.01"
         />

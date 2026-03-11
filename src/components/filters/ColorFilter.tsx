@@ -37,7 +37,7 @@ export default function ColorFilter({ availableColors }: ColorFilterProps) {
         <select
           value={selectedColor || ""}
           onChange={(e) => handleColorChange(e.target.value || null)}
-          className="flex-1 px-3 py-2 border-0 focus:outline-none focus:ring-0 text-sm font-medium appearance-none bg-transparent"
+          className="flex-1 px-3 py-2 border-0 focus:outline-none focus:ring-0 text-sm font-medium appearance-none bg-transparent text-gray-900"
         >
           <option value="">All Colors</option>
           {availableColors.map((color) => (
