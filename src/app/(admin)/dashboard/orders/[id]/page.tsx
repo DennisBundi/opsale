@@ -1,0 +1,284 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter, useParams } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+
+type OrderStatus = 'pending' | 'processing' | 'completed' | 'cancelled' | 'refunded'
+
+interface AdminOrderDetail {
+  id: string
+  order_number: string
+  date: string
+  status: OrderStatus
+  payment_method: string
+  sale_type: string
+  total_amount: number
+  customer: { full_name: string; email: string; phone: string | null }
+  seller: string | null
+  items: {
+    id: string
+    product_id: string
+    product_name: string
+    product_image: string | null
+    size: string | null
+    color: string | null
+    quantity: number
+    unit_price: number
+  }[]
+}
+
+const STATUS_COLORS: Record<OrderStatus, string> = {
+  pending: 'bg-yellow-100 text-yellow-800',
+  processing: 'bg-blue-100 text-blue-800',
+  completed: 'bg-green-100 text-green-800',
+  cancelled: 'bg-gray-100 text-gray-600',
+  refunded: 'bg-red-100 text-red-700',
+}
+
+const ALL_STATUSES: OrderStatus[] = ['pending', 'processing', 'completed', 'cancelled', 'refunded']
+
+export default function AdminOrderDetailPage() {
+  const router = useRouter()
+  const params = useParams()
+  const orderId = Array.isArray(params.id) ? params.id[0] : (params.id ?? '')
+
+  const [order, setOrder] = useState<AdminOrderDetail | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [statusFeedback, setStatusFeedback] = useState<string | null>(null)
+  const [updatingStatus, setUpdatingStatus] = useState(false)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) {
+        router.push('/signin')
+        setLoading(false)
+        return
+      }
+      fetch(`/api/orders/${orderId}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.error) throw new Error(data.error)
+          setOrder(data.order)
+        })
+        .catch((err: unknown) => {
+          const message = err instanceof Error ? err.message : 'Failed to load order.'
+          setError(message)
+        })
+        .finally(() => setLoading(false))
+    })
+  }, [router, orderId])
+
+  async function handleStatusUpdate(newStatus: OrderStatus) {
+    if (!order || newStatus === order.status || updatingStatus) return
+    setUpdatingStatus(true)
+    setStatusFeedback(null)
+    try {
+      const res = await fetch('/api/orders/update', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: order.id, status: newStatus }),
+      })
+      const data = await res.json()
+      if (!res.ok || data.error) throw new Error(data.error ?? 'Update failed')
+      setOrder((prev) => (prev ? { ...prev, status: newStatus } : prev))
+      setStatusFeedback(`Status updated to "${newStatus}".`)
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to update status.'
+      setStatusFeedback(message)
+    } finally {
+      setUpdatingStatus(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    )
+  }
+
+  if (error || !order) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
+          <div className="mb-6">
+            <Link href="/dashboard/orders" className="text-sm text-gray-500 hover:text-gray-700">
+              ← Orders
+            </Link>
+          </div>
+          <div className="bg-red-50 text-red-700 p-4 rounded-2xl">{error ?? 'Order not found.'}</div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto p-6">
+        {/* Header */}
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard/orders" className="text-sm text-gray-500 hover:text-gray-700">
+              ← Orders
+            </Link>
+            <h1 className="text-2xl font-bold text-gray-900">{order.order_number}</h1>
+          </div>
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-semibold capitalize ${STATUS_COLORS[order.status]}`}
+          >
+            {order.status}
+          </span>
+        </div>
+
+        {/* Order Meta card */}
+        <div className="bg-white rounded-2xl shadow p-6 mb-4">
+          <h2 className="text-sm font-semibold text-gray-700 mb-3">Order Details</h2>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-gray-500">Date</p>
+              <p className="font-medium text-gray-900">
+                {new Date(order.date).toLocaleDateString('en-KE', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </p>
+            </div>
+            <div>
+              <p className="text-gray-500">Payment Method</p>
+              <p className="font-medium text-gray-900">{order.payment_method.toUpperCase()}</p>
+            </div>
+            <div>
+              <p className="text-gray-500">Type</p>
+              <p className="font-medium text-gray-900 capitalize">{order.sale_type}</p>
+            </div>
+            {order.seller && (
+              <div>
+                <p className="text-gray-500">Seller</p>
+                <p className="font-medium text-gray-900">{order.seller}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Customer card */}
+        <div className="bg-white rounded-2xl shadow p-6 mb-4">
+          <h2 className="text-sm font-semibold text-gray-700 mb-3">Customer</h2>
+          <div className="text-sm space-y-1">
+            <p className="font-medium text-gray-900">{order.customer.full_name}</p>
+            <p className="text-gray-500">{order.customer.email}</p>
+            {order.customer.phone && (
+              <p className="text-gray-500">{order.customer.phone}</p>
+            )}
+          </div>
+        </div>
+
+        {/* Status Update card */}
+        <div className="bg-white rounded-2xl shadow p-6 mb-4">
+          <h2 className="text-sm font-semibold text-gray-700 mb-3">Update Status</h2>
+          <div className="flex flex-wrap gap-2">
+            {ALL_STATUSES.map((s) => (
+              <button
+                key={s}
+                onClick={() => handleStatusUpdate(s)}
+                disabled={updatingStatus}
+                className={`px-4 py-1.5 rounded-full text-sm font-semibold capitalize transition-all border-2 ${
+                  order.status === s
+                    ? `${STATUS_COLORS[s]} border-current ring-2 ring-offset-1 ring-current`
+                    : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+          {statusFeedback && (
+            <p className="mt-3 text-sm text-gray-600">{statusFeedback}</p>
+          )}
+        </div>
+
+        {/* Items card */}
+        <div className="bg-white rounded-2xl shadow p-6 mb-4">
+          <h2 className="text-base font-semibold text-gray-900 mb-4">
+            Items ({order.items.length})
+          </h2>
+          <div className="divide-y divide-gray-100">
+            {order.items.map((item) => (
+              <div key={item.id} className="py-4 flex items-center gap-4">
+                {/* Thumbnail */}
+                <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                  {item.product_image ? (
+                    <Image
+                      src={item.product_image}
+                      alt={item.product_name}
+                      width={64}
+                      height={64}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3 20.25h18A1.5 1.5 0 0022.5 18.75V6.75A1.5 1.5 0 0021 5.25H3A1.5 1.5 0 001.5 6.75v12c0 .828.672 1.5 1.5 1.5z"
+                        />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+
+                {/* Details */}
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-gray-900 truncate">{item.product_name}</p>
+                  <div className="flex flex-wrap gap-1.5 mt-1">
+                    {item.size && (
+                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                        {item.size}
+                      </span>
+                    )}
+                    {item.color && (
+                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                        {item.color}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Qty: {item.quantity} × KSh {item.unit_price.toLocaleString('en-KE')}
+                  </p>
+                </div>
+
+                {/* Line total */}
+                <p className="font-semibold text-gray-900 flex-shrink-0">
+                  KSh {(item.quantity * item.unit_price).toLocaleString('en-KE')}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Total card */}
+        <div className="bg-white rounded-2xl shadow p-6">
+          <div className="flex items-center justify-between">
+            <span className="text-base font-semibold text-gray-900">Order Total</span>
+            <span className="text-xl font-bold text-gray-900">
+              KSh {order.total_amount.toLocaleString('en-KE')}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
