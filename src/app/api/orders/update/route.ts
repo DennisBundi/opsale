@@ -9,7 +9,7 @@ const updateOrderSchema = z.object({
   order_id: z.string().uuid(),
   seller_id: z.string().uuid().optional(),
   payment_method: z.enum(['mpesa', 'card', 'cash']).optional(),
-  status: z.enum(['pending', 'processing', 'completed', 'cancelled', 'refunded']).optional(),
+  status: z.enum(['pending', 'processing', 'completed', 'cancelled', 'refunded', 'paid', 'shipped', 'delivered']).optional(),
   social_platform: z.enum(['tiktok', 'instagram', 'whatsapp', 'walkin']).optional(),
 });
 

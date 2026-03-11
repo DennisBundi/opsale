@@ -15,7 +15,7 @@ interface UpdateApiResponse {
   error?: string
 }
 
-type OrderStatus = 'pending' | 'processing' | 'completed' | 'cancelled' | 'refunded'
+type OrderStatus = 'pending' | 'processing' | 'completed' | 'cancelled' | 'refunded' | 'paid' | 'shipped' | 'delivered'
 
 interface AdminOrderDetail {
   id: string
@@ -45,9 +45,12 @@ const STATUS_COLORS: Record<OrderStatus, string> = {
   completed: 'bg-green-100 text-green-800',
   cancelled: 'bg-gray-100 text-gray-600',
   refunded: 'bg-red-100 text-red-700',
+  paid: 'bg-emerald-100 text-emerald-800',
+  shipped: 'bg-indigo-100 text-indigo-800',
+  delivered: 'bg-green-100 text-green-800',
 }
 
-const ALL_STATUSES: OrderStatus[] = ['pending', 'processing', 'completed', 'cancelled', 'refunded']
+const ALL_STATUSES: OrderStatus[] = ['pending', 'processing', 'completed', 'cancelled', 'refunded', 'paid', 'shipped', 'delivered']
 
 export default function AdminOrderDetailPage() {
   const router = useRouter()
