@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 const GOODS_CATEGORIES = [
   "Clothing",
@@ -165,8 +165,8 @@ export default function ImportationAdmin() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {applications.map((app) => (
-                  <>
-                    <tr key={app.id} className="hover:bg-gray-50 transition-colors">
+                  <React.Fragment key={app.id}>
+                    <tr className="hover:bg-gray-50 transition-colors">
                       <td className="px-4 py-3">
                         <p className="font-semibold text-gray-900">{app.business_name}</p>
                         <p className="text-gray-500 text-xs">{app.full_name}</p>
@@ -269,7 +269,7 @@ export default function ImportationAdmin() {
                         </td>
                       </tr>
                     )}
-                  </>
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>
