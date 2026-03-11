@@ -77,7 +77,7 @@ export default function ImportationStatusPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 flex items-center justify-center px-4 py-16">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-white flex items-center justify-center px-4 py-16">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-block mb-6">
@@ -102,14 +102,14 @@ export default function ImportationStatusPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full border border-gray-300 px-4 py-3 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                 placeholder="your@email.com"
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-60"
+              className="w-full py-3 bg-secondary text-white font-semibold hover:bg-secondary-dark transition-colors disabled:opacity-60"
             >
               {loading ? "Checking…" : "Check Status"}
             </button>
@@ -163,7 +163,7 @@ export default function ImportationStatusPage() {
 
         <p className="text-center mt-6 text-sm text-gray-500">
           Haven&apos;t applied yet?{" "}
-          <Link href="/" className="text-indigo-600 underline">
+          <Link href="/" className="text-secondary underline">
             Join the waitlist on our home page
           </Link>
         </p>
