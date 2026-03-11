@@ -50,7 +50,7 @@ export async function GET(
           size,
           color,
           quantity,
-          unit_price,
+          price,
           products (
             name,
             images
@@ -119,7 +119,7 @@ export async function GET(
         size: item.size || null,
         color: item.color || null,
         quantity: item.quantity,
-        unit_price: parseFloat(item.unit_price || 0),
+        unit_price: parseFloat(item.price || 0),
       };
     });
 
