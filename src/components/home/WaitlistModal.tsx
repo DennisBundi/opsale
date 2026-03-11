@@ -79,10 +79,10 @@ export default function WaitlistModal({ onClose }: Props) {
     >
       <div className="bg-white w-full max-w-lg shadow-2xl overflow-hidden animate-slide-up">
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-900 to-slate-900 px-6 py-5 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-secondary-dark to-secondary px-6 py-5 flex items-center justify-between">
           <div>
             <h2 className="text-white font-bold text-xl">Join the Waitlist</h2>
-            <p className="text-indigo-300 text-sm mt-1">
+            <p className="text-white/75 text-sm mt-1">
               Connect your business with Chinese suppliers
             </p>
           </div>
@@ -126,14 +126,14 @@ export default function WaitlistModal({ onClose }: Props) {
             </p>
             <p className="text-gray-500 text-sm mb-6">
               You can check your application status anytime at{" "}
-              <a href="/importation/status" className="text-indigo-600 underline">
+              <a href="/importation/status" className="text-secondary underline">
                 leeztruestyles.com/importation/status
               </a>{" "}
               using <strong>{form.email}</strong>.
             </p>
             <button
               onClick={onClose}
-              className="px-6 py-3 bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors"
+              className="px-6 py-3 bg-secondary text-white font-semibold hover:bg-secondary-dark transition-colors"
             >
               Done
             </button>
@@ -157,7 +157,7 @@ export default function WaitlistModal({ onClose }: Props) {
                   required
                   value={form.full_name}
                   onChange={(e) => update("full_name", e.target.value)}
-                  className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                   placeholder="Jane Wanjiku"
                 />
               </div>
@@ -170,7 +170,7 @@ export default function WaitlistModal({ onClose }: Props) {
                   required
                   value={form.business_name}
                   onChange={(e) => update("business_name", e.target.value)}
-                  className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                   placeholder="Wanjiku Styles"
                 />
               </div>
@@ -186,7 +186,7 @@ export default function WaitlistModal({ onClose }: Props) {
                   required
                   value={form.email}
                   onChange={(e) => update("email", e.target.value)}
-                  className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                   placeholder="jane@business.co.ke"
                 />
               </div>
@@ -199,7 +199,7 @@ export default function WaitlistModal({ onClose }: Props) {
                   required
                   value={form.phone}
                   onChange={(e) => update("phone", e.target.value)}
-                  className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                   placeholder="0712 345 678"
                 />
               </div>
@@ -213,7 +213,7 @@ export default function WaitlistModal({ onClose }: Props) {
                 required
                 value={form.goods_category}
                 onChange={(e) => update("goods_category", e.target.value)}
-                className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                className="w-full border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
               >
                 <option value="">Select a category</option>
                 {GOODS_CATEGORIES.map((cat) => (
@@ -232,7 +232,7 @@ export default function WaitlistModal({ onClose }: Props) {
                 required
                 value={form.monthly_order_value}
                 onChange={(e) => update("monthly_order_value", e.target.value)}
-                className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                className="w-full border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
               >
                 <option value="">Select a range</option>
                 {ORDER_VALUE_RANGES.map((range) => (
@@ -246,7 +246,7 @@ export default function WaitlistModal({ onClose }: Props) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-secondary text-white font-semibold hover:bg-secondary-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? "Submitting…" : "Join Waitlist"}
             </button>
