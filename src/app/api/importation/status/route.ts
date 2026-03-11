@@ -21,8 +21,11 @@ export async function GET(request: NextRequest) {
       .limit(1)
       .single();
 
-    if (error || !data) {
-      return NextResponse.json({ error: "No application found with this email." }, { status: 404 });
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return NextResponse.json({ error: "No application found with this email." }, { status: 404 });
+      }
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 
     return NextResponse.json({ data });
