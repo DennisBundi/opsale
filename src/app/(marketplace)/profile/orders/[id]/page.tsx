@@ -1,30 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-
-type OrderItem = {
-  id: string
-  product_id: string
-  product_name: string
-  product_image: string | null
-  size: string | null
-  color: string | null
-  quantity: number
-  unit_price: number
-}
-
-type Order = {
-  id: string
-  order_number: string
-  date: string
-  status: 'pending' | 'processing' | 'completed' | 'cancelled' | 'refunded'
-  payment_method: string
-  total_amount: number
-  items: OrderItem[]
-}
+import type { CustomerOrder } from '../types'
 
 const STATUS_STYLES: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-800',
@@ -37,9 +18,9 @@ const STATUS_STYLES: Record<string, string> = {
 export default function OrderDetailPage() {
   const router = useRouter()
   const params = useParams()
-  const orderId = params.id as string
+  const orderId = Array.isArray(params.id) ? params.id[0] : (params.id ?? '')
 
-  const [order, setOrder] = useState<Order | null>(null)
+  const [order, setOrder] = useState<CustomerOrder | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -48,13 +29,14 @@ export default function OrderDetailPage() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) {
         router.push('/signin')
+        setLoading(false)
         return
       }
       fetch('/api/orders/customer')
         .then((r) => r.json())
         .then((data) => {
           if (data.error) throw new Error(data.error)
-          const found = (data.orders as Order[]).find((o) => o.id === orderId)
+          const found = (data.orders as CustomerOrder[]).find((o) => o.id === orderId)
           if (!found) {
             setError('Order not found.')
           } else {
@@ -136,10 +118,13 @@ export default function OrderDetailPage() {
                 {/* Thumbnail */}
                 <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                   {item.product_image ? (
-                    <img
+                    <Image
                       src={item.product_image}
                       alt={item.product_name}
+                      width={64}
+                      height={64}
                       className="w-full h-full object-cover"
+                      unoptimized
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-gray-400">
