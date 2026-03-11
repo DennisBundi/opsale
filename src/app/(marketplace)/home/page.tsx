@@ -200,11 +200,23 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary via-primary-dark to-primary-light text-white py-24 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-        </div>
+      <section className="relative text-white py-24 md:py-32 overflow-hidden">
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1600&q=80')",
+          }}
+        />
+        {/* Pink brand overlay */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(219,39,119,0.75) 0%, rgba(244,114,182,0.60) 50%, rgba(219,39,119,0.75) 100%)",
+          }}
+        />
 
         <div className="container mx-auto px-4 text-center relative z-10 animate-slide-up">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
