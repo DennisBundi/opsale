@@ -49,9 +49,11 @@ export default function AdminOrderDetailPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [statusFeedback, setStatusFeedback] = useState<string | null>(null)
+  const [feedbackType, setFeedbackType] = useState<'success' | 'error' | null>(null)
   const [updatingStatus, setUpdatingStatus] = useState(false)
 
   useEffect(() => {
+    setStatusFeedback(null)
     const supabase = createClient()
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) {
@@ -62,6 +64,10 @@ export default function AdminOrderDetailPage() {
       fetch(`/api/orders/${orderId}`)
         .then((r) => r.json())
         .then((data) => {
+          if (data.error === 'Forbidden' || data.error === 'Unauthorized') {
+            router.push('/')
+            return
+          }
           if (data.error) throw new Error(data.error)
           setOrder(data.order)
         })
@@ -87,9 +93,11 @@ export default function AdminOrderDetailPage() {
       if (!res.ok || data.error) throw new Error(data.error ?? 'Update failed')
       setOrder((prev) => (prev ? { ...prev, status: newStatus } : prev))
       setStatusFeedback(`Status updated to "${newStatus}".`)
+      setFeedbackType('success')
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to update status.'
       setStatusFeedback(message)
+      setFeedbackType('error')
     } finally {
       setUpdatingStatus(false)
     }
@@ -120,7 +128,7 @@ export default function AdminOrderDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto p-6">
+      <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -188,6 +196,7 @@ export default function AdminOrderDetailPage() {
                 key={s}
                 onClick={() => handleStatusUpdate(s)}
                 disabled={updatingStatus}
+                aria-pressed={order.status === s}
                 className={`px-4 py-1.5 rounded-full text-sm font-semibold capitalize transition-all border-2 ${
                   order.status === s
                     ? `${STATUS_COLORS[s]} border-current ring-2 ring-offset-1 ring-current`
@@ -199,7 +208,7 @@ export default function AdminOrderDetailPage() {
             ))}
           </div>
           {statusFeedback && (
-            <p className="mt-3 text-sm text-gray-600">{statusFeedback}</p>
+            <p className={`mt-2 text-xs ${feedbackType === 'success' ? 'text-green-600' : 'text-red-600'}`}>{statusFeedback}</p>
           )}
         </div>
 
