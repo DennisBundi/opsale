@@ -25,7 +25,7 @@ export default async function AdminLayout({
   }
   if (!hasSupabase) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
         <AdminNav />
         <div className="lg:ml-64 transition-all duration-300 min-h-[calc(100vh-4rem)]">
           <main className="px-4 sm:px-6 lg:px-8 py-8 max-w-7xl mx-auto">
@@ -134,7 +134,7 @@ export default async function AdminLayout({
   const employee = await getEmployee(user.id);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <AdminNav userRole={userRole} employee={employee} />
       <div className="ml-20 lg:ml-64 transition-all duration-300 min-h-[calc(100vh-4rem)]">
         <main className="px-4 sm:px-6 lg:px-8 py-8 max-w-7xl mx-auto">
