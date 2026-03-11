@@ -274,14 +274,16 @@ export default function Header() {
             href="/"
             className="flex items-center hover:opacity-80 transition-opacity"
           >
-            <Image
-              src="/images/leeztruelogo.jpeg"
-              alt="Leez True Styles Logo"
-              width={60}
-              height={60}
-              className="h-12 w-12 object-cover rounded-full"
-              priority
-            />
+            <div className="h-12 w-12 rounded-full overflow-hidden flex-shrink-0">
+              <Image
+                src="/images/leeztruelogo.jpeg"
+                alt="Leez True Styles Logo"
+                width={60}
+                height={60}
+                className="h-full w-full object-cover scale-[1.45]"
+                priority
+              />
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
