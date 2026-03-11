@@ -4,6 +4,9 @@ export const STATUS_STYLES: Record<string, string> = {
   completed: 'bg-green-100 text-green-800',
   cancelled: 'bg-gray-100 text-gray-600',
   refunded: 'bg-gray-100 text-gray-600',
+  paid: 'bg-emerald-100 text-emerald-800',
+  shipped: 'bg-indigo-100 text-indigo-800',
+  delivered: 'bg-green-100 text-green-800',
 }
 
 export type CustomerOrderItem = {
@@ -21,7 +24,7 @@ export type CustomerOrder = {
   id: string
   order_number: string
   date: string
-  status: 'pending' | 'processing' | 'completed' | 'cancelled' | 'refunded'
+  status: 'pending' | 'processing' | 'completed' | 'cancelled' | 'refunded' | 'paid' | 'shipped' | 'delivered'
   payment_method: string
   total_amount: number
   items: CustomerOrderItem[]
