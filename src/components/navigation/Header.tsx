@@ -10,6 +10,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 import dynamic from 'next/dynamic';
 const NavbarLoyaltyBadge = dynamic(() => import('@/components/loyalty/NavbarLoyaltyBadge'), { ssr: false });
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 export default function Header() {
   const pathname = usePathname();
@@ -266,7 +267,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100 relative" style={{ isolation: 'isolate' }}>
+    <header className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100 dark:border-gray-700 relative transition-colors duration-200" style={{ isolation: 'isolate' }}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -294,7 +295,7 @@ export default function Header() {
                 href={link.href}
                 className={`relative font-medium transition-colors ${pathname === link.href
                   ? 'text-primary'
-                  : 'text-gray-700 hover:text-primary'
+                  : 'text-gray-700 dark:text-gray-300 hover:text-primary'
                   }`}
               >
                 {link.label}
@@ -326,7 +327,7 @@ export default function Header() {
                       const newState = !showSignOutModal;
                       setShowSignOutModal(newState);
                     }}
-                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-none hover:bg-gray-200 transition-colors font-medium text-sm flex items-center gap-2 cursor-pointer"
+                    className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-none hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium text-sm flex items-center gap-2 cursor-pointer"
                     type="button"
                   >
                     {isAdmin ? "Admin" : "Account"}
@@ -337,14 +338,14 @@ export default function Header() {
 
                   {showSignOutModal && (
                     <div 
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-1 z-50"
+                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-50"
                       onClick={(e) => e.stopPropagation()}
                     >
                       {userRole ? (
                         // Admin, Manager, or Seller - show Dashboard
                         <Link
                           href={userRole === 'seller' ? "/dashboard/products" : "/dashboard"}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-primary transition-colors"
                           onClick={() => setShowSignOutModal(false)}
                         >
                           Dashboard
@@ -353,7 +354,7 @@ export default function Header() {
                         // Regular user - show Profile
                         <Link
                           href="/profile"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-primary transition-colors"
                           onClick={() => setShowSignOutModal(false)}
                         >
                           Profile
@@ -393,19 +394,19 @@ export default function Header() {
 
                   {showSignOutModal && (
                     <div 
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-1 z-50"
+                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-50"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <Link
                         href="/signin"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-primary transition-colors"
                         onClick={() => setShowSignOutModal(false)}
                       >
                         Sign In
                       </Link>
                       <Link
                         href="/signup"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-primary transition-colors"
                         onClick={() => setShowSignOutModal(false)}
                       >
                         Create Account
@@ -415,6 +416,9 @@ export default function Header() {
                 </div>
               )}
             </div>
+
+            {/* Theme Toggle */}
+            <ThemeToggle />
 
             {/* Cart Icon */}
             <Link
@@ -456,7 +460,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <nav className="md:hidden py-4 border-t border-gray-100 animate-slide-up">
+          <nav className="md:hidden py-4 border-t border-gray-100 dark:border-gray-700 animate-slide-up dark:bg-gray-800">
             <div className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <Link
@@ -465,14 +469,14 @@ export default function Header() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${pathname === link.href
                     ? 'bg-primary/10 text-primary'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                 >
                   {link.label}
                 </Link>
               ))}
               {/* Mobile Auth Links */}
-              <div className="px-4 pt-2 border-t border-gray-100 flex flex-col gap-2">
+              <div className="px-4 pt-2 border-t border-gray-100 dark:border-gray-700 flex flex-col gap-2">
                 {user ? (
                   <>
                     <Link
