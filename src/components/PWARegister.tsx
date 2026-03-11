@@ -4,45 +4,29 @@ import { useEffect } from 'react';
 
 export default function PWARegister() {
   useEffect(() => {
-    if (
-      typeof window !== 'undefined' &&
-      'serviceWorker' in navigator
-    ) {
-      // Register service worker
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((registration) => {
-          console.log('Service Worker registered:', registration.scope);
+    if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
 
-          // Check for updates
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            if (newWorker) {
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  // New service worker available, notify user
-                  console.log('New service worker available. Refresh to update.');
-                }
-              });
-            }
-          });
-        })
-        .catch((error) => {
-          console.error('Service Worker registration failed:', error);
-        });
+    // Snapshot whether there was already a controller before we register.
+    // If null → first-time install (no update toast needed).
+    // If set → existing install, any controllerchange = update.
+    const hadController = !!navigator.serviceWorker.controller;
 
-      // Handle service worker updates
-      let refreshing = false;
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!refreshing) {
-          refreshing = true;
-          // Optionally reload the page when new service worker takes control
-          // window.location.reload();
-        }
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        console.log('Service Worker registered:', registration.scope);
+      })
+      .catch((error) => {
+        console.error('Service Worker registration failed:', error);
       });
-    }
+
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (hadController) {
+        // A new SW has taken over — notify the update prompt
+        window.dispatchEvent(new CustomEvent('pwa-updated'));
+      }
+    });
   }, []);
 
-  return null; // This component doesn't render anything
+  return null;
 }
-
