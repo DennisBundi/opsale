@@ -7,6 +7,7 @@ import PWARegister from "@/components/PWARegister";
 import InstallPrompt from "@/components/InstallPrompt";
 import PWAMetaTags from "@/components/PWAMetaTags";
 import PWAUpdatePrompt from "@/components/PWAUpdatePrompt";
+import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: "Leeztruestyles - Fashion Marketplace",
@@ -46,7 +47,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="flex flex-col min-h-screen" suppressHydrationWarning>
+      <body className="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200" suppressHydrationWarning>
+        <ThemeProvider attribute="class" defaultTheme="light" storageKey="leez-theme" enableSystem={false}>
           <PWAMetaTags />
           <PWARegister />
           <Header />
@@ -55,6 +57,7 @@ export default function RootLayout({
           <CartNotificationProvider />
           <InstallPrompt />
           <PWAUpdatePrompt />
+        </ThemeProvider>
       </body>
     </html>
   );
