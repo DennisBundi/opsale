@@ -6,6 +6,7 @@ import CartNotificationProvider from "@/components/cart/CartNotificationProvider
 import PWARegister from "@/components/PWARegister";
 import InstallPrompt from "@/components/InstallPrompt";
 import PWAMetaTags from "@/components/PWAMetaTags";
+import PWAUpdatePrompt from "@/components/PWAUpdatePrompt";
 
 export const metadata: Metadata = {
   title: "Leeztruestyles - Fashion Marketplace",
@@ -53,6 +54,7 @@ export default function RootLayout({
           <Footer />
           <CartNotificationProvider />
           <InstallPrompt />
+          <PWAUpdatePrompt />
       </body>
     </html>
   );
