@@ -1,21 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-const GOODS_CATEGORIES = [
-  "Clothing",
-  "Footwear",
-  "Accessories",
-  "Home Goods",
-  "Electronics",
-  "Other",
-];
-const ORDER_VALUE_RANGES = [
-  "Under KES 50k",
-  "KES 50k–100k",
-  "KES 100k–500k",
-  "Over KES 500k",
-];
+import { GOODS_CATEGORIES, ORDER_VALUE_RANGES } from "@/lib/constants/importation";
 
 interface Props {
   onClose: () => void;
@@ -43,7 +29,7 @@ export default function WaitlistModal({ onClose }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  function update(field: keyof FormState, value: string) {
+  function updateField(field: keyof FormState, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
@@ -156,7 +142,7 @@ export default function WaitlistModal({ onClose }: Props) {
                   type="text"
                   required
                   value={form.full_name}
-                  onChange={(e) => update("full_name", e.target.value)}
+                  onChange={(e) => updateField("full_name", e.target.value)}
                   className="w-full border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                   placeholder="Jane Wanjiku"
                 />
@@ -169,7 +155,7 @@ export default function WaitlistModal({ onClose }: Props) {
                   type="text"
                   required
                   value={form.business_name}
-                  onChange={(e) => update("business_name", e.target.value)}
+                  onChange={(e) => updateField("business_name", e.target.value)}
                   className="w-full border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                   placeholder="Wanjiku Styles"
                 />
@@ -185,7 +171,7 @@ export default function WaitlistModal({ onClose }: Props) {
                   type="email"
                   required
                   value={form.email}
-                  onChange={(e) => update("email", e.target.value)}
+                  onChange={(e) => updateField("email", e.target.value)}
                   className="w-full border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                   placeholder="jane@business.co.ke"
                 />
@@ -198,7 +184,7 @@ export default function WaitlistModal({ onClose }: Props) {
                   type="tel"
                   required
                   value={form.phone}
-                  onChange={(e) => update("phone", e.target.value)}
+                  onChange={(e) => updateField("phone", e.target.value)}
                   className="w-full border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                   placeholder="0712 345 678"
                 />
@@ -212,7 +198,7 @@ export default function WaitlistModal({ onClose }: Props) {
               <select
                 required
                 value={form.goods_category}
-                onChange={(e) => update("goods_category", e.target.value)}
+                onChange={(e) => updateField("goods_category", e.target.value)}
                 className="w-full border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
               >
                 <option value="">Select a category</option>
@@ -231,7 +217,7 @@ export default function WaitlistModal({ onClose }: Props) {
               <select
                 required
                 value={form.monthly_order_value}
-                onChange={(e) => update("monthly_order_value", e.target.value)}
+                onChange={(e) => updateField("monthly_order_value", e.target.value)}
                 className="w-full border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
               >
                 <option value="">Select a range</option>

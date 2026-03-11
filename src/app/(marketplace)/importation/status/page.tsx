@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-type Status = "pending" | "approved" | "rejected";
+import type { Status } from "@/types/importation";
 
 interface ApplicationResult {
   status: Status;
@@ -45,14 +44,14 @@ export default function ImportationStatusPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ApplicationResult | null>(null);
-  const [notFound, setNotFound] = useState(false);
+  const [isNotFound, setIsNotFound] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleCheck(e: React.FormEvent) {
+  async function handleCheck(e: React.FormEvent): Promise<void> {
     e.preventDefault();
     setLoading(true);
     setResult(null);
-    setNotFound(false);
+    setIsNotFound(false);
     setError(null);
 
     try {
@@ -60,7 +59,7 @@ export default function ImportationStatusPage() {
         `/api/importation/status?email=${encodeURIComponent(email.trim())}`
       );
       if (res.status === 404) {
-        setNotFound(true);
+        setIsNotFound(true);
         return;
       }
       if (!res.ok) {
@@ -115,7 +114,7 @@ export default function ImportationStatusPage() {
             </button>
           </form>
 
-          {notFound && (
+          {isNotFound && (
             <div className="mt-6 p-4 bg-gray-50 border border-gray-200 text-center">
               <p className="text-gray-600 text-sm">
                 No application found with this email. Please check and try again.
