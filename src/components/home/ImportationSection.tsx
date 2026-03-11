@@ -16,14 +16,8 @@ export default function ImportationSection() {
             "url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1600&q=80')",
         }}
       />
-      {/* Pink brand overlay */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(219,39,119,0.82) 0%, rgba(244,114,182,0.70) 50%, rgba(219,39,119,0.82) 100%)",
-        }}
-      />
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-black/50" />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -46,7 +40,7 @@ export default function ImportationSection() {
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={() => setModalOpen(true)}
-                className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-secondary-dark font-semibold transition-all hover:scale-105 shadow-lg hover:shadow-white/30 hover:bg-primary-light"
+                className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-secondary text-white font-semibold transition-all hover:scale-105 shadow-lg hover:bg-secondary-dark"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
