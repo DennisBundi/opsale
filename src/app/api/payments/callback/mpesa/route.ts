@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     const order = orders[0];
 
     // Handle duplicate callbacks (idempotency)
-    if (order.status === 'completed' && ResultCode === 0) {
+    if (order.status === 'paid' && ResultCode === 0) {
       console.log('Order already completed, ignoring duplicate callback:', order.id);
       return NextResponse.json({ ResultCode: 0, ResultDesc: 'Already processed' });
     }
@@ -104,11 +104,11 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // Update order status to completed
+      // Update order status to paid
       const { error: updateError } = await adminClient
         .from('orders')
         .update({
-          status: 'completed',
+          status: 'paid',
           payment_reference: mpesaReceiptNumber || CheckoutRequestID, // Store M-Pesa receipt number
         })
         .eq('id', order.id);

@@ -64,14 +64,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Idempotency: if already completed, just return success
-    if (order.status === 'completed') {
+    if (order.status === 'paid') {
       return NextResponse.json({ success: true, order_id: order.id });
     }
 
-    // Update order status to completed
+    // Update order status to paid
     await adminClient
       .from('orders')
-      .update({ status: 'completed' })
+      .update({ status: 'paid' })
       .eq('id', order.id);
 
     // Deduct inventory
