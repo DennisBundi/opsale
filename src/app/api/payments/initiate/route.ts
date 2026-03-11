@@ -112,9 +112,12 @@ export async function POST(request: NextRequest) {
       .eq('order_id', validated.order_id);
 
     if (orderItems) {
-      for (const item of orderItems) {
-        const available = await InventoryService.getStock(item.product_id);
-        if (available < item.quantity) {
+      // Check all items in parallel instead of sequentially
+      const stockChecks = await Promise.all(
+        orderItems.map((item) => InventoryService.getStock(item.product_id))
+      );
+      for (let i = 0; i < orderItems.length; i++) {
+        if (stockChecks[i] < orderItems[i].quantity) {
           return NextResponse.json(
             { error: `Insufficient stock for one of your items. Please refresh and try again.` },
             { status: 400 }

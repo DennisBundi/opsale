@@ -10,12 +10,21 @@ export class InventoryService {
   static async getStock(productId: string): Promise<number> {
     const adminClient = createAdminClient();
 
-    // Get general inventory stock
-    const { data: inventoryData, error: inventoryError } = await adminClient
-      .from('inventory')
-      .select('stock_quantity, reserved_quantity')
-      .eq('product_id', productId)
-      .single();
+    // Fetch general inventory and size-based inventory in parallel
+    const [inventoryResult, sizeResult] = await Promise.all([
+      adminClient
+        .from('inventory')
+        .select('stock_quantity, reserved_quantity')
+        .eq('product_id', productId)
+        .single(),
+      adminClient
+        .from('product_sizes')
+        .select('stock_quantity, reserved_quantity')
+        .eq('product_id', productId),
+    ]);
+
+    const { data: inventoryData, error: inventoryError } = inventoryResult;
+    const { data: sizeData, error: sizeError } = sizeResult;
 
     let generalStock = 0;
     let generalReserved = 0;
@@ -23,12 +32,6 @@ export class InventoryService {
       generalStock = inventoryData.stock_quantity || 0;
       generalReserved = inventoryData.reserved_quantity || 0;
     }
-
-    // Get size-based inventory stock
-    const { data: sizeData, error: sizeError } = await adminClient
-      .from('product_sizes')
-      .select('stock_quantity, reserved_quantity')
-      .eq('product_id', productId);
 
     let sizeStock = 0;
     let sizeReserved = 0;
@@ -40,7 +43,7 @@ export class InventoryService {
     // Total available stock = (general stock + size stock) - (general reserved + size reserved)
     const totalStock = generalStock + sizeStock;
     const totalReserved = generalReserved + sizeReserved;
-    
+
     return Math.max(0, totalStock - totalReserved);
   }
 
@@ -196,6 +199,23 @@ export class InventoryService {
 
           if (!updateError) {
             logger.info(`Successfully deducted ${quantity} from size+color inventory (${size}, ${color})`);
+            // Keep product_sizes in sync (frontend reads this for "M (5 available)" display)
+            const { data: sizeRow } = await adminClient
+              .from('product_sizes')
+              .select('id, stock_quantity, reserved_quantity')
+              .eq('product_id', productId)
+              .eq('size', size)
+              .single();
+            if (sizeRow) {
+              await adminClient
+                .from('product_sizes')
+                .update({
+                  stock_quantity: Math.max(0, (sizeRow.stock_quantity || 0) - quantity),
+                  reserved_quantity: Math.max(0, (sizeRow.reserved_quantity || 0) - quantity),
+                  last_updated: new Date().toISOString(),
+                })
+                .eq('id', sizeRow.id);
+            }
             // Keep general inventory in sync if it exists
             await decrementGeneralInventory();
             return true;

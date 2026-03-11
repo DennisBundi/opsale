@@ -571,13 +571,13 @@ export async function POST(request: NextRequest) {
         .eq("user_id", user.id);
     }
 
-    // Create or update user record with customer info
-    await supabase.from("users").upsert({
+    // Update user record with customer info — fire and forget (non-critical path)
+    supabase.from("users").upsert({
       id: user.id,
       email: validated.customer_info.email,
       full_name: validated.customer_info.name,
       phone: validated.customer_info.phone,
-    });
+    }).then(() => {}).catch(() => {});
 
     // For POS orders, deduct inventory immediately since they're completed
     if (validated.sale_type === "pos" && order) {
