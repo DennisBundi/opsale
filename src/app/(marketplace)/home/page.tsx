@@ -200,19 +200,16 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative text-white py-24 md:py-32 overflow-hidden">
+      <section className="relative text-white min-h-[80vh] md:min-h-screen flex items-center overflow-hidden">
         {/* Background image */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1600&q=80')",
-          }}
+          className="absolute inset-0 bg-cover bg-top bg-no-repeat"
+          style={{ backgroundImage: "url('/images/hero-fashion.jpg')" }}
         />
         {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-black/50" />
 
-        <div className="container mx-auto px-4 text-center relative z-10 animate-slide-up">
+        <div className="container mx-auto px-4 text-center relative z-10 animate-slide-up w-full py-24 md:py-0">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
             Welcome to{" "}
             <span className="bg-white/20 px-4 py-2 rounded-2xl">
