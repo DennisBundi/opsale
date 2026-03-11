@@ -47,7 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200" suppressHydrationWarning>
+      <body className="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
         <ThemeProvider attribute="class" defaultTheme="light" storageKey="leez-theme" enableSystem={false}>
           <PWAMetaTags />
           <PWARegister />
