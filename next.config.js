@@ -26,14 +26,10 @@ const nextConfig = {
     // TODO: Fix pre-existing type errors across POS/product components, then re-enable
     ignoreBuildErrors: true,
   },
-  // Rewrite root to /home so visitors don't see a redirect
+  // Root now serves the OpSale landing page (src/app/page.tsx).
+  // Authenticated users are redirected to /home from the landing page or middleware.
   async rewrites() {
-    return [
-      {
-        source: '/',
-        destination: '/home',
-      },
-    ];
+    return [];
   },
   async headers() {
     return [
