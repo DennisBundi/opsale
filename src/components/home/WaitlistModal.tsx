@@ -113,7 +113,7 @@ export default function WaitlistModal({ onClose }: Props) {
             <p className="text-gray-500 text-sm mb-6">
               You can check your application status anytime at{" "}
               <a href="/importation/status" className="text-secondary underline">
-                leeztruestyles.com/importation/status
+                opsale.app/importation/status
               </a>{" "}
               using <strong>{form.email}</strong>.
             </p>

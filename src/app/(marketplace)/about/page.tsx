@@ -3,11 +3,11 @@ import Image from "next/image";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About Us - Leeztruestyles',
-  description: 'Learn about Leeztruestyles, your trusted fashion destination in Kenya. Quality fashion, fast delivery, and excellent customer service.',
+  title: 'About Us - OpSale',
+  description: 'Learn about OpSale, your trusted fashion destination in Kenya. Quality fashion, fast delivery, and excellent customer service.',
   openGraph: {
-    title: 'About Us - Leeztruestyles',
-    description: 'Learn about Leeztruestyles, your trusted fashion destination in Kenya.',
+    title: 'About Us - OpSale',
+    description: 'Learn about OpSale, your trusted fashion destination in Kenya.',
     type: 'website',
   },
 };
@@ -39,7 +39,7 @@ export default async function AboutPage() {
           {/* Header Section with Visual */}
           <div className="text-center mb-16">
             <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">
-              About Leeztruestyles
+              About OpSale
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Your trusted fashion destination in Kenya
@@ -60,7 +60,7 @@ export default async function AboutPage() {
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div className="space-y-4">
                   <p className="text-gray-700 text-lg leading-relaxed">
-                    Leeztruestyles was founded with a passion for bringing the latest fashion trends
+                    OpSale was founded with a passion for bringing the latest fashion trends
                     to Kenya. We believe that everyone deserves access to quality, stylish clothing
                     that makes them feel confident and beautiful.
                   </p>

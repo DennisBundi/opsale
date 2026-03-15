@@ -5,7 +5,7 @@ const DARAJA_CONSUMER_SECRET = process.env.DARAJA_CONSUMER_SECRET!;
 const DARAJA_PASSKEY = process.env.DARAJA_PASSKEY!;
 const DARAJA_BUSINESS_SHORTCODE = process.env.DARAJA_BUSINESS_SHORTCODE!;
 // Default callback URL if not provided (should be ngrok for local dev)
-const DARAJA_CALLBACK_URL = process.env.DARAJA_CALLBACK_URL || 'https://leeztruestyles.com/api/payments/callback/mpesa';
+const DARAJA_CALLBACK_URL = process.env.DARAJA_CALLBACK_URL || 'https://opsale.app/api/payments/callback/mpesa';
 
 // Daraja API URLs
 const DARAJA_AUTH_URL = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';

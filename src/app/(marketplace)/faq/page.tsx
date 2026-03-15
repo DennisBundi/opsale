@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'FAQ - Leeztruestyles',
-  description: 'Frequently asked questions about ordering, payments, shipping, and returns at Leeztruestyles.',
+  title: 'FAQ - OpSale',
+  description: 'Frequently asked questions about ordering, payments, shipping, and returns at OpSale.',
   openGraph: {
-    title: 'FAQ - Leeztruestyles',
-    description: 'Find answers to common questions about shopping at Leeztruestyles.',
+    title: 'FAQ - OpSale',
+    description: 'Find answers to common questions about shopping at OpSale.',
     type: 'website',
   },
 };

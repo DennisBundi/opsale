@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service - Leeztruestyles',
-  description: 'Terms and conditions for using Leeztruestyles marketplace',
+  title: 'Terms of Service - OpSale',
+  description: 'Terms and conditions for using OpSale marketplace',
 };
 
 export default function TermsOfServicePage() {
@@ -17,14 +17,14 @@ export default function TermsOfServicePage() {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">1. Acceptance of Terms</h2>
               <p className="text-gray-700 leading-relaxed">
-                By accessing and using the Leeztruestyles website and services, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
+                By accessing and using the OpSale website and services, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">2. Use License</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                Permission is granted to temporarily access the materials on Leeztruestyles website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
+                Permission is granted to temporarily access the materials on OpSale website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-gray-700">
                 <li>Modify or copy the materials</li>
@@ -90,7 +90,7 @@ export default function TermsOfServicePage() {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">8. Intellectual Property</h2>
               <p className="text-gray-700 leading-relaxed">
-                All content on this website, including but not limited to text, graphics, logos, images, and software, is the property of Leeztruestyles or its content suppliers and is protected by Kenyan and international copyright laws. You may not reproduce, distribute, or create derivative works from any content without our express written permission.
+                All content on this website, including but not limited to text, graphics, logos, images, and software, is the property of OpSale or its content suppliers and is protected by Kenyan and international copyright laws. You may not reproduce, distribute, or create derivative works from any content without our express written permission.
               </p>
             </section>
 
@@ -110,14 +110,14 @@ export default function TermsOfServicePage() {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">10. Limitation of Liability</h2>
               <p className="text-gray-700 leading-relaxed">
-                In no event shall Leeztruestyles, its directors, employees, or agents be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your use of the website or services.
+                In no event shall OpSale, its directors, employees, or agents be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your use of the website or services.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">11. Indemnification</h2>
               <p className="text-gray-700 leading-relaxed">
-                You agree to defend, indemnify, and hold harmless Leeztruestyles and its licensee and licensors, and their employees, contractors, agents, officers and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees).
+                You agree to defend, indemnify, and hold harmless OpSale and its licensee and licensors, and their employees, contractors, agents, officers and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees).
               </p>
             </section>
 
@@ -143,8 +143,8 @@ export default function TermsOfServicePage() {
               <div className="bg-gray-50 rounded-xl p-6 mt-4">
                 <p className="text-gray-700">
                   <strong>Email:</strong>{' '}
-                  <a href="mailto:leeztruestyles44@gmail.com" className="text-primary hover:underline">
-                    leeztruestyles44@gmail.com
+                  <a href="mailto:support@opsale.app" className="text-primary hover:underline">
+                    support@opsale.app
                   </a>
                 </p>
                 <p className="text-gray-700">

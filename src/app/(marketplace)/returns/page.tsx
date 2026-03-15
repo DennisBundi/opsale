@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Returns & Exchanges - Leeztruestyles',
-  description: 'Our return and exchange policy. Learn how to return or exchange items purchased from Leeztruestyles.',
+  title: 'Returns & Exchanges - OpSale',
+  description: 'Our return and exchange policy. Learn how to return or exchange items purchased from OpSale.',
   openGraph: {
-    title: 'Returns & Exchanges - Leeztruestyles',
-    description: 'Return and exchange policy for Leeztruestyles purchases.',
+    title: 'Returns & Exchanges - OpSale',
+    description: 'Return and exchange policy for OpSale purchases.',
     type: 'website',
   },
 };
@@ -57,7 +57,7 @@ export default function ReturnsPage() {
               <div className="bg-gray-50 p-6 rounded-lg">
                 <h3 className="font-semibold mb-2">Step 1: Contact Us</h3>
                 <p className="text-gray-700">
-                  Email us at returns@leeztruestyles.com or call +254 700 000 000 to initiate
+                  Email us at returns@opsale.app or call +254 700 000 000 to initiate
                   your return. Please provide your order number.
                 </p>
               </div>

@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Contact Us - Leeztruestyles',
-  description: 'Get in touch with Leeztruestyles. Email, phone, or visit us at Westlands Shopping Centre, Nairobi, Kenya.',
+  title: 'Contact Us - OpSale',
+  description: 'Get in touch with OpSale. Email, phone, or visit us at Westlands Shopping Centre, Nairobi, Kenya.',
   openGraph: {
-    title: 'Contact Us - Leeztruestyles',
-    description: 'Get in touch with Leeztruestyles for any inquiries or support.',
+    title: 'Contact Us - OpSale',
+    description: 'Get in touch with OpSale for any inquiries or support.',
     type: 'website',
   },
 };
@@ -38,8 +38,8 @@ export default function ContactPage() {
                   </svg>
                   Email
                 </h3>
-                <p className="text-gray-700">info@leeztruestyles.com</p>
-                <p className="text-gray-700">support@leeztruestyles.com</p>
+                <p className="text-gray-700">info@opsale.app</p>
+                <p className="text-gray-700">support@opsale.app</p>
               </div>
 
               <div>

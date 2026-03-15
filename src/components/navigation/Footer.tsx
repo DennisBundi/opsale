@@ -98,10 +98,10 @@ export default function Footer() {
               <li>
                 Email:{' '}
                 <a
-                  href="mailto:leeztruestyles44@gmail.com"
+                  href="mailto:support@opsale.app"
                   className="hover:text-primary transition-colors"
                 >
-                  leeztruestyles44@gmail.com
+                  support@opsale.app
                 </a>
               </li>
               <li>

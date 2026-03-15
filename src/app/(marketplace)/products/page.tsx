@@ -8,10 +8,10 @@ import { createClient } from "@/lib/supabase/server";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Products - Leeztruestyles',
+  title: 'Products - OpSale',
   description: 'Browse our curated collection of fashion-forward clothing and accessories. Filter by category, price, and color.',
   openGraph: {
-    title: 'Products - Leeztruestyles',
+    title: 'Products - OpSale',
     description: 'Browse our curated collection of fashion-forward clothing and accessories.',
     type: 'website',
   },

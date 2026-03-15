@@ -56,7 +56,7 @@ export default function WarpShaderHero() {
           <h1 className="text-white text-5xl md:text-7xl font-bold text-balance tracking-tight">
             Welcome to{" "}
             <span className="bg-white/20 px-4 py-2 rounded-2xl">
-              Leeztruestyles
+              OpSale
             </span>
           </h1>
 

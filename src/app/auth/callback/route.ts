@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       
       if (user) {
         // Check if this email should get admin role
-        const adminEmails = ['leeztruestyles44@gmail.com'];
+        const adminEmails = [process.env.ADMIN_EMAIL || 'admin@opsale.app'];
         const isAdmin = adminEmails.includes(user.email?.toLowerCase() || '');
         
         if (isAdmin) {

@@ -130,7 +130,7 @@ export default function InstallPrompt() {
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <h3 className="font-semibold text-gray-900 mb-1">
-              Install Leeztruestyles
+              Install OpSale
             </h3>
             <p className="text-sm text-gray-600 mb-3">
               Add to Home Screen to access quickly
@@ -162,7 +162,7 @@ export default function InstallPrompt() {
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <h3 className="font-semibold text-gray-900 mb-1">
-            Install Leeztruestyles
+            Install OpSale
           </h3>
           <p className="text-sm text-gray-600 mb-3">
             {deferredPrompt 

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy - Leeztruestyles',
-  description: 'Privacy policy for Leeztruestyles marketplace',
+  title: 'Privacy Policy - OpSale',
+  description: 'Privacy policy for OpSale marketplace',
 };
 
 export default function PrivacyPolicyPage() {
@@ -17,7 +17,7 @@ export default function PrivacyPolicyPage() {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">1. Introduction</h2>
               <p className="text-gray-700 leading-relaxed">
-                Leeztruestyles ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services. Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site.
+                OpSale ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services. Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site.
               </p>
             </section>
 
@@ -167,8 +167,8 @@ export default function PrivacyPolicyPage() {
               <div className="bg-gray-50 rounded-xl p-6 mt-4">
                 <p className="text-gray-700">
                   <strong>Email:</strong>{' '}
-                  <a href="mailto:leeztruestyles44@gmail.com" className="text-primary hover:underline">
-                    leeztruestyles44@gmail.com
+                  <a href="mailto:privacy@opsale.app" className="text-primary hover:underline">
+                    privacy@opsale.app
                   </a>
                 </p>
                 <p className="text-gray-700">
@@ -180,8 +180,8 @@ export default function PrivacyPolicyPage() {
                 <p className="text-gray-700"><strong>Address:</strong> Nairobi, Kenya</p>
                 <p className="text-gray-700 mt-4">
                   <strong>Data Protection Officer:</strong>{' '}
-                  <a href="mailto:leeztruestyles44@gmail.com" className="text-primary hover:underline">
-                    leeztruestyles44@gmail.com
+                  <a href="mailto:privacy@opsale.app" className="text-primary hover:underline">
+                    privacy@opsale.app
                   </a>
                 </p>
               </div>

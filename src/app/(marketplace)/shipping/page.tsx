@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Shipping Information - Leeztruestyles',
+  title: 'Shipping Information - OpSale',
   description: 'Learn about our shipping options, delivery times, and costs for orders across Kenya.',
   openGraph: {
-    title: 'Shipping Information - Leeztruestyles',
-    description: 'Shipping options and delivery information for Leeztruestyles orders.',
+    title: 'Shipping Information - OpSale',
+    description: 'Shipping options and delivery information for OpSale orders.',
     type: 'website',
   },
 };

@@ -6,7 +6,7 @@ import ReviewSummary from '@/components/reviews/ReviewSummary';
 import ReviewList from '@/components/reviews/ReviewList';
 import ReviewForm from '@/components/reviews/ReviewForm';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://leeztruestyles.com';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://opsale.app';
 
 export async function generateMetadata({
   params,
@@ -21,7 +21,7 @@ export async function generateMetadata({
     .single();
 
   if (!product) {
-    return { title: 'Product Not Found - Leeztruestyles' };
+    return { title: 'Product Not Found - OpSale' };
   }
 
   const price = product.sale_price || product.price;
@@ -30,15 +30,15 @@ export async function generateMetadata({
     : undefined;
 
   return {
-    title: `${product.name} - Leeztruestyles`,
+    title: `${product.name} - OpSale`,
     description: product.description
       ? product.description.slice(0, 160)
-      : `Shop ${product.name} at Leeztruestyles. KSh ${price}. Fast delivery across Kenya.`,
+      : `Shop ${product.name} at OpSale. KSh ${price}. Fast delivery across Kenya.`,
     openGraph: {
-      title: `${product.name} - Leeztruestyles`,
+      title: `${product.name} - OpSale`,
       description: product.description
         ? product.description.slice(0, 160)
-        : `Shop ${product.name} at Leeztruestyles.`,
+        : `Shop ${product.name} at OpSale.`,
       type: 'website',
       ...(imageUrl && { images: [{ url: imageUrl }] }),
     },
@@ -123,7 +123,7 @@ export default async function ProductDetailPage({
     },
     brand: {
       '@type': 'Brand',
-      name: 'Leeztruestyles',
+      name: 'OpSale',
     },
   };
 

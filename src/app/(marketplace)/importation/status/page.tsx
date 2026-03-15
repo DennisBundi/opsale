@@ -80,7 +80,7 @@ export default function ImportationStatusPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-block mb-6">
-            <span className="text-2xl font-bold text-gray-900">Leeztruestyles</span>
+            <span className="text-2xl font-bold text-gray-900">OpSale</span>
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Check Application Status

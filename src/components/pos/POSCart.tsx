@@ -222,7 +222,7 @@ export default function POSCart({
         items: orderItems,
         customer_info: {
           name: customerName || "POS Customer",
-          email: "pos@leeztruestyles.com",
+          email: "pos@opsale.app",
           phone: "0000000000",
           address: "In-store",
         },

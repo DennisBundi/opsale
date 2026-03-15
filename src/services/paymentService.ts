@@ -100,7 +100,7 @@ export class PaymentService {
     }
 
     try {
-      const email = request.email || `${formattedPhone}@customer.leeztruestyles.com`;
+      const email = request.email || `${formattedPhone}@customer.opsale.app`;
 
       const data = await paystackRequest('POST', '/transaction/initialize', {
         email,

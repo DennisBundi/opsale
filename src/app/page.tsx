@@ -108,27 +108,27 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="relative z-10 text-center px-6 pt-24 pb-20 max-w-4xl mx-auto">
-        <div className="inline-flex items-center gap-2 glass-teal px-4 py-1.5 rounded-full text-sm text-primary mb-8">
+      <section className="relative z-10 text-center px-6 pt-6 pb-16 max-w-4xl mx-auto">
+        <div className="inline-flex items-center gap-2 glass-teal px-4 py-1.5 rounded-full text-sm text-primary mb-3">
           <span>✓</span> Now accepting early businesses
         </div>
-        <h1 className="font-display font-extrabold text-5xl md:text-7xl leading-tight tracking-tight mb-6">
+        <h1 className="font-display font-extrabold text-4xl md:text-5xl leading-tight tracking-tight mb-3">
           Your store.<br />
           <span className="text-primary">Your rules.</span><br />
           One platform.
         </h1>
-        <p className="text-[#F4F8FF]/60 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+        <p className="text-[#F4F8FF]/60 text-base md:text-lg max-w-2xl mx-auto mb-5 leading-relaxed">
           OpSale is the business operating system for modern sellers. Marketplace, customer loyalty,
           automated records, and smart admin — all under one subscription.
         </p>
         <a
           href="#get-started"
-          className="inline-block bg-primary hover:bg-primary-dark text-navy font-bold px-8 py-4 rounded-2xl text-lg transition-all hover:-translate-y-0.5"
+          className="inline-block bg-primary hover:bg-primary-dark text-navy font-bold px-8 py-3 rounded-2xl text-lg transition-all hover:-translate-y-0.5"
           style={{ boxShadow: '0 0 24px rgba(0,200,150,0.35)' }}
         >
           Get Your Store →
         </a>
-        <p className="text-[#F4F8FF]/35 text-sm mt-4">We set it up with you. No tech skills needed.</p>
+        <p className="text-[#F4F8FF]/35 text-sm mt-3">We set it up with you. No tech skills needed.</p>
       </section>
 
       {/* Brand pillars */}

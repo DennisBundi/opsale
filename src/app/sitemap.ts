@@ -5,7 +5,7 @@ import { logger } from '@/lib/logger'
 export const dynamic = 'force-dynamic'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://leeztruestyles.com'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://opsale.app'
 
   const staticRoutes: MetadataRoute.Sitemap = [
     '/',

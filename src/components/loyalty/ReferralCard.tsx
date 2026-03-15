@@ -60,7 +60,7 @@ export default function ReferralCard() {
   const handleWhatsApp = () => {
     if (!data) return;
     const message = encodeURIComponent(
-      `Join OpSale and get rewarded! Use my referral code: ${data.referral_code} to earn bonus points on your first order. Shop now at leeztruestyles.com`
+      `Join OpSale and get rewarded! Use my referral code: ${data.referral_code} to earn bonus points on your first order. Shop now at opsale.app`
     );
     window.open(`https://wa.me/?text=${message}`, "_blank");
   };

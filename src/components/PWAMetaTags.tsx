@@ -26,7 +26,7 @@ export default function PWAMetaTags() {
     // Add Apple-specific meta tags
     addMetaTag('apple-mobile-web-app-capable', 'yes');
     addMetaTag('apple-mobile-web-app-status-bar-style', 'default');
-    addMetaTag('apple-mobile-web-app-title', 'Leeztruestyles');
+    addMetaTag('apple-mobile-web-app-title', 'OpSale');
     
     // Add mobile web app capability
     addMetaTag('mobile-web-app-capable', 'yes');

@@ -1,49 +1,34 @@
-# Leeztruestyles.com - Fashion Marketplace
+# OpSale — Business Operating System
 
-A high-performance, scalable e-commerce marketplace built with Next.js, Supabase, and Paystack.
+> Sell. Retain. Grow.
 
-## Technology Stack
+OpSale is a multi-tenant SaaS platform for modern sellers worldwide. Built on Next.js 14 + Supabase.
 
-- **Frontend**: Next.js 14+ (TypeScript, App Router)
-- **Styling**: Tailwind CSS
-- **State Management**: Zustand
-- **Backend/Database**: Supabase (PostgreSQL)
-- **Payments**: Paystack (M-Pesa & Card payments)
-- **Chatbot**: WhatsApp Business API
-- **Hosting**: Vercel (Frontend) & Supabase (Database)
+## Features
 
-## Getting Started
+- **Marketplace** — Product listings, cart, checkout, order management
+- **Loyalty & Rewards** — Points system, tiers (Standard/Silver/Gold/Platinum), referrals
+- **Record Keeping** — Automated transaction logs, order history, customer profiles
+- **Admin Dashboard** — Real-time analytics, inventory, staff management, POS
 
-1. Install dependencies:
+## Tech Stack
+
+- **Frontend:** Next.js 14 (App Router, TypeScript)
+- **Styling:** Tailwind CSS + glassmorphism design system
+- **Database:** Supabase (PostgreSQL + Auth + RLS)
+- **Payments:** Paystack
+- **Hosting:** Vercel
+
+## Run locally
+
 ```bash
 npm install
-```
-
-2. Set up environment variables (see `.env.local.example`)
-
-3. Run the development server:
-```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser.
+Copy `.env.example` to `.env.local` and fill in your Supabase + Paystack credentials.
 
-## Project Structure
+## Architecture
 
-```
-src/
-├── app/                    # Next.js App Router
-│   ├── (marketplace)/     # Public routes
-│   ├── (admin)/           # Admin routes
-│   └── api/               # API routes
-├── components/            # Reusable components
-├── store/                 # Zustand stores
-├── services/              # Business logic
-├── types/                 # TypeScript types
-└── lib/                   # Utilities
-```
-
-## Environment Variables
-
-See `.env.local.example` for all required environment variables.
-
+Multi-tenant: every table scoped by `tenant_id`. Row Level Security enforces isolation.
+Subdomain routing: `[slug].opsale.app` → tenant storefront (coming soon).

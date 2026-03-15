@@ -89,7 +89,7 @@ export class LoyaltyService {
   static generateReferralCode(name: string | null, userId: string): string {
     const prefix = name
       ? name.replace(/[^a-zA-Z]/g, "").substring(0, 6).toUpperCase()
-      : "LEEZ";
+      : "OPSL";
     const suffix = userId.substring(0, 4).toUpperCase();
     const random = randomBytes(3).toString("hex").substring(0, 4).toUpperCase();
     return `${prefix}${suffix}${random}`;
@@ -398,7 +398,7 @@ export class LoyaltyService {
     if (!account || account.current_points < points) return null;
 
     // Generate unique code
-    const code = `LEEZ-${randomBytes(4).toString("hex").substring(0, 6).toUpperCase()}`;
+    const code = `OPSL-${randomBytes(4).toString("hex").substring(0, 6).toUpperCase()}`;
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 30); // 30 day expiry
 

@@ -45,7 +45,7 @@ export default function LoyaltyAnalyticsPage() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[#F4F8FF]">Leez Rewards Analytics</h1>
+        <h1 className="text-2xl font-bold text-[#F4F8FF]">OpSale Rewards Analytics</h1>
         <p className="text-[#F4F8FF]/70 mt-1">Overview of the loyalty program performance.</p>
       </div>
 
@@ -53,7 +53,7 @@ export default function LoyaltyAnalyticsPage() {
         <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-800 text-sm">
           <p className="font-semibold mb-1">Setup Required</p>
           <p>{error}</p>
-          <p className="mt-2 text-xs">Run the migration at <code className="bg-yellow-100 px-1 rounded">supabase/migrations/add_leez_rewards_tables.sql</code> in your Supabase SQL Editor.</p>
+          <p className="mt-2 text-xs">Run the migration at <code className="bg-yellow-100 px-1 rounded">supabase/migrations/add_opsale_rewards_tables.sql</code> in your Supabase SQL Editor.</p>
         </div>
       )}
 

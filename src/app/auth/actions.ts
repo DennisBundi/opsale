@@ -191,7 +191,7 @@ export async function signup(formData: FormData) {
                 full_name: fullName
             })
 
-            // Create Leez Rewards loyalty account
+            // Create OpSale Rewards loyalty account
             try {
                 const { LoyaltyService } = await import('@/services/loyaltyService')
                 await LoyaltyService.createAccount(user.id, fullName)

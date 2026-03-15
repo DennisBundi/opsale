@@ -1,7 +1,7 @@
 /**
  * Generates a short, readable order number from a UUID
- * Format: LEEZT + last 6 characters of UUID (uppercase)
- * Example: LEEZT-A3B2C1
+ * Format: OPSL + last 6 characters of UUID (uppercase)
+ * Example: OPSL-A3B2C1
  */
 export function formatOrderId(orderId: string): string {
   if (!orderId) return 'N/A';
@@ -10,19 +10,19 @@ export function formatOrderId(orderId: string): string {
   const cleanId = orderId.replace(/-/g, '').toUpperCase();
   const shortId = cleanId.slice(-6);
   
-  return `LEEZT-${shortId}`;
+  return `OPSL-${shortId}`;
 }
 
 /**
  * Generates a short order number with sequential format
- * Format: LEEZT + padded number
- * Example: LEEZT-0001, LEEZT-0002
+ * Format: OPSL + padded number
+ * Example: OPSL-0001, OPSL-0002
  * 
  * Note: This requires storing order_number in database for sequential numbering
  * For now, we'll use the UUID-based format above
  */
 export function formatOrderIdSequential(orderNumber: number): string {
   if (!orderNumber) return 'N/A';
-  return `LEEZT-${String(orderNumber).padStart(4, '0')}`;
+  return `OPSL-${String(orderNumber).padStart(4, '0')}`;
 }
 

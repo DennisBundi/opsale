@@ -144,11 +144,11 @@ export default function ProfilePage() {
                     </div>
                 </div>
 
-                {/* Leez Rewards Section */}
+                {/* OpSale Rewards Section */}
                 <div className="mt-8 bg-gradient-to-r from-primary-light to-pink-50 rounded-2xl p-6 border border-primary/20">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h2 className="text-lg font-bold text-gray-900">Leez Rewards</h2>
+                            <h2 className="text-lg font-bold text-gray-900">OpSale Rewards</h2>
                             <p className="text-gray-600 text-sm mt-1">
                                 Earn points, unlock tiers, and get exclusive perks
                             </p>
