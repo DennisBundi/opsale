@@ -91,7 +91,7 @@ export async function updateSession(request: NextRequest) {
       request.nextUrl.pathname.startsWith('/signup'))
   ) {
     const url = request.nextUrl.clone()
-    url.pathname = '/'
+    url.pathname = '/home'
     url.search = ''
     return NextResponse.redirect(url)
   }
