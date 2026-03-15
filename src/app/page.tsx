@@ -11,15 +11,15 @@ const PRICING = [
     name: 'Starter',
     price: '$19',
     period: '/mo',
-    target: 'Solo sellers & early-stage businesses',
-    features: ['Up to 50 products', '200 orders/mo', 'Basic records', 'Standard loyalty'],
+    target: 'Get your first store off the ground',
+    features: ['Up to 50 products', '200 orders/mo', 'Transaction history', 'Customer loyalty rewards'],
     highlight: false,
   },
   {
     name: 'Growth',
     price: '$49',
     period: '/mo',
-    target: 'Growing SMEs with teams',
+    target: 'Scale with your team and keep customers coming back',
     features: ['Unlimited products', '2,000 orders/mo', 'Full records', 'Advanced loyalty tiers', 'Staff accounts'],
     highlight: true,
   },
@@ -27,23 +27,23 @@ const PRICING = [
     name: 'Pro',
     price: '$99',
     period: '/mo',
-    target: 'Established retailers',
+    target: 'Full control for serious retailers',
     features: ['Everything in Growth', 'Custom domain', 'Priority support', 'API access', 'White-glove onboarding'],
     highlight: false,
   },
 ];
 
 const PILLARS = [
-  { icon: '📦', title: 'Record-first', desc: 'Every transaction tracked and searchable' },
-  { icon: '⭐', title: 'Loyalty built-in', desc: 'Rewards that bring customers back' },
-  { icon: '📊', title: 'Smart admin', desc: 'One dashboard, full visibility' },
-  { icon: '🌍', title: 'Global-ready', desc: 'Built for sellers worldwide' },
+  { icon: '📦', title: 'Record-first', desc: 'Know exactly what sold, when, and to who — no spreadsheets' },
+  { icon: '⭐', title: 'Loyalty built-in', desc: 'Turn one-time buyers into regulars on autopilot' },
+  { icon: '📊', title: 'Smart admin', desc: 'Run your whole business from one screen' },
+  { icon: '🌍', title: 'Global-ready', desc: 'Works in your currency and your market' },
 ];
 
 const PROBLEMS = [
-  { problem: 'Record chaos', solution: 'Every transaction logged automatically. Search anything instantly.' },
-  { problem: 'Zero retention', solution: 'Built-in loyalty rewards that keep customers coming back on autopilot.' },
-  { problem: 'Blind admin', solution: 'Real-time dashboard — sales, inventory, staff, and customers in one view.' },
+  { problem: '"I have no idea what sold last week"', solution: 'Every sale, product, and customer logged automatically. Find anything in seconds — no notebook required.' },
+  { problem: '"Customers buy once and never come back"', solution: 'Built-in rewards that bring customers back automatically — no extra app needed.' },
+  { problem: '"I\'m making decisions based on gut feel"', solution: 'Live dashboard showing your sales, stock, and customers — so every decision is backed by real data.' },
 ];
 
 export default function LandingPage() {
@@ -108,18 +108,17 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="relative z-10 text-center px-6 pt-6 pb-16 max-w-4xl mx-auto">
+      <section className="relative z-10 text-center px-6 pt-6 pb-28 max-w-4xl mx-auto">
         <div className="inline-flex items-center gap-2 glass-teal px-4 py-1.5 rounded-full text-sm text-primary mb-3">
-          <span>✓</span> Now accepting early businesses
+          <span>✓</span> 47 businesses already on the waitlist
         </div>
         <h1 className="font-display font-extrabold text-4xl md:text-5xl leading-tight tracking-tight mb-3">
-          Your store.<br />
-          <span className="text-primary">Your rules.</span><br />
-          One platform.
+          One tool to run your store,<br />
+          <span className="text-primary">reward your customers,</span><br />
+          and see your numbers.
         </h1>
         <p className="text-[#F4F8FF]/60 text-base md:text-lg max-w-2xl mx-auto mb-5 leading-relaxed">
-          OpSale is the business operating system for modern sellers. Marketplace, customer loyalty,
-          automated records, and smart admin — all under one subscription.
+          Built for independent retailers, boutiques, and growing businesses who are done duct-taping their operations together.
         </p>
         <a
           href="#get-started"
@@ -128,7 +127,7 @@ export default function LandingPage() {
         >
           Get Your Store →
         </a>
-        <p className="text-[#F4F8FF]/35 text-sm mt-3">We set it up with you. No tech skills needed.</p>
+        <p className="text-[#F4F8FF]/35 text-sm mt-3">We set up your store together. Usually live within 48 hours.</p>
       </section>
 
       {/* Brand pillars */}
@@ -149,7 +148,7 @@ export default function LandingPage() {
         <p className="text-[#F4F8FF]/35 uppercase tracking-[2.5px] text-xs mb-4">The Problem</p>
         <h2 className="font-display font-bold text-3xl md:text-4xl mb-10">
           Running a business shouldn&apos;t mean<br />
-          <span className="text-primary">juggling 5 different apps.</span>
+          <span className="text-primary">juggling five different apps.</span>
         </h2>
         <div className="grid md:grid-cols-3 gap-6 text-left">
           {PROBLEMS.map(item => (
@@ -165,7 +164,7 @@ export default function LandingPage() {
       <section className="relative z-10 px-6 py-20 max-w-5xl mx-auto">
         <p className="text-[#F4F8FF]/35 uppercase tracking-[2.5px] text-xs text-center mb-4">Pricing</p>
         <h2 className="font-display font-bold text-3xl md:text-4xl text-center mb-12">
-          Simple, transparent plans
+          Simple pricing. Real outcomes.
         </h2>
         <div className="grid md:grid-cols-3 gap-6">
           {PRICING.map(plan => (
@@ -207,7 +206,7 @@ export default function LandingPage() {
         <p className="text-center text-[#F4F8FF]/30 text-sm mt-6">
           Enterprise?{' '}
           <a href="#get-started" className="text-primary underline">
-            Contact us
+            Talk to us
           </a>{' '}
           for custom pricing.
         </p>
@@ -217,16 +216,18 @@ export default function LandingPage() {
       <section id="get-started" className="relative z-10 px-6 py-20 max-w-2xl mx-auto">
         <p className="text-[#F4F8FF]/35 uppercase tracking-[2.5px] text-xs text-center mb-4">Get Started</p>
         <h2 className="font-display font-bold text-3xl md:text-4xl text-center mb-4">
-          Register your business
+          Get your store set up
         </h2>
-        <p className="text-[#F4F8FF]/50 text-center mb-10">
-          Fill in the form and we&apos;ll reach out within 24 hours to set up your store together.
-        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10 text-sm text-[#F4F8FF]/60">
+          <div className="flex items-center gap-2"><span className="text-primary font-bold">1.</span> Fill in your details (2 min)</div>
+          <div className="flex items-center gap-2"><span className="text-primary font-bold">2.</span> We call to understand your business (15 min)</div>
+          <div className="flex items-center gap-2"><span className="text-primary font-bold">3.</span> Your store goes live within 48 hours</div>
+        </div>
 
         {status === 'success' ? (
           <div className="glass-teal p-8 text-center rounded-2xl">
             <div className="text-5xl mb-4">✓</div>
-            <h3 className="font-display font-bold text-xl text-primary mb-2">You&apos;re on the list!</h3>
+            <h3 className="font-display font-bold text-xl text-primary mb-2">You&apos;re in — we&apos;ll be in touch soon.</h3>
             <p className="text-[#F4F8FF]/60">
               We&apos;ll reach out to <strong className="text-[#F4F8FF]">{form.email}</strong> within 24 hours
               to get your store set up.
@@ -324,7 +325,7 @@ export default function LandingPage() {
               {status === 'loading' ? 'Registering...' : 'Register My Business →'}
             </button>
             <p className="text-center text-[#F4F8FF]/30 text-xs">
-              We&apos;ll contact you within 24 hours. No spam, ever.
+              No spam. We only reach out to set up your store.
             </p>
           </form>
         )}
