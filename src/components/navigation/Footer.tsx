@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import OpSaleLogo from '@/components/ui/OpSaleLogo';
 
 export default function Footer() {
   const pathname = usePathname();
@@ -12,47 +12,40 @@ export default function Footer() {
     return null;
   }
   return (
-    <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white mt-auto border-t border-gray-700">
+    <footer className="bg-navy border-t border-white/10 text-[#F4F8FF] mt-auto">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           {/* Brand */}
           <div>
-            <Link href="/" className="inline-block mb-4">
-              <Image
-                src="/images/leeztruelogo.jpeg"
-                alt="Leez True Styles Logo"
-                width={50}
-                height={50}
-                className="h-12 w-12 object-cover rounded-full"
-                unoptimized
-              />
-            </Link>
-            <p className="text-gray-400">
-              Your premier destination for fashion and style in Kenya.
+            <div className="mb-4">
+              <OpSaleLogo size="sm" showTagline />
+            </div>
+            <p className="text-[#F4F8FF]/50">
+              The operating system for modern sellers worldwide.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
+            <h4 className="text-[#F4F8FF] font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/" className="text-[#F4F8FF]/50 hover:text-primary transition-colors">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/products" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/products" className="text-[#F4F8FF]/50 hover:text-primary transition-colors">
                   Products
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/about" className="text-[#F4F8FF]/50 hover:text-primary transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/contact" className="text-[#F4F8FF]/50 hover:text-primary transition-colors">
                   Contact
                 </Link>
               </li>
@@ -61,20 +54,20 @@ export default function Footer() {
 
           {/* Customer Service */}
           <div>
-            <h4 className="font-semibold mb-4">Customer Service</h4>
+            <h4 className="text-[#F4F8FF] font-semibold mb-4">Customer Service</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/shipping" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/shipping" className="text-[#F4F8FF]/50 hover:text-primary transition-colors">
                   Shipping Info
                 </Link>
               </li>
               <li>
-                <Link href="/returns" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/returns" className="text-[#F4F8FF]/50 hover:text-primary transition-colors">
                   Returns
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/faq" className="text-[#F4F8FF]/50 hover:text-primary transition-colors">
                   FAQ
                 </Link>
               </li>
@@ -83,15 +76,15 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="font-semibold mb-4">Legal</h4>
+            <h4 className="text-[#F4F8FF] font-semibold mb-4">Legal</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/terms" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/terms" className="text-[#F4F8FF]/50 hover:text-primary transition-colors">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/privacy" className="text-[#F4F8FF]/50 hover:text-primary transition-colors">
                   Privacy Policy
                 </Link>
               </li>
@@ -100,8 +93,8 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h4 className="font-semibold mb-4">Contact Us</h4>
-            <ul className="space-y-2 text-gray-400">
+            <h4 className="text-[#F4F8FF] font-semibold mb-4">Contact Us</h4>
+            <ul className="space-y-2 text-[#F4F8FF]/50">
               <li>
                 Email:{' '}
                 <a
@@ -125,11 +118,10 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Leeztruestyles. All rights reserved.</p>
+        <div className="border-t border-white/10 mt-8 pt-8 text-center text-[#F4F8FF]/30">
+          <p>&copy; {new Date().getFullYear()} OpSale. All rights reserved.</p>
         </div>
       </div>
     </footer>
   );
 }
-

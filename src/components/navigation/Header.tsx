@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/cartStore';
 import { useLoyaltyStore } from '@/store/loyaltyStore';
@@ -10,7 +9,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 import dynamic from 'next/dynamic';
 const NavbarLoyaltyBadge = dynamic(() => import('@/components/loyalty/NavbarLoyaltyBadge'), { ssr: false });
-import ThemeToggle from '@/components/ui/ThemeToggle';
+import OpSaleLogo from '@/components/ui/OpSaleLogo';
 
 export default function Header() {
   const pathname = usePathname();
@@ -51,7 +50,7 @@ export default function Header() {
 
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      
+
       // Ignore clicks that happened right after opening the modal
       if (justOpenedRef.current) {
         return;
@@ -61,12 +60,12 @@ export default function Header() {
       if (buttonRef.current && buttonRef.current.contains(target)) {
         return;
       }
-      
+
       // Also check if clicking on a link inside the dropdown
       if (target.closest('.absolute.right-0.mt-2')) {
         return;
       }
-      
+
       // Close the dropdown
       setShowSignOutModal(false);
     };
@@ -267,25 +266,11 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100 dark:border-gray-700 relative transition-colors duration-200" style={{ isolation: 'isolate' }}>
+    <header className="bg-navy/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50 relative transition-colors duration-200" style={{ isolation: 'isolate' }}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link
-            href="/"
-            className="flex items-center hover:opacity-80 transition-opacity"
-          >
-            <div className="h-12 w-12 rounded-full overflow-hidden flex-shrink-0">
-              <Image
-                src="/images/leeztruelogo.jpeg"
-                alt="Leez True Styles Logo"
-                width={60}
-                height={60}
-                className="h-full w-full object-cover scale-[1.45]"
-                priority
-              />
-            </div>
-          </Link>
+          <OpSaleLogo size="sm" />
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
@@ -295,7 +280,7 @@ export default function Header() {
                 href={link.href}
                 className={`relative font-medium transition-colors ${pathname === link.href
                   ? 'text-primary'
-                  : 'text-gray-700 dark:text-gray-300 hover:text-primary'
+                  : 'text-[#F4F8FF]/70 hover:text-[#F4F8FF]'
                   }`}
               >
                 {link.label}
@@ -327,7 +312,7 @@ export default function Header() {
                       const newState = !showSignOutModal;
                       setShowSignOutModal(newState);
                     }}
-                    className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-none hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium text-sm flex items-center gap-2 cursor-pointer"
+                    className="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors font-semibold text-sm flex items-center gap-2 cursor-pointer"
                     type="button"
                   >
                     {isAdmin ? "Admin" : "Account"}
@@ -337,15 +322,15 @@ export default function Header() {
                   </button>
 
                   {showSignOutModal && (
-                    <div 
-                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-50"
+                    <div
+                      className="absolute right-0 mt-2 w-48 glass border border-white/10 rounded-lg shadow-xl py-1 z-50"
                       onClick={(e) => e.stopPropagation()}
                     >
                       {userRole ? (
                         // Admin, Manager, or Seller - show Dashboard
                         <Link
                           href={userRole === 'seller' ? "/dashboard/products" : "/dashboard"}
-                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-primary transition-colors"
+                          className="block px-4 py-2 text-sm text-[#F4F8FF]/80 hover:bg-white/5 hover:text-primary transition-colors"
                           onClick={() => setShowSignOutModal(false)}
                         >
                           Dashboard
@@ -354,7 +339,7 @@ export default function Header() {
                         // Regular user - show Profile
                         <Link
                           href="/profile"
-                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-primary transition-colors"
+                          className="block px-4 py-2 text-sm text-[#F4F8FF]/80 hover:bg-white/5 hover:text-primary transition-colors"
                           onClick={() => setShowSignOutModal(false)}
                         >
                           Profile
@@ -365,7 +350,7 @@ export default function Header() {
                           setShowSignOutModal(false);
                           handleSignOut();
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-900/20 transition-colors"
                         type="button"
                       >
                         Sign Out
@@ -383,7 +368,7 @@ export default function Header() {
                       const newState = !showSignOutModal;
                       setShowSignOutModal(newState);
                     }}
-                    className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium text-sm flex items-center gap-2 cursor-pointer"
+                    className="px-4 py-2 bg-primary hover:bg-primary-dark text-navy font-semibold rounded-lg transition-colors text-sm flex items-center gap-2 cursor-pointer"
                     type="button"
                   >
                     Sign Up
@@ -393,20 +378,20 @@ export default function Header() {
                   </button>
 
                   {showSignOutModal && (
-                    <div 
-                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-50"
+                    <div
+                      className="absolute right-0 mt-2 w-48 glass border border-white/10 rounded-lg shadow-xl py-1 z-50"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <Link
                         href="/signin"
-                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-primary transition-colors"
+                        className="block px-4 py-2 text-sm text-[#F4F8FF]/80 hover:bg-white/5 hover:text-primary transition-colors"
                         onClick={() => setShowSignOutModal(false)}
                       >
                         Sign In
                       </Link>
                       <Link
                         href="/signup"
-                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-primary transition-colors"
+                        className="block px-4 py-2 text-sm text-[#F4F8FF]/80 hover:bg-white/5 hover:text-primary transition-colors"
                         onClick={() => setShowSignOutModal(false)}
                       >
                         Create Account
@@ -417,20 +402,17 @@ export default function Header() {
               )}
             </div>
 
-            {/* Theme Toggle */}
-            <ThemeToggle />
-
             {/* Cart Icon */}
             <Link
               href="/checkout"
-              className="relative p-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors"
+              className="relative p-2 text-[#F4F8FF]/70 hover:text-[#F4F8FF] transition-colors"
               aria-label="Shopping cart"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               {isMounted && itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-scale-in">
+                <span className="absolute -top-1 -right-1 bg-primary text-navy text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-scale-in">
                   {itemCount}
                 </span>
               )}
@@ -439,7 +421,7 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors"
+              className="md:hidden p-2 text-[#F4F8FF]/70 hover:text-[#F4F8FF] transition-colors"
               aria-label="Toggle menu"
             >
               <svg
@@ -460,7 +442,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <nav className="md:hidden py-4 border-t border-gray-100 dark:border-gray-700 animate-slide-up dark:bg-gray-800">
+          <nav className="md:hidden py-4 border-t border-white/10 animate-slide-up bg-navy">
             <div className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <Link
@@ -469,20 +451,20 @@ export default function Header() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${pathname === link.href
                     ? 'bg-primary/10 text-primary'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    : 'text-[#F4F8FF]/70 hover:bg-white/5 hover:text-[#F4F8FF]'
                     }`}
                 >
                   {link.label}
                 </Link>
               ))}
               {/* Mobile Auth Links */}
-              <div className="px-4 pt-2 border-t border-gray-100 dark:border-gray-700 flex flex-col gap-2">
+              <div className="px-4 pt-2 border-t border-white/10 flex flex-col gap-2">
                 {user ? (
                   <>
                     <Link
                       href={userRole ? (userRole === 'seller' ? "/dashboard/products" : "/dashboard") : "/profile"}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors text-center cursor-pointer"
+                      className="px-4 py-2 text-[#F4F8FF]/70 hover:bg-white/5 hover:text-[#F4F8FF] rounded-lg font-medium transition-colors text-center cursor-pointer"
                     >
                       {userRole ? "Dashboard" : "Profile"}
                     </Link>
@@ -491,7 +473,7 @@ export default function Header() {
                         setMobileMenuOpen(false);
                         handleSignOut();
                       }}
-                      className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-none hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium cursor-pointer"
+                      className="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors font-semibold cursor-pointer"
                     >
                       Sign Out
                     </button>
@@ -502,14 +484,14 @@ export default function Header() {
                     <Link
                       href="/signin"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors text-center cursor-pointer"
+                      className="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors font-semibold text-center cursor-pointer"
                     >
                       Sign In
                     </Link>
                     <Link
                       href="/signup"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium text-center cursor-pointer"
+                      className="px-4 py-2 bg-primary hover:bg-primary-dark text-navy rounded-lg transition-colors font-semibold text-center cursor-pointer"
                     >
                       Create Account
                     </Link>
