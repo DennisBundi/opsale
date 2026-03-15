@@ -43,31 +43,31 @@ export default function EmployeeForm() {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h2 className="text-2xl font-bold mb-4">Add Employee</h2>
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
+          <div className="glass-strong rounded-lg p-6 max-w-md w-full mx-4">
+            <h2 className="text-2xl font-bold text-[#F4F8FF] mb-4">Add Employee</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Email *</label>
+                <label className="block text-sm font-medium text-[#F4F8FF]/70 mb-1">Email *</label>
                 <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-[#F4F8FF]/40 mt-1">
                   User must have an account with this email
                 </p>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Role *</label>
+                <label className="block text-sm font-medium text-[#F4F8FF]/70 mb-1">Role *</label>
                 <select
                   value={formData.role}
                   onChange={(e) =>
                     setFormData({ ...formData, role: e.target.value as any })
                   }
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[#F4F8FF] focus:outline-none focus:border-primary"
                 >
                   <option value="seller">Seller</option>
                   <option value="manager">Manager</option>
@@ -85,7 +85,7 @@ export default function EmployeeForm() {
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-none hover:bg-gray-300"
+                  className="flex-1 px-4 py-2 bg-white/10 text-[#F4F8FF]/70 rounded-none hover:bg-white/20"
                 >
                   Cancel
                 </button>

@@ -95,7 +95,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Redirecting to products...</p>
+          <p className="text-[#F4F8FF]/70">Redirecting to products...</p>
         </div>
       </div>
     );
@@ -258,15 +258,15 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Dashboard</h1>
-        <p className="text-sm text-gray-500">Welcome back! Here's your business overview.</p>
+        <h1 className="text-2xl font-bold text-[#F4F8FF] mb-1">Dashboard</h1>
+        <p className="text-sm text-[#F4F8FF]/50">Welcome back! Here's your business overview.</p>
       </div>
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Link href="/dashboard/orders" className="bg-gradient-to-br from-primary/10 to-primary-light/10 p-5 rounded-xl shadow-md border border-primary/20 hover:shadow-lg transition-all cursor-pointer">
+        <Link href="/dashboard/orders" className="glass p-5 rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-gray-600 text-xs font-medium uppercase tracking-wide">Total Sales</h3>
+            <h3 className="text-[#F4F8FF]/70 text-xs font-medium uppercase tracking-wide">Total Sales</h3>
             <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -274,52 +274,52 @@ export default function DashboardPage() {
           <p className="text-2xl font-bold text-primary">
             {loading ? '...' : error ? 'Error' : `KES ${(totalSales || 0).toLocaleString()}`}
           </p>
-          <p className="text-xs text-gray-500 mt-1">All time</p>
-          {error && <p className="text-xs text-red-500 mt-1 truncate" title={error}>{error}</p>}
+          <p className="text-xs text-[#F4F8FF]/50 mt-1">All time</p>
+          {error && <p className="text-xs text-red-400 mt-1 truncate" title={error}>{error}</p>}
         </Link>
-        
-        <Link href="/dashboard/orders" className="bg-gradient-to-br from-blue-50 to-blue-100 p-5 rounded-xl shadow-md border border-blue-200 hover:shadow-lg transition-all cursor-pointer">
+
+        <Link href="/dashboard/orders" className="glass p-5 rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-gray-600 text-xs font-medium uppercase tracking-wide">Total Orders</h3>
-            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <h3 className="text-[#F4F8FF]/70 text-xs font-medium uppercase tracking-wide">Total Orders</h3>
+            <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
           </div>
-          <p className="text-2xl font-bold text-blue-600">
+          <p className="text-2xl font-bold text-[#F4F8FF]">
             {loading ? '...' : error ? 'Error' : totalOrders}
           </p>
-          <p className="text-xs text-gray-500 mt-1">All time</p>
-          {error && <p className="text-xs text-red-500 mt-1 truncate" title={error}>{error}</p>}
+          <p className="text-xs text-[#F4F8FF]/50 mt-1">All time</p>
+          {error && <p className="text-xs text-red-400 mt-1 truncate" title={error}>{error}</p>}
         </Link>
-        
-        <div className="bg-gradient-to-br from-green-50 to-green-100 p-5 rounded-xl shadow-md border border-green-200 hover:shadow-lg transition-all">
+
+        <div className="glass p-5 rounded-xl shadow-md hover:shadow-lg transition-all">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-gray-600 text-xs font-medium uppercase tracking-wide">Today's Sales</h3>
-            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <h3 className="text-[#F4F8FF]/70 text-xs font-medium uppercase tracking-wide">Today's Sales</h3>
+            <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
           </div>
-          <p className="text-2xl font-bold text-green-600">
+          <p className="text-2xl font-bold text-green-400">
             {loading ? '...' : error ? 'Error' : `KES ${(todaySales || 0).toLocaleString()}`}
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-[#F4F8FF]/50 mt-1">
             {loading ? 'Loading...' : error ? 'Failed to load' : `${todayOrders} orders today`}
           </p>
-          {error && <p className="text-xs text-red-500 mt-1 truncate" title={error}>{error}</p>}
+          {error && <p className="text-xs text-red-400 mt-1 truncate" title={error}>{error}</p>}
         </div>
-        
-        <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-5 rounded-xl shadow-md border border-purple-200 hover:shadow-lg transition-all">
+
+        <div className="glass p-5 rounded-xl shadow-md hover:shadow-lg transition-all">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-gray-600 text-xs font-medium uppercase tracking-wide">Today's Profits</h3>
-            <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <h3 className="text-[#F4F8FF]/70 text-xs font-medium uppercase tracking-wide">Today's Profits</h3>
+            <svg className="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
           </div>
-          <p className="text-2xl font-bold text-purple-600">
+          <p className="text-2xl font-bold text-secondary">
             {loading ? '...' : error ? 'Error' : `KES ${(todayProfits || 0).toLocaleString()}`}
           </p>
-          <p className="text-xs text-gray-500 mt-1">Today's earnings</p>
-          {error && <p className="text-xs text-red-500 mt-1 truncate" title={error}>{error}</p>}
+          <p className="text-xs text-[#F4F8FF]/50 mt-1">Today's earnings</p>
+          {error && <p className="text-xs text-red-400 mt-1 truncate" title={error}>{error}</p>}
         </div>
       </div>
       
@@ -349,39 +349,39 @@ export default function DashboardPage() {
 
       {/* Secondary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-xl shadow-md border border-gray-100">
+        <div className="glass p-5 rounded-xl shadow-md">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-gray-600 text-xs font-medium">Completed Orders</h3>
+            <h3 className="text-[#F4F8FF]/70 text-xs font-medium">Completed Orders</h3>
             <span className="text-lg">✓</span>
           </div>
-          <p className="text-xl font-bold text-green-600">
+          <p className="text-xl font-bold text-green-400">
             {loading ? '...' : completedOrders}
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-[#F4F8FF]/50 mt-1">
             {loading ? 'Loading...' : totalOrders > 0 ? `${Math.round((completedOrders / totalOrders) * 100)}% success rate` : 'No orders yet'}
           </p>
         </div>
-        
-        <div className="bg-white p-5 rounded-xl shadow-md border border-gray-100">
+
+        <div className="glass p-5 rounded-xl shadow-md">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-gray-600 text-xs font-medium">Pending Orders</h3>
+            <h3 className="text-[#F4F8FF]/70 text-xs font-medium">Pending Orders</h3>
             <span className="text-lg">⏳</span>
           </div>
-          <p className="text-xl font-bold text-yellow-600">
+          <p className="text-xl font-bold text-yellow-400">
             {loading ? '...' : pendingOrders}
           </p>
-          <p className="text-xs text-gray-500 mt-1">Requires attention</p>
+          <p className="text-xs text-[#F4F8FF]/50 mt-1">Requires attention</p>
         </div>
-        
-        <div className="bg-white p-5 rounded-xl shadow-md border border-gray-100">
+
+        <div className="glass p-5 rounded-xl shadow-md">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-gray-600 text-xs font-medium">Total Customers</h3>
+            <h3 className="text-[#F4F8FF]/70 text-xs font-medium">Total Customers</h3>
             <span className="text-lg">👥</span>
           </div>
-          <p className="text-xl font-bold text-blue-600">
+          <p className="text-xl font-bold text-primary">
             {loading ? '...' : totalCustomers}
           </p>
-          <p className="text-xs text-gray-500 mt-1">Registered users</p>
+          <p className="text-xs text-[#F4F8FF]/50 mt-1">Registered users</p>
         </div>
       </div>
 
@@ -402,25 +402,25 @@ export default function DashboardPage() {
         if (!hasAlerts) return null;
 
         return (
-          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-200 rounded-2xl p-6 shadow-lg animate-slide-up">
+          <div className="glass-strong border border-yellow-500/30 rounded-2xl p-6 shadow-lg animate-slide-up">
             <div className="flex items-center gap-3 mb-4">
-              <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
-              <h2 className="text-2xl font-bold text-yellow-800">Stock Alerts</h2>
-              <span className="ml-auto bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold">
+              <h2 className="text-2xl font-bold text-[#F4F8FF]">Stock Alerts</h2>
+              <span className="ml-auto bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full text-sm font-bold">
                 {lowStockItems.length + outOfStockCount}
               </span>
             </div>
 
             {/* Out of Stock Summary */}
             {outOfStockCount > 0 && (
-              <div className="mb-4 p-3 bg-red-100 border border-red-200 rounded-lg">
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
                 <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                  <span className="text-red-800 font-semibold">
+                  <span className="text-red-400 font-semibold">
                     Out of Stock: {outOfStockCount} {outOfStockCount === 1 ? 'product' : 'products'}
                   </span>
                 </div>
@@ -430,28 +430,28 @@ export default function DashboardPage() {
             {/* Low Stock Products - Scrollable List */}
             {lowStockItems.length > 0 && (
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-gray-700 mb-2">Low Stock Products:</h3>
-                <div 
+                <h3 className="text-sm font-semibold text-[#F4F8FF]/70 mb-2">Low Stock Products:</h3>
+                <div
                   className="overflow-y-auto pr-2 space-y-3"
                   style={{
-                    maxHeight: '180px', // Shows approximately 3 products (60px each)
+                    maxHeight: '180px',
                     scrollbarWidth: 'thin',
-                    scrollbarColor: '#fcd34d #fef3c7',
+                    scrollbarColor: '#F5A623 #1A2E4A',
                   }}
                 >
                   {lowStockItems.map((item: any) => (
-                    <div key={item.id} className="flex justify-between items-center bg-white/50 p-3 rounded-lg">
-                      <span className="text-gray-800 font-medium">
+                    <div key={item.id} className="flex justify-between items-center bg-white/5 p-3 rounded-lg">
+                      <span className="text-[#F4F8FF] font-medium">
                         {item.name || 'Unknown Product'}
                       </span>
-                      <span className="font-bold px-3 py-1 rounded-full text-yellow-700 bg-yellow-100">
+                      <span className="font-bold px-3 py-1 rounded-full text-yellow-400 bg-yellow-500/20">
                         {item.stock_quantity} units
                       </span>
                     </div>
                   ))}
                 </div>
                 {lowStockItems.length > 3 && (
-                  <p className="text-xs text-gray-500 italic text-center mt-2">
+                  <p className="text-xs text-[#F4F8FF]/50 italic text-center mt-2">
                     Scroll to see {lowStockItems.length - 3} more {lowStockItems.length - 3 === 1 ? 'product' : 'products'}
                   </p>
                 )}
@@ -460,7 +460,7 @@ export default function DashboardPage() {
 
             {/* Show message if no low stock items but has out of stock */}
             {lowStockItems.length === 0 && outOfStockCount > 0 && (
-              <p className="text-sm text-gray-600 italic">All alerts are out of stock items.</p>
+              <p className="text-sm text-[#F4F8FF]/70 italic">All alerts are out of stock items.</p>
             )}
           </div>
         );
@@ -472,14 +472,14 @@ export default function DashboardPage() {
       {/* Charts and Analytics Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Sales Chart */}
-        <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100 animate-slide-up">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Sales This Week</h2>
+        <div className="glass rounded-xl shadow-md p-5 animate-slide-up">
+          <h2 className="text-lg font-semibold text-[#F4F8FF] mb-4">Sales This Week</h2>
           {loading ? (
             <div className="flex items-center justify-center py-8">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
             </div>
           ) : salesByDay.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-[#F4F8FF]/50">
               <p className="text-sm">No sales data available</p>
               <p className="text-xs mt-1">Check console for details</p>
             </div>
@@ -493,43 +493,43 @@ export default function DashboardPage() {
                   }))}
                   margin={{ top: 10, right: 10, left: 0, bottom: 5 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis 
-                    dataKey="day" 
-                    stroke="#6b7280"
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
+                  <XAxis
+                    dataKey="day"
+                    stroke="rgba(244,248,255,0.5)"
                     fontSize={12}
                     tickLine={false}
                   />
-                  <YAxis 
-                    stroke="#6b7280"
+                  <YAxis
+                    stroke="rgba(244,248,255,0.5)"
                     fontSize={12}
                     tickLine={false}
                     tickFormatter={(value) => `KES ${(value / 1000).toFixed(0)}k`}
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#fff',
-                      border: '1px solid #e5e7eb',
+                      backgroundColor: '#1A2E4A',
+                      border: '1px solid rgba(255,255,255,0.12)',
                       borderRadius: '8px',
                       padding: '8px 12px',
                     }}
                     formatter={(value: any) => [`KES ${Number(value).toLocaleString()}`, 'Sales']}
-                    labelStyle={{ color: '#374151', fontWeight: 600, marginBottom: '4px' }}
+                    labelStyle={{ color: '#F4F8FF', fontWeight: 600, marginBottom: '4px' }}
                   />
-                  <Line 
-                    type="monotone" 
-                    dataKey="sales" 
-                    stroke="#f9a8d4"
+                  <Line
+                    type="monotone"
+                    dataKey="sales"
+                    stroke="#00C896"
                     strokeWidth={3}
-                    dot={{ fill: '#f9a8d4', r: 5, strokeWidth: 2, stroke: '#fff' }}
-                    activeDot={{ r: 7, fill: '#f472b6', stroke: '#fff', strokeWidth: 2 }}
+                    dot={{ fill: '#00C896', r: 5, strokeWidth: 2, stroke: '#080F1E' }}
+                    activeDot={{ r: 7, fill: '#00E8AE', stroke: '#080F1E', strokeWidth: 2 }}
                   />
                 </LineChart>
               </ResponsiveContainer>
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <div className="flex items-center justify-between text-xs text-gray-600">
+              <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="flex items-center justify-between text-xs text-[#F4F8FF]/70">
                   <span>Total Week Sales:</span>
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-[#F4F8FF]">
                     KES {salesByDay.reduce((sum, day) => sum + (day.sales || 0), 0).toLocaleString()}
                   </span>
                 </div>
@@ -539,9 +539,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Top Products */}
-        <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100 animate-slide-up">
+        <div className="glass rounded-xl shadow-md p-5 animate-slide-up">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Top Products</h2>
+            <h2 className="text-lg font-semibold text-[#F4F8FF]">Top Products</h2>
             <Link
               href="/dashboard/products"
               className="text-primary hover:text-primary-dark font-medium text-xs"
@@ -554,25 +554,25 @@ export default function DashboardPage() {
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
             </div>
           ) : topProducts.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-[#F4F8FF]/50">
               <p className="text-sm">No product sales data available</p>
             </div>
           ) : (
             <div className="space-y-3">
               {topProducts.map((product, index) => (
-                <div key={product.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <div key={product.id} className="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-dark rounded-lg flex items-center justify-center text-white text-xs font-bold">
+                    <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center text-primary text-xs font-bold">
                       {index + 1}
                     </div>
                     <div>
-                      <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                      <div className="text-xs text-gray-600">{product.sales} units sold</div>
+                      <div className="text-sm font-medium text-[#F4F8FF]">{product.name}</div>
+                      <div className="text-xs text-[#F4F8FF]/50">{product.sales} units sold</div>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm font-bold text-primary">{product.sales}</div>
-                    <div className="text-xs text-gray-500">Sales Count</div>
+                    <div className="text-xs text-[#F4F8FF]/50">Sales Count</div>
                   </div>
                 </div>
               ))}
@@ -582,9 +582,9 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent Orders */}
-      <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100 animate-slide-up">
+      <div className="glass rounded-xl shadow-md p-5 animate-slide-up">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Recent Orders</h2>
+          <h2 className="text-lg font-semibold text-[#F4F8FF]">Recent Orders</h2>
           <Link
             href="/dashboard/orders"
             className="text-primary hover:text-primary-dark font-medium text-xs flex items-center gap-1"
@@ -598,38 +598,38 @@ export default function DashboardPage() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b-2 border-gray-200">
-                <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">Order ID</th>
-                <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">Customer</th>
-                <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">Amount</th>
-                <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">Status</th>
-                <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">Date</th>
-                <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">Actions</th>
+              <tr className="border-b-2 border-white/10">
+                <th className="text-left py-2 px-3 text-xs font-medium text-[#F4F8FF]/70">Order ID</th>
+                <th className="text-left py-2 px-3 text-xs font-medium text-[#F4F8FF]/70">Customer</th>
+                <th className="text-left py-2 px-3 text-xs font-medium text-[#F4F8FF]/70">Amount</th>
+                <th className="text-left py-2 px-3 text-xs font-medium text-[#F4F8FF]/70">Status</th>
+                <th className="text-left py-2 px-3 text-xs font-medium text-[#F4F8FF]/70">Date</th>
+                <th className="text-left py-2 px-3 text-xs font-medium text-[#F4F8FF]/70">Actions</th>
               </tr>
             </thead>
             <tbody>
               {recentOrdersLoading ? (
                 <tr>
-                  <td colSpan={6} className="py-6 text-center text-xs text-gray-500">
+                  <td colSpan={6} className="py-6 text-center text-xs text-[#F4F8FF]/50">
                     Loading recent orders...
                   </td>
                 </tr>
               ) : recentOrders.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-6 text-center text-xs text-gray-500">
+                  <td colSpan={6} className="py-6 text-center text-xs text-[#F4F8FF]/50">
                     No recent orders found
                   </td>
                 </tr>
               ) : (
                 recentOrders.map((order: any) => (
-                <tr key={order.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                  <td className="py-2 px-3 font-mono text-xs text-gray-600">
+                <tr key={order.id} className="border-b border-white/10 hover:bg-white/5 transition-colors">
+                  <td className="py-2 px-3 font-mono text-xs text-[#F4F8FF]/70">
                     {order.order_number ? `#${order.order_number}` : `#${formatOrderId(order.id)}`}
                   </td>
-                  <td className="py-2 px-3 text-sm font-medium text-gray-900">
+                  <td className="py-2 px-3 text-sm font-medium text-[#F4F8FF]">
                     {order.customer || 'Guest'}
                   </td>
-                  <td className="py-2 px-3 text-sm font-semibold text-gray-900">
+                  <td className="py-2 px-3 text-sm font-semibold text-[#F4F8FF]">
                     KES {(order.amount || 0).toLocaleString()}
                   </td>
                   <td className="py-2 px-3">
@@ -645,7 +645,7 @@ export default function DashboardPage() {
                       {order.status}
                     </span>
                   </td>
-                  <td className="py-2 px-3 text-xs text-gray-600">
+                  <td className="py-2 px-3 text-xs text-[#F4F8FF]/70">
                     {order.date instanceof Date ? order.date.toLocaleDateString() : new Date(order.date).toLocaleDateString()}
                   </td>
                   <td className="py-2 px-3">

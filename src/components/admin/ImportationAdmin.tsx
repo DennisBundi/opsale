@@ -113,26 +113,26 @@ export default function ImportationAdmin() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: "Total Applications", value: stats.total, color: "text-gray-900" },
+          { label: "Total Applications", value: stats.total, color: "text-[#F4F8FF]" },
           { label: "Pending Review", value: stats.pending, color: "text-amber-600" },
           { label: "Approved", value: stats.approved, color: "text-green-600" },
         ].map(({ label, value, color }) => (
           <div
             key={label}
-            className="bg-white rounded-xl p-5 shadow-sm border border-gray-100"
+            className="glass rounded-xl p-5 shadow-sm"
           >
-            <p className="text-sm text-gray-500 mb-1">{label}</p>
+            <p className="text-sm text-[#F4F8FF]/50 mb-1">{label}</p>
             <p className={`text-3xl font-bold ${color}`}>{value}</p>
           </div>
         ))}
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex flex-wrap gap-3">
+      <div className="glass rounded-xl p-4 shadow-sm flex flex-wrap gap-3">
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as Status | "all")}
-          className="border border-gray-300 px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="bg-white/5 border border-white/10 px-3 py-2 text-sm rounded-lg text-[#F4F8FF] focus:outline-none focus:ring-2 focus:ring-primary"
         >
           <option value="all">All Statuses</option>
           <option value="pending">Pending</option>
@@ -142,7 +142,7 @@ export default function ImportationAdmin() {
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="border border-gray-300 px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="bg-white/5 border border-white/10 px-3 py-2 text-sm rounded-lg text-[#F4F8FF] focus:outline-none focus:ring-2 focus:ring-primary"
         >
           <option value="all">All Categories</option>
           {GOODS_CATEGORIES.map((cat) => (
@@ -154,15 +154,15 @@ export default function ImportationAdmin() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="glass rounded-xl shadow-sm overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center text-gray-400">Loading applications…</div>
+          <div className="p-12 text-center text-[#F4F8FF]/40">Loading applications…</div>
         ) : applications.length === 0 ? (
-          <div className="p-12 text-center text-gray-400">No applications found.</div>
+          <div className="p-12 text-center text-[#F4F8FF]/40">No applications found.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b border-gray-100">
+              <thead className="bg-white/5 border-b border-white/10">
                 <tr>
                   {[
                     "Business",
@@ -175,32 +175,32 @@ export default function ImportationAdmin() {
                   ].map((header) => (
                     <th
                       key={header}
-                      className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide"
+                      className="px-4 py-3 text-left text-xs font-semibold text-[#F4F8FF]/50 uppercase tracking-wide"
                     >
                       {header}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-white/10">
                 {applications.map((app) => (
                   <React.Fragment key={app.id}>
-                    <tr className="hover:bg-gray-50 transition-colors">
+                    <tr className="hover:bg-white/5 transition-colors">
                       <td className="px-4 py-3">
-                        <p className="font-semibold text-gray-900">{app.business_name}</p>
-                        <p className="text-gray-500 text-xs">{app.full_name}</p>
+                        <p className="font-semibold text-[#F4F8FF]">{app.business_name}</p>
+                        <p className="text-[#F4F8FF]/50 text-xs">{app.full_name}</p>
                       </td>
                       <td className="px-4 py-3">
-                        <p className="text-gray-900">{app.email}</p>
-                        <p className="text-gray-500 text-xs">{app.phone}</p>
+                        <p className="text-[#F4F8FF]">{app.email}</p>
+                        <p className="text-[#F4F8FF]/50 text-xs">{app.phone}</p>
                       </td>
                       <td className="px-4 py-3">
                         <span className="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-full">
                           {app.goods_category}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-gray-600">{app.monthly_order_value}</td>
-                      <td className="px-4 py-3 text-gray-500 text-xs">
+                      <td className="px-4 py-3 text-[#F4F8FF]/70">{app.monthly_order_value}</td>
+                      <td className="px-4 py-3 text-[#F4F8FF]/50 text-xs">
                         {new Date(app.created_at).toLocaleDateString("en-KE")}
                       </td>
                       <td className="px-4 py-3">
@@ -211,7 +211,7 @@ export default function ImportationAdmin() {
                         </span>
                         {app.admin_note && (
                           <p
-                            className="text-xs text-gray-400 mt-1 max-w-[150px] truncate"
+                            className="text-xs text-[#F4F8FF]/40 mt-1 max-w-[150px] truncate"
                             title={app.admin_note}
                           >
                             {app.admin_note}
@@ -249,10 +249,10 @@ export default function ImportationAdmin() {
                     </tr>
                     {/* Inline confirmation panel */}
                     {confirmingAppId === app.id && pendingAction && (
-                      <tr key={`${app.id}-action`} className="bg-indigo-50">
+                      <tr key={`${app.id}-action`} className="bg-primary/10">
                         <td colSpan={7} className="px-4 py-3">
                           <div className="flex items-center gap-3 flex-wrap">
-                            <span className="text-sm font-medium text-gray-700">
+                            <span className="text-sm font-medium text-[#F4F8FF]/70">
                               {pendingAction.status === "approved" ? "Approve" : "Reject"}{" "}
                               <strong>{app.business_name}</strong>?
                             </span>
@@ -261,7 +261,7 @@ export default function ImportationAdmin() {
                               value={noteInput}
                               onChange={(e) => setNoteInput(e.target.value)}
                               placeholder="Optional note to retailer…"
-                              className="border border-gray-300 px-3 py-1.5 text-sm flex-1 min-w-[200px] focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                              className="bg-white/5 border border-white/10 px-3 py-1.5 text-sm text-[#F4F8FF] placeholder-[#F4F8FF]/30 flex-1 min-w-[200px] focus:outline-none focus:ring-2 focus:ring-primary"
                             />
                             <button
                               onClick={() =>
@@ -271,7 +271,7 @@ export default function ImportationAdmin() {
                                   noteInput
                                 )
                               }
-                              className="px-4 py-1.5 bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700"
+                              className="px-4 py-1.5 bg-primary text-white text-sm font-medium hover:bg-primary-dark"
                             >
                               Confirm
                             </button>
@@ -280,7 +280,7 @@ export default function ImportationAdmin() {
                                 setConfirmingAppId(null);
                                 setPendingAction(null);
                               }}
-                              className="px-4 py-1.5 bg-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-300"
+                              className="px-4 py-1.5 bg-white/10 text-[#F4F8FF]/70 text-sm font-medium hover:bg-white/20"
                             >
                               Cancel
                             </button>

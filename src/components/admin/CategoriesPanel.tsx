@@ -74,12 +74,12 @@ export default function CategoriesPanel({ categories, loading, onRefresh, onClos
 
   return (
     <>
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+      <div className="glass rounded-2xl shadow-lg p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Categories</h2>
-            <p className="text-sm text-gray-600 mt-1">Manage product categories</p>
+            <h2 className="text-2xl font-bold text-[#F4F8FF]">Categories</h2>
+            <p className="text-sm text-[#F4F8FF]/60 mt-1">Manage product categories</p>
           </div>
           <div className="flex gap-2">
             <button
@@ -91,7 +91,7 @@ export default function CategoriesPanel({ categories, loading, onRefresh, onClos
             {onClose && (
               <button
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-colors"
+                className="px-4 py-2 bg-white/10 hover:bg-white/20 text-[#F4F8FF]/70 rounded-xl font-medium transition-colors"
               >
                 Close
               </button>
@@ -103,12 +103,12 @@ export default function CategoriesPanel({ categories, loading, onRefresh, onClos
         {loading ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            <p className="mt-4 text-gray-600">Loading categories...</p>
+            <p className="mt-4 text-[#F4F8FF]/50">Loading categories...</p>
           </div>
         ) : categories.length === 0 ? (
           <div className="text-center py-12">
             <svg
-              className="w-16 h-16 mx-auto text-gray-300 mb-4"
+              className="w-16 h-16 mx-auto text-[#F4F8FF]/20 mb-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -120,34 +120,34 @@ export default function CategoriesPanel({ categories, loading, onRefresh, onClos
                 d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
               />
             </svg>
-            <p className="text-gray-500 font-medium">No categories found</p>
-            <p className="text-sm text-gray-400 mt-1">Create your first category to get started</p>
+            <p className="text-[#F4F8FF]/50 font-medium">No categories found</p>
+            <p className="text-sm text-[#F4F8FF]/30 mt-1">Create your first category to get started</p>
           </div>
         ) : (
           <div className="space-y-3 max-h-[600px] overflow-y-auto">
             {categories.map((category) => (
               <div
                 key={category.id}
-                className="border border-gray-200 rounded-xl p-4 hover:border-primary/50 hover:shadow-md transition-all"
+                className="border border-white/10 rounded-xl p-4 hover:border-primary/50 hover:shadow-md transition-all bg-white/5"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 text-lg">{category.name}</h3>
-                    <p className="text-sm text-gray-500 mt-1">Slug: {category.slug}</p>
+                    <h3 className="font-semibold text-[#F4F8FF] text-lg">{category.name}</h3>
+                    <p className="text-sm text-[#F4F8FF]/50 mt-1">Slug: {category.slug}</p>
                     {category.description && (
-                      <p className="text-sm text-gray-600 mt-2">{category.description}</p>
+                      <p className="text-sm text-[#F4F8FF]/60 mt-2">{category.description}</p>
                     )}
                   </div>
                   <div className="flex gap-2 ml-4">
                     <button
                       onClick={() => handleEdit(category)}
-                      className="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg font-medium hover:bg-blue-100 transition-colors text-sm"
+                      className="px-3 py-1.5 bg-blue-500/20 text-blue-400 rounded-lg font-medium hover:bg-blue-500/30 transition-colors text-sm"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(category)}
-                      className="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg font-medium hover:bg-red-100 transition-colors text-sm"
+                      className="px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg font-medium hover:bg-red-500/30 transition-colors text-sm"
                     >
                       Delete
                     </button>
@@ -190,10 +190,10 @@ export default function CategoriesPanel({ categories, loading, onRefresh, onClos
       {/* Delete Confirmation Modal */}
       {deleteModal.isOpen && deleteModal.category && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+          <div className="glass-strong rounded-2xl shadow-2xl max-w-md w-full">
             <div className="p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Delete Category</h3>
-              <p className="text-gray-600 mb-6">
+              <h3 className="text-xl font-bold text-[#F4F8FF] mb-2">Delete Category</h3>
+              <p className="text-[#F4F8FF]/70 mb-6">
                 Are you sure you want to delete the category <strong>&ldquo;{deleteModal.category.name}&rdquo;</strong>?
                 This action cannot be undone.
               </p>
@@ -208,7 +208,7 @@ export default function CategoriesPanel({ categories, loading, onRefresh, onClos
                 <button
                   onClick={() => setDeleteModal({ isOpen: false, category: null })}
                   disabled={deleting}
-                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 bg-white/10 text-[#F4F8FF]/70 rounded-xl font-medium hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Cancel
                 </button>

@@ -811,10 +811,10 @@ export default function ProductForm({
 
       {isOpen && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-2 sm:p-4">
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="glass-strong rounded-xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
             {/* Header */}
-            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 flex items-center justify-between">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-white/10 flex items-center justify-between">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#F4F8FF]">
                 {product ? "Edit Product" : "Add New Product"}
               </h2>
               <button
@@ -822,7 +822,7 @@ export default function ProductForm({
                   setIsOpen(false);
                   if (onClose) onClose();
                 }}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-[#F4F8FF]/40 hover:text-[#F4F8FF] transition-colors"
               >
                 <svg
                   className="w-6 h-6"
@@ -848,13 +848,13 @@ export default function ProductForm({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 {/* Basic Information */}
                 <div className="md:col-span-2">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  <h3 className="text-lg font-semibold text-[#F4F8FF] mb-4">
                     Basic Information
                   </h3>
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                     Product Name *
                   </label>
                   <input
@@ -864,13 +864,13 @@ export default function ProductForm({
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    className="w-full px-3 py-2.5 text-base bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                     placeholder="Enter product name"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                     Description
                   </label>
                   <textarea
@@ -879,13 +879,13 @@ export default function ProductForm({
                       setFormData({ ...formData, description: e.target.value })
                     }
                     rows={4}
-                    className="w-full px-3 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    className="w-full px-3 py-2.5 text-base bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                     placeholder="Enter product description"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                     Category *
                   </label>
                   <select
@@ -894,7 +894,7 @@ export default function ProductForm({
                     onChange={(e) =>
                       setFormData({ ...formData, category_id: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    className="w-full px-3 py-2.5 text-base bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   >
                     <option value="">Select Category</option>
                     {categories.map((cat) => (
@@ -906,7 +906,7 @@ export default function ProductForm({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                     Status
                   </label>
                   <select
@@ -917,7 +917,7 @@ export default function ProductForm({
                         status: e.target.value as "active" | "inactive",
                       })
                     }
-                    className="w-full px-3 py-2 text-sm border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    className="w-full px-3 py-2 text-sm bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   >
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -926,14 +926,14 @@ export default function ProductForm({
 
                 {/* Pricing */}
                 <div className="md:col-span-2">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 mt-4">
+                  <h3 className="text-lg font-semibold text-[#F4F8FF] mb-4 mt-4">
                     Pricing
                   </h3>
                 </div>
 
                 {userRole === "admin" && (
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                       Buying Price (KES)
                     </label>
                     <input
@@ -947,17 +947,17 @@ export default function ProductForm({
                           buying_price: e.target.value,
                         })
                       }
-                      className="w-full px-3 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                      className="w-full px-3 py-2.5 text-base bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                       placeholder="Cost price"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-[#F4F8FF]/40 mt-1">
                       The price you paid to purchase this product
                     </p>
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                     Selling Price (KES) *
                   </label>
                   <input
@@ -969,7 +969,7 @@ export default function ProductForm({
                     onChange={(e) =>
                       setFormData({ ...formData, price: e.target.value })
                     }
-                    className="w-full px-3 py-2 text-sm border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    className="w-full px-3 py-2 text-sm bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                     placeholder="0.00"
                   />
                   {userRole === "admin" &&
@@ -999,7 +999,7 @@ export default function ProductForm({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                     Flash Sale Price (KES)
                   </label>
                   <input
@@ -1010,11 +1010,11 @@ export default function ProductForm({
                     onChange={(e) =>
                       setFormData({ ...formData, sale_price: e.target.value })
                     }
-                    className="w-full px-3 py-2 text-sm border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    className="w-full px-3 py-2 text-sm bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                     placeholder="Optional"
                   />
                   {formData.sale_price && formData.price && (
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-[#F4F8FF]/40 mt-1">
                       Discount:{" "}
                       {Math.round(
                         (1 -
@@ -1043,7 +1043,7 @@ export default function ProductForm({
 
                 {/* Flash Sale */}
                 <div className="md:col-span-2">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 mt-4">
+                  <h3 className="text-lg font-semibold text-[#F4F8FF] mb-4 mt-4">
                     Flash Sale
                   </h3>
                 </div>
@@ -1059,9 +1059,9 @@ export default function ProductForm({
                           is_flash_sale: e.target.checked,
                         })
                       }
-                      className="w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary"
+                      className="w-5 h-5 text-primary border-white/30 rounded focus:ring-primary"
                     />
-                    <span className="text-sm font-semibold text-gray-700">
+                    <span className="text-sm font-semibold text-[#F4F8FF]/70">
                       Enable Flash Sale
                     </span>
                   </label>
@@ -1070,7 +1070,7 @@ export default function ProductForm({
                 {formData.is_flash_sale && (
                   <>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                         Flash Sale Start Date & Time
                       </label>
                       <input
@@ -1082,12 +1082,12 @@ export default function ProductForm({
                             flash_sale_start: e.target.value,
                           })
                         }
-                        className="w-full px-3 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                        className="w-full px-3 py-2.5 text-base bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                         Flash Sale End Date & Time
                       </label>
                       <input
@@ -1099,7 +1099,7 @@ export default function ProductForm({
                             flash_sale_end: e.target.value,
                           })
                         }
-                        className="w-full px-3 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                        className="w-full px-3 py-2.5 text-base bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                       />
                     </div>
                   </>
@@ -1107,7 +1107,7 @@ export default function ProductForm({
 
                 {/* Images */}
                 <div className="md:col-span-2">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 mt-4">
+                  <h3 className="text-lg font-semibold text-[#F4F8FF] mb-4 mt-4">
                     Product Images
                   </h3>
 
@@ -1125,7 +1125,7 @@ export default function ProductForm({
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
                       disabled={uploadingImages}
-                      className="w-full px-6 py-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-primary hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full px-6 py-4 border-2 border-dashed border-white/20 rounded-xl hover:border-primary hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {uploadingImages ? (
                         <>
@@ -1148,14 +1148,14 @@ export default function ProductForm({
                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                             ></path>
                           </svg>
-                          <span className="text-sm font-medium text-gray-700">
+                          <span className="text-sm font-medium text-[#F4F8FF]/70">
                             Uploading images...
                           </span>
                         </>
                       ) : (
                         <>
                           <svg
-                            className="w-8 h-8 text-gray-400"
+                            className="w-8 h-8 text-[#F4F8FF]/30"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -1167,10 +1167,10 @@ export default function ProductForm({
                               d="M12 4v16m8-8H4"
                             />
                           </svg>
-                          <span className="text-sm font-medium text-gray-700">
+                          <span className="text-sm font-medium text-[#F4F8FF]/70">
                             Click to upload images
                           </span>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-[#F4F8FF]/40">
                             PNG, JPG, WEBP up to 10MB each
                           </span>
                         </>
@@ -1183,7 +1183,7 @@ export default function ProductForm({
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       {imagePreviews.map((preview, index) => (
                         <div key={index} className="relative group">
-                          <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-100 border-2 border-gray-200">
+                          <div className="relative aspect-square rounded-xl overflow-hidden bg-white/10 border-2 border-white/10">
                             <Image
                               src={preview.url}
                               alt={`Product image ${index + 1}`}
@@ -1232,7 +1232,7 @@ export default function ProductForm({
                                 <button
                                   type="button"
                                   onClick={() => moveImage(index, "up")}
-                                  className="bg-white/90 hover:bg-white text-gray-700 rounded p-1 shadow-sm"
+                                  className="bg-white/20 hover:bg-white/30 text-[#F4F8FF] rounded p-1 shadow-sm"
                                   title="Move up"
                                 >
                                   <svg
@@ -1254,7 +1254,7 @@ export default function ProductForm({
                                 <button
                                   type="button"
                                   onClick={() => moveImage(index, "down")}
-                                  className="bg-white/90 hover:bg-white text-gray-700 rounded p-1 shadow-sm"
+                                  className="bg-white/20 hover:bg-white/30 text-[#F4F8FF] rounded p-1 shadow-sm"
                                   title="Move down"
                                 >
                                   <svg
@@ -1279,7 +1279,7 @@ export default function ProductForm({
                     </div>
                   )}
 
-                  <p className="text-xs text-gray-500 mt-3">
+                  <p className="text-xs text-[#F4F8FF]/40 mt-3">
                     Upload multiple images. The first image will be used as the
                     main product image. You can reorder images by using the
                     arrow buttons.
@@ -1288,11 +1288,11 @@ export default function ProductForm({
 
                 {/* Stock */}
                 <div className="md:col-span-2">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 mt-4">
+                  <h3 className="text-lg font-semibold text-[#F4F8FF] mb-4 mt-4">
                     Stock Management
                   </h3>
                   <div className="md:col-span-2 mb-4">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                       Total Stock Quantity *
                     </label>
                     <input
@@ -1306,20 +1306,20 @@ export default function ProductForm({
                           initial_stock: e.target.value,
                         })
                       }
-                      className="w-full px-3 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                      className="w-full px-3 py-2.5 text-base bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                       placeholder="Enter total stock quantity"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-[#F4F8FF]/40 mt-1">
                       Total number of pieces available for this product
                     </p>
                   </div>
 
                   {/* Size-based Stock Breakdown */}
                   <div className="md:col-span-2">
-                    <h4 className="text-md font-semibold text-gray-800 mb-3">
+                    <h4 className="text-md font-semibold text-[#F4F8FF]/80 mb-3">
                       Stock Breakdown by Size (Optional)
                     </h4>
-                    <p className="text-xs text-gray-500 mb-4">
+                    <p className="text-xs text-[#F4F8FF]/40 mb-4">
                       {selectedColors.length > 0 &&
                       Object.keys(colorStocks).length > 0
                         ? "Automatically calculated from color stocks. Edit color quantities below to change these values."
@@ -1343,7 +1343,7 @@ export default function ProductForm({
                           Object.keys(colorStocks).length > 0;
                         return (
                           <div key={size}>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                            <label className="block text-xs font-semibold text-[#F4F8FF]/70 mb-1.5">
                               Size {size}
                             </label>
                             <input
@@ -1366,8 +1366,8 @@ export default function ProductForm({
                               readOnly={isReadOnly}
                               className={`w-full px-3 py-2.5 text-base border-2 rounded-lg ${
                                 isReadOnly
-                                  ? "border-gray-300 bg-gray-50 text-gray-600 cursor-not-allowed"
-                                  : "border-gray-200 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                                  ? "border-white/10 bg-white/5 text-[#F4F8FF]/30 cursor-not-allowed"
+                                  : "bg-white/5 border-white/10 text-[#F4F8FF] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                               }`}
                               placeholder="0"
                               title={
@@ -1381,9 +1381,9 @@ export default function ProductForm({
                       })}
                     </div>
                     <div className="mt-3 space-y-1">
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-[#F4F8FF]/40">
                         Total pieces:{" "}
-                        <span className="font-semibold text-gray-900">
+                        <span className="font-semibold text-[#F4F8FF]">
                           {parseInt(formData.initial_stock.toString()) || 0}
                         </span>
                       </p>
@@ -1429,9 +1429,9 @@ export default function ProductForm({
               </div>
 
               {/* Color Selection */}
-              <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
+              <div className="glass rounded-xl p-5 border border-white/10">
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-md font-semibold text-gray-800">
+                  <h4 className="text-md font-semibold text-[#F4F8FF]/80">
                     Available Colors (Optional)
                   </h4>
                   <button
@@ -1455,16 +1455,16 @@ export default function ProductForm({
                     Add Color
                   </button>
                 </div>
-                <p className="text-xs text-gray-500 mb-4">
+                <p className="text-xs text-[#F4F8FF]/40 mb-4">
                   Select the colors available for this product
                 </p>
 
                 {/* Add New Color Form */}
                 {showAddColorForm && (
-                  <div className="mb-4 p-4 bg-white rounded-lg border-2 border-primary/30">
+                  <div className="mb-4 p-4 bg-white/5 rounded-lg border-2 border-primary/30">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
                       <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1">
+                        <label className="block text-xs font-semibold text-[#F4F8FF]/70 mb-1">
                           Color Name
                         </label>
                         <input
@@ -1472,11 +1472,11 @@ export default function ProductForm({
                           value={newColorName}
                           onChange={(e) => setNewColorName(e.target.value)}
                           placeholder="e.g., Burgundy"
-                          className="w-full px-3 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                          className="w-full px-3 py-2.5 text-base bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1">
+                        <label className="block text-xs font-semibold text-[#F4F8FF]/70 mb-1">
                           Color Preview
                         </label>
                         <div className="flex items-center gap-2">
@@ -1484,14 +1484,14 @@ export default function ProductForm({
                             type="color"
                             value={newColorHex}
                             onChange={(e) => setNewColorHex(e.target.value)}
-                            className="w-12 h-10 border-2 border-gray-200 rounded-lg cursor-pointer"
+                            className="w-12 h-10 border-2 border-white/10 rounded-lg cursor-pointer"
                           />
                           <input
                             type="text"
                             value={newColorHex}
                             onChange={(e) => setNewColorHex(e.target.value)}
                             placeholder="#000000"
-                            className="flex-1 px-3 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 font-mono"
+                            className="flex-1 px-3 py-2.5 text-base bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 font-mono"
                           />
                         </div>
                       </div>
@@ -1565,7 +1565,7 @@ export default function ProductForm({
                             setNewColorName("");
                             setNewColorHex("#000000");
                           }}
-                          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors text-sm"
+                          className="px-4 py-2 bg-white/10 text-[#F4F8FF]/70 rounded-lg font-semibold hover:bg-white/20 transition-colors text-sm"
                         >
                           Cancel
                         </button>
@@ -1579,7 +1579,7 @@ export default function ProductForm({
                   {PRODUCT_COLORS.map((color) => (
                     <label
                       key={color.name}
-                      className="flex items-center gap-2 p-2 rounded-lg border-2 border-gray-200 hover:border-primary/50 cursor-pointer transition-colors bg-white"
+                      className="flex items-center gap-2 p-2 rounded-lg border-2 border-white/10 hover:border-primary/50 cursor-pointer transition-colors bg-white/5"
                     >
                       <input
                         type="checkbox"
@@ -1617,14 +1617,14 @@ export default function ProductForm({
                             setColorStocks(newColorStocks);
                           }
                         }}
-                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
+                        className="w-4 h-4 text-primary border-white/30 rounded focus:ring-primary focus:ring-2"
                       />
                       <div
-                        className="w-5 h-5 rounded-full border border-gray-300 shadow-sm"
+                        className="w-5 h-5 rounded-full border border-white/20 shadow-sm"
                         style={{ backgroundColor: color.hex }}
                         title={color.name}
                       />
-                      <span className="text-sm font-medium text-gray-700">
+                      <span className="text-sm font-medium text-[#F4F8FF]/70">
                         {color.name}
                       </span>
                     </label>
@@ -1633,7 +1633,7 @@ export default function ProductForm({
                   {customColors.map((color) => (
                     <label
                       key={color.name}
-                      className="flex items-center gap-2 p-2 rounded-lg border-2 border-primary/30 hover:border-primary/50 cursor-pointer transition-colors bg-white"
+                      className="flex items-center gap-2 p-2 rounded-lg border-2 border-primary/30 hover:border-primary/50 cursor-pointer transition-colors bg-white/5"
                     >
                       <input
                         type="checkbox"
@@ -1671,21 +1671,21 @@ export default function ProductForm({
                             setColorStocks(newColorStocks);
                           }
                         }}
-                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
+                        className="w-4 h-4 text-primary border-white/30 rounded focus:ring-primary focus:ring-2"
                       />
                       <div
-                        className="w-5 h-5 rounded-full border border-gray-300 shadow-sm"
+                        className="w-5 h-5 rounded-full border border-white/20 shadow-sm"
                         style={{ backgroundColor: color.hex }}
                         title={color.name}
                       />
-                      <span className="text-sm font-medium text-gray-700">
+                      <span className="text-sm font-medium text-[#F4F8FF]/70">
                         {color.name}
                       </span>
                     </label>
                   ))}
                 </div>
                 {selectedColors.length > 0 && (
-                  <p className="text-xs text-gray-600 mt-3">
+                  <p className="text-xs text-[#F4F8FF]/50 mt-3">
                     Selected: {selectedColors.join(", ")}
                   </p>
                 )}
@@ -1693,11 +1693,11 @@ export default function ProductForm({
 
               {/* Color Stock Quantities */}
               {selectedColors.length > 0 && (
-                <div className="bg-gray-50 rounded-xl p-5 border border-gray-200 mt-4">
-                  <h4 className="text-md font-semibold text-gray-800 mb-3">
+                <div className="glass rounded-xl p-5 border border-white/10 mt-4">
+                  <h4 className="text-md font-semibold text-[#F4F8FF]/80 mb-3">
                     Stock Quantities by Color
                   </h4>
-                  <p className="text-xs text-gray-500 mb-4">
+                  <p className="text-xs text-[#F4F8FF]/40 mb-4">
                     Specify the quantity available for each color. If the
                     product has sizes, enter quantities for each size+color
                     combination.
@@ -1738,15 +1738,15 @@ export default function ProductForm({
                           return (
                             <div
                               key={colorName}
-                              className="bg-white rounded-lg p-4 border border-gray-200"
+                              className="bg-white/5 rounded-lg p-4 border border-white/10"
                             >
                               <div className="flex items-center gap-3 mb-3">
                                 <div
-                                  className="w-6 h-6 rounded-full border border-gray-300 shadow-sm"
+                                  className="w-6 h-6 rounded-full border border-white/20 shadow-sm"
                                   style={{ backgroundColor: colorHex }}
                                   title={colorName}
                                 />
-                                <span className="text-sm font-semibold text-gray-800">
+                                <span className="text-sm font-semibold text-[#F4F8FF]">
                                   {colorName}
                                 </span>
                               </div>
@@ -1765,7 +1765,7 @@ export default function ProductForm({
 
                                     return (
                                       <div key={size}>
-                                        <label className="block text-xs font-medium text-gray-600 mb-1">
+                                        <label className="block text-xs font-medium text-[#F4F8FF]/50 mb-1">
                                           {size}
                                         </label>
                                         <input
@@ -1786,7 +1786,7 @@ export default function ProductForm({
                                             )[size] = e.target.value;
                                             setColorStocks(newColorStocks);
                                           }}
-                                          className="w-full px-2 py-2 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                                          className="w-full px-2 py-2 text-base bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                                           placeholder="0"
                                         />
                                       </div>
@@ -1796,7 +1796,7 @@ export default function ProductForm({
                               ) : (
                                 // Color-only quantity
                                 <div>
-                                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                                  <label className="block text-xs font-medium text-[#F4F8FF]/50 mb-1">
                                     Quantity
                                   </label>
                                   <input
@@ -1811,7 +1811,7 @@ export default function ProductForm({
                                         [colorName]: e.target.value,
                                       });
                                     }}
-                                    className="w-full px-3 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                                    className="w-full px-3 py-2.5 text-base bg-white/5 border-2 border-white/10 rounded-lg text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                                     placeholder="Enter quantity"
                                   />
                                 </div>
@@ -1826,7 +1826,7 @@ export default function ProductForm({
               )}
 
               {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-white/10">
                 <button
                   type="button"
                   onClick={() => {
@@ -1838,7 +1838,7 @@ export default function ProductForm({
                     setNewColorHex("#000000");
                     if (onClose) onClose();
                   }}
-                  className="w-full sm:w-auto px-6 py-3 bg-gray-200 text-gray-700 rounded-lg sm:rounded-none font-semibold hover:bg-gray-300 transition-all text-base order-2 sm:order-1"
+                  className="w-full sm:w-auto px-6 py-3 bg-white/10 text-[#F4F8FF]/70 rounded-lg sm:rounded-none font-semibold hover:bg-white/20 transition-all text-base order-2 sm:order-1"
                 >
                   Cancel
                 </button>
@@ -1864,10 +1864,10 @@ export default function ProductForm({
       {/* Success Modal */}
       {showSuccessModal && (
         <div className="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 sm:p-6">
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 text-center animate-scale-in">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="glass-strong rounded-xl sm:rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 text-center animate-scale-in">
+            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
-                className="w-8 h-8 text-green-600"
+                className="w-8 h-8 text-green-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -1880,10 +1880,10 @@ export default function ProductForm({
                 />
               </svg>
             </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+            <h3 className="text-xl sm:text-2xl font-bold text-[#F4F8FF] mb-2">
               {product ? "Product Updated!" : "Product Created!"}
             </h3>
-            <p className="text-gray-600">
+            <p className="text-[#F4F8FF]/70">
               {product
                 ? "Your product has been updated successfully."
                 : "Your product has been created successfully and is now available."}

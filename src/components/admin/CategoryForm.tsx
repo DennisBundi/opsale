@@ -139,15 +139,15 @@ export default function CategoryForm({
 
       {isOpen && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
+          <div className="glass-strong rounded-2xl shadow-2xl max-w-2xl w-full">
             {/* Header */}
-            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900">
+            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-[#F4F8FF]">
                 {category ? 'Edit Category' : 'Add New Category'}
               </h2>
               <button
                 onClick={closeModal}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-[#F4F8FF]/40 hover:text-[#F4F8FF] transition-colors"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -158,7 +158,7 @@ export default function CategoryForm({
             {/* Form */}
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                   Category Name *
                 </label>
                 <input
@@ -166,13 +166,13 @@ export default function CategoryForm({
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  className="w-full px-4 py-3 bg-white/5 border-2 border-white/10 rounded-xl text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   placeholder="e.g., Dresses, Accessories"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                   Slug *
                 </label>
                 <input
@@ -180,29 +180,29 @@ export default function CategoryForm({
                   required
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  className="w-full px-4 py-3 bg-white/5 border-2 border-white/10 rounded-xl text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   placeholder="e.g., dresses, accessories"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-[#F4F8FF]/40 mt-1">
                   URL-friendly identifier (auto-generated from name)
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                   Description
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={3}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  className="w-full px-4 py-3 bg-white/5 border-2 border-white/10 rounded-xl text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   placeholder="Brief description of this category"
                 />
               </div>
 
               {/* Actions */}
-              <div className="flex gap-4 pt-4 border-t border-gray-200">
+              <div className="flex gap-4 pt-4 border-t border-white/10">
                 <button
                   type="submit"
                   disabled={loading}
@@ -213,7 +213,7 @@ export default function CategoryForm({
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-none font-semibold hover:bg-gray-300 transition-all"
+                  className="px-6 py-3 bg-white/10 text-[#F4F8FF]/70 rounded-none font-semibold hover:bg-white/20 transition-all"
                 >
                   Cancel
                 </button>

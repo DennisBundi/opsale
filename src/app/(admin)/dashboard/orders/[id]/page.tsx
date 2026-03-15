@@ -131,14 +131,14 @@ export default function AdminOrderDetailPage() {
 
   if (error || !order) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-navy py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <div className="mb-6">
-            <Link href="/dashboard/orders" className="text-sm text-gray-500 hover:text-gray-700">
+            <Link href="/dashboard/orders" className="text-sm text-[#F4F8FF]/50 hover:text-[#F4F8FF]">
               ← Orders
             </Link>
           </div>
-          <div className="bg-red-50 text-red-700 p-4 rounded-2xl">{error ?? 'Order not found.'}</div>
+          <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-2xl">{error ?? 'Order not found.'}</div>
         </div>
       </div>
     )
@@ -150,10 +150,10 @@ export default function AdminOrderDetailPage() {
         {/* Header */}
         <div className="mb-6 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/orders" className="text-sm text-gray-500 hover:text-gray-700">
+            <Link href="/dashboard/orders" className="text-sm text-[#F4F8FF]/50 hover:text-[#F4F8FF]">
               ← Orders
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900">{order.order_number}</h1>
+            <h1 className="text-2xl font-bold text-[#F4F8FF]">{order.order_number}</h1>
           </div>
           <span
             className={`px-3 py-1 rounded-full text-sm font-semibold capitalize ${STATUS_COLORS[order.status]}`}
@@ -163,12 +163,12 @@ export default function AdminOrderDetailPage() {
         </div>
 
         {/* Order Meta card */}
-        <div className="bg-white rounded-2xl shadow p-6 mb-4">
-          <h2 className="text-sm font-semibold text-gray-700 mb-3">Order Details</h2>
+        <div className="glass rounded-2xl shadow p-6 mb-4">
+          <h2 className="text-sm font-semibold text-[#F4F8FF]/70 mb-3">Order Details</h2>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <p className="text-gray-500">Date</p>
-              <p className="font-medium text-gray-900">
+              <p className="text-[#F4F8FF]/50">Date</p>
+              <p className="font-medium text-[#F4F8FF]">
                 {new Date(order.date).toLocaleDateString('en-KE', {
                   day: 'numeric',
                   month: 'long',
@@ -177,37 +177,37 @@ export default function AdminOrderDetailPage() {
               </p>
             </div>
             <div>
-              <p className="text-gray-500">Payment Method</p>
-              <p className="font-medium text-gray-900">{order.payment_method.toUpperCase()}</p>
+              <p className="text-[#F4F8FF]/50">Payment Method</p>
+              <p className="font-medium text-[#F4F8FF]">{order.payment_method.toUpperCase()}</p>
             </div>
             <div>
-              <p className="text-gray-500">Type</p>
-              <p className="font-medium text-gray-900 capitalize">{order.sale_type}</p>
+              <p className="text-[#F4F8FF]/50">Type</p>
+              <p className="font-medium text-[#F4F8FF] capitalize">{order.sale_type}</p>
             </div>
             {order.seller && (
               <div>
-                <p className="text-gray-500">Seller</p>
-                <p className="font-medium text-gray-900">{order.seller}</p>
+                <p className="text-[#F4F8FF]/50">Seller</p>
+                <p className="font-medium text-[#F4F8FF]">{order.seller}</p>
               </div>
             )}
           </div>
         </div>
 
         {/* Customer card */}
-        <div className="bg-white rounded-2xl shadow p-6 mb-4">
-          <h2 className="text-sm font-semibold text-gray-700 mb-3">Customer</h2>
+        <div className="glass rounded-2xl shadow p-6 mb-4">
+          <h2 className="text-sm font-semibold text-[#F4F8FF]/70 mb-3">Customer</h2>
           <div className="text-sm space-y-1">
-            <p className="font-medium text-gray-900">{order.customer.full_name}</p>
-            <p className="text-gray-500">{order.customer.email}</p>
+            <p className="font-medium text-[#F4F8FF]">{order.customer.full_name}</p>
+            <p className="text-[#F4F8FF]/50">{order.customer.email}</p>
             {order.customer.phone && (
-              <p className="text-gray-500">{order.customer.phone}</p>
+              <p className="text-[#F4F8FF]/50">{order.customer.phone}</p>
             )}
           </div>
         </div>
 
         {/* Status Update card */}
-        <div className="bg-white rounded-2xl shadow p-6 mb-4">
-          <h2 className="text-sm font-semibold text-gray-700 mb-3">Update Status</h2>
+        <div className="glass rounded-2xl shadow p-6 mb-4">
+          <h2 className="text-sm font-semibold text-[#F4F8FF]/70 mb-3">Update Status</h2>
           <div className="flex flex-wrap gap-2">
             {ALL_STATUSES.map((s) => (
               <button
@@ -218,7 +218,7 @@ export default function AdminOrderDetailPage() {
                 className={`px-4 py-1.5 rounded-full text-sm font-semibold capitalize transition-all border-2 ${
                   order.status === s
                     ? `${STATUS_COLORS[s]} border-current ring-2 ring-offset-1 ring-current`
-                    : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+                    : 'bg-white/5 text-[#F4F8FF]/70 border-white/10 hover:bg-white/10'
                 } disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 {s}
@@ -232,14 +232,14 @@ export default function AdminOrderDetailPage() {
 
         {/* Items card */}
         <div className="bg-white rounded-2xl shadow p-6 mb-4">
-          <h2 className="text-base font-semibold text-gray-900 mb-4">
+          <h2 className="text-base font-semibold text-[#F4F8FF] mb-4">
             Items ({order.items.length})
           </h2>
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-white/10">
             {order.items.map((item) => (
               <div key={item.id} className="py-4 flex items-center gap-4">
                 {/* Thumbnail */}
-                <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                <div className="w-16 h-16 rounded-lg overflow-hidden bg-white/10 flex-shrink-0">
                   {item.product_image ? (
                     <Image
                       src={item.product_image}
@@ -249,7 +249,7 @@ export default function AdminOrderDetailPage() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <div className="w-full h-full flex items-center justify-center text-[#F4F8FF]/40">
                       <svg
                         className="w-6 h-6"
                         fill="none"
@@ -269,26 +269,26 @@ export default function AdminOrderDetailPage() {
 
                 {/* Details */}
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-900 truncate">{item.product_name}</p>
+                  <p className="font-medium text-[#F4F8FF] truncate">{item.product_name}</p>
                   <div className="flex flex-wrap gap-1.5 mt-1">
                     {item.size && (
-                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                      <span className="text-xs bg-white/10 text-[#F4F8FF]/70 px-2 py-0.5 rounded-full">
                         {item.size}
                       </span>
                     )}
                     {item.color && (
-                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                      <span className="text-xs bg-white/10 text-[#F4F8FF]/70 px-2 py-0.5 rounded-full">
                         {item.color}
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-[#F4F8FF]/50 mt-1">
                     Qty: {item.quantity} × KSh {item.unit_price.toLocaleString('en-KE')}
                   </p>
                 </div>
 
                 {/* Line total */}
-                <p className="font-semibold text-gray-900 flex-shrink-0">
+                <p className="font-semibold text-[#F4F8FF] flex-shrink-0">
                   KSh {(item.quantity * item.unit_price).toLocaleString('en-KE')}
                 </p>
               </div>
@@ -297,10 +297,10 @@ export default function AdminOrderDetailPage() {
         </div>
 
         {/* Total card */}
-        <div className="bg-white rounded-2xl shadow p-6">
+        <div className="glass rounded-2xl shadow p-6">
           <div className="flex items-center justify-between">
-            <span className="text-base font-semibold text-gray-900">Order Total</span>
-            <span className="text-xl font-bold text-gray-900">
+            <span className="text-base font-semibold text-[#F4F8FF]">Order Total</span>
+            <span className="text-xl font-bold text-primary">
               KSh {order.total_amount.toLocaleString('en-KE')}
             </span>
           </div>

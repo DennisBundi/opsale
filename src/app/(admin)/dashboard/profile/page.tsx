@@ -114,52 +114,52 @@ export default function ProfilePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Profile</h1>
-          <p className="text-gray-600">Manage your account information</p>
+          <h1 className="text-2xl font-bold text-[#F4F8FF] mb-2">Profile</h1>
+          <p className="text-[#F4F8FF]/70">Manage your account information</p>
         </div>
       </div>
 
       {/* Profile Form */}
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+      <div className="glass rounded-2xl shadow-lg p-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email (Read-only) */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
               Email Address
             </label>
             <input
               type="email"
               value={user?.email || ''}
               disabled
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-500 cursor-not-allowed"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-[#F4F8FF]/40 cursor-not-allowed"
             />
-            <p className="mt-1 text-xs text-gray-400">Email cannot be changed</p>
+            <p className="mt-1 text-xs text-[#F4F8FF]/40">Email cannot be changed</p>
           </div>
 
           {/* Full Name */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
               Full Name
             </label>
             <input
               type="text"
               value={profile?.full_name || ''}
               onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full px-4 py-3 bg-white/5 border-2 border-white/10 rounded-xl text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               placeholder="Enter your full name"
             />
           </div>
 
           {/* Phone */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
               Phone Number
             </label>
             <input
               type="tel"
               value={profile?.phone || ''}
               onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full px-4 py-3 bg-white/5 border-2 border-white/10 rounded-xl text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               placeholder="Enter your phone number"
             />
           </div>
@@ -167,23 +167,23 @@ export default function ProfilePage() {
           {/* Employee Code (Read-only if exists) */}
           {employee && (
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                 Employee Code
               </label>
               <input
                 type="text"
                 value={employee.employee_code}
                 disabled
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-500 cursor-not-allowed"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-[#F4F8FF]/40 cursor-not-allowed"
               />
-              <p className="mt-1 text-xs text-gray-400">Employee code cannot be changed</p>
+              <p className="mt-1 text-xs text-[#F4F8FF]/40">Employee code cannot be changed</p>
             </div>
           )}
 
           {/* Role (Read-only if employee) */}
           {employee && (
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-[#F4F8FF]/70 mb-2">
                 Role
               </label>
               <input
@@ -193,7 +193,7 @@ export default function ProfilePage() {
                        employee.role === 'seller' ? 'Sales Person' : 
                        employee.role}
                 disabled
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-500 cursor-not-allowed capitalize"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-[#F4F8FF]/40 cursor-not-allowed capitalize"
               />
             </div>
           )}
