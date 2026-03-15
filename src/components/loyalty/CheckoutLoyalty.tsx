@@ -82,7 +82,7 @@ export default function CheckoutLoyalty({
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2 py-3 text-gray-400">
+      <div className="flex items-center gap-2 py-3 text-[#F4F8FF]/40">
         <Loader2 className="w-4 h-4 animate-spin" />
         <span className="text-sm">Loading rewards...</span>
       </div>
@@ -92,34 +92,34 @@ export default function CheckoutLoyalty({
   if (!account) return null;
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-5 space-y-4">
+    <div className="glass rounded-lg p-5 space-y-4">
       <div className="flex items-center gap-2">
-        <Gift className="w-5 h-5 text-pink-400" />
-        <h3 className="font-semibold text-gray-800">Leez Rewards</h3>
+        <Gift className="w-5 h-5 text-secondary" />
+        <h3 className="font-semibold text-[#F4F8FF]">OpSale Rewards</h3>
       </div>
 
       {/* Points Balance */}
       <div className="flex items-center justify-between text-sm">
-        <span className="text-gray-500">Your Points Balance</span>
-        <span className="font-semibold text-pink-500">
+        <span className="text-[#F4F8FF]/60">Your Points Balance</span>
+        <span className="font-semibold text-secondary">
           {account.current_points.toLocaleString()} pts
         </span>
       </div>
 
       {/* Points to Earn */}
-      <div className="bg-pink-50 rounded-lg p-3 text-sm">
-        <span className="text-pink-600">
+      <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 text-sm">
+        <span className="text-primary">
           You&apos;ll earn{" "}
-          <span className="font-bold">+{pointsToEarn} pts</span> from this
+          <span className="font-bold text-secondary">+{pointsToEarn} pts</span> from this
           order
         </span>
       </div>
 
       {/* Applied Code */}
       {appliedCode && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-3 flex items-center gap-2 text-sm">
-          <Tag className="w-4 h-4 text-green-600" />
-          <span className="text-green-700 font-medium">
+        <div className="bg-primary/10 border border-primary/30 rounded-lg p-3 flex items-center gap-2 text-sm">
+          <Tag className="w-4 h-4 text-primary" />
+          <span className="text-primary font-medium">
             Code <span className="font-bold">{appliedCode}</span> applied
           </span>
         </div>
@@ -130,13 +130,13 @@ export default function CheckoutLoyalty({
           {/* Dropdown for active reward codes */}
           {activeRewardCodes.length > 0 && (
             <div>
-              <label className="text-sm text-gray-500 mb-1 block">
+              <label className="text-sm text-[#F4F8FF]/60 mb-1 block">
                 Your Reward Codes
               </label>
               <select
                 value={selectedCode}
                 onChange={(e) => handleDropdownSelect(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-[#F4F8FF] focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="">Select a reward code</option>
                 {activeRewardCodes.map((rc) => (
@@ -153,7 +153,7 @@ export default function CheckoutLoyalty({
 
           {/* Manual Code Input */}
           <div>
-            <label className="text-sm text-gray-500 mb-1 block">
+            <label className="text-sm text-[#F4F8FF]/60 mb-1 block">
               Enter Reward Code
             </label>
             <div className="flex gap-2">
@@ -162,12 +162,12 @@ export default function CheckoutLoyalty({
                 value={manualCode}
                 onChange={(e) => setManualCode(e.target.value.toUpperCase())}
                 placeholder="Enter code"
-                className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 uppercase"
+                className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:ring-2 focus:ring-primary/50 uppercase"
               />
               <button
                 onClick={() => handleApplyCode(manualCode)}
                 disabled={applying || !manualCode.trim()}
-                className="bg-pink-400 hover:bg-pink-500 text-white font-semibold px-4 py-2 rounded-none hover:scale-105 transition-all disabled:opacity-50 text-sm"
+                className="bg-primary hover:bg-primary/90 text-white font-semibold px-4 py-2 rounded-none hover:scale-105 transition-all disabled:opacity-50 text-sm"
               >
                 {applying ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -180,7 +180,7 @@ export default function CheckoutLoyalty({
         </>
       )}
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-sm text-red-400">{error}</p>}
     </div>
   );
 }

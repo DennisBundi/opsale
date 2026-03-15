@@ -12,9 +12,15 @@ interface TierBadgeProps {
 }
 
 const tierStyles: Record<Tier, string> = {
-  bronze: "bg-gradient-to-br from-amber-700 to-amber-500 text-white",
-  silver: "bg-gradient-to-br from-gray-400 to-gray-300 text-white",
-  gold: "bg-gradient-to-br from-yellow-500 to-amber-400 text-white",
+  bronze: "text-white",
+  silver: "text-white",
+  gold: "text-white",
+};
+
+const tierInlineStyles: Record<Tier, React.CSSProperties> = {
+  bronze: { background: "#00C896" },
+  silver: { background: "#C0C0C0" },
+  gold: { background: "#F5A623" },
 };
 
 const sizeStyles: Record<Size, string> = {
@@ -38,11 +44,12 @@ export default function TierBadge({
     <div className="flex items-center gap-2">
       <div
         className={`${tierStyles[tier]} ${sizeStyles[size]} rounded-full flex items-center justify-center font-semibold shadow-sm`}
+        style={tierInlineStyles[tier]}
       >
         {tierInitials[tier]}
       </div>
       {showLabel && (
-        <span className="font-semibold text-gray-800 capitalize">{tier}</span>
+        <span className="font-semibold text-[#F4F8FF] capitalize">{tier}</span>
       )}
     </div>
   );

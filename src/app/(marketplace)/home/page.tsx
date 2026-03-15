@@ -8,13 +8,11 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = {
-  title: "Leeztruestyles - Fashion Marketplace in Kenya",
-  description:
-    "Discover the latest fashion trends at Leeztruestyles. Shop premium clothing, accessories, and more with fast delivery across Kenya.",
+  title: "OpSale — Sell. Retain. Grow.",
+  description: "The business operating system for modern sellers worldwide. Marketplace, loyalty, records, and admin — all in one subscription.",
   openGraph: {
-    title: "Leeztruestyles - Fashion Marketplace in Kenya",
-    description:
-      "Discover the latest fashion trends at Leeztruestyles. Shop premium clothing, accessories, and more with fast delivery across Kenya.",
+    title: "OpSale — Sell. Retain. Grow.",
+    description: "The business operating system for modern sellers worldwide.",
     type: "website",
   },
 };

@@ -62,7 +62,7 @@ export default function LoyaltyDashboard() {
   if (loading && !account) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-pink-400" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -81,20 +81,20 @@ export default function LoyaltyDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-lg shadow-sm border border-gray-100 p-8"
+          className="glass rounded-lg p-8"
         >
-          <Gift className="w-16 h-16 text-pink-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-            Join Leez Rewards
+          <Gift className="w-16 h-16 text-secondary mx-auto mb-4" />
+          <h2 className="text-2xl font-semibold text-[#F4F8FF] mb-2">
+            Join OpSale Rewards
           </h2>
-          <p className="text-gray-500 mb-6">
+          <p className="text-[#F4F8FF]/60 mb-6">
             Earn points on every purchase, unlock exclusive perks, and get
             rewarded for being a loyal customer.
           </p>
           <button
             onClick={handleJoin}
             disabled={joining}
-            className="w-full bg-pink-400 hover:bg-pink-500 text-white font-semibold py-3 px-6 rounded-none hover:scale-105 transition-all disabled:opacity-50"
+            className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-none hover:scale-105 transition-all disabled:opacity-50"
           >
             {joining ? (
               <Loader2 className="w-5 h-5 animate-spin mx-auto" />
@@ -119,10 +119,10 @@ export default function LoyaltyDashboard() {
       >
         <TierBadge tier={account.tier} size="lg" />
         <div>
-          <h1 className="text-2xl font-semibold text-gray-800">
+          <h1 className="text-2xl font-semibold text-[#F4F8FF]">
             Welcome back!
           </h1>
-          <p className="text-gray-500 capitalize">{account.tier} Member</p>
+          <p className="text-[#F4F8FF]/60 capitalize">{account.tier} Member</p>
         </div>
       </motion.div>
 
@@ -141,27 +141,27 @@ export default function LoyaltyDashboard() {
           {
             label: "Current Points",
             value: account.current_points.toLocaleString(),
-            color: "text-pink-500",
+            color: "text-secondary",
           },
           {
             label: "Total Earned",
             value: account.total_points_earned.toLocaleString(),
-            color: "text-green-500",
+            color: "text-primary",
           },
           {
             label: "Total Redeemed",
             value: totalRedeemed.toLocaleString(),
-            color: "text-orange-500",
+            color: "text-[#F4F8FF]/80",
           },
         ].map((stat) => (
           <motion.div
             key={stat.label}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 text-center"
+            className="glass rounded-lg p-4 text-center"
           >
             <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-            <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
+            <p className="text-xs text-[#F4F8FF]/50 mt-1">{stat.label}</p>
           </motion.div>
         ))}
       </div>
@@ -173,14 +173,14 @@ export default function LoyaltyDashboard() {
       <div className="grid grid-cols-2 gap-4">
         <button
           onClick={() => setRedeemOpen(true)}
-          className="bg-pink-400 hover:bg-pink-500 text-white font-semibold py-3 px-6 rounded-none hover:scale-105 transition-all flex items-center justify-center gap-2"
+          className="bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-none hover:scale-105 transition-all flex items-center justify-center gap-2"
         >
           <Gift className="w-5 h-5" />
           Redeem Points
         </button>
         <Link
           href="/profile/rewards/refer"
-          className="bg-white border border-pink-400 text-pink-500 font-semibold py-3 px-6 rounded-none hover:scale-105 transition-all flex items-center justify-center gap-2"
+          className="glass border border-secondary/40 text-secondary font-semibold py-3 px-6 rounded-none hover:scale-105 transition-all flex items-center justify-center gap-2"
         >
           <Users className="w-5 h-5" />
           Refer a Friend
@@ -190,22 +190,22 @@ export default function LoyaltyDashboard() {
       {/* Points History Link */}
       <Link
         href="/profile/rewards/history"
-        className="flex items-center justify-center gap-2 text-pink-500 hover:text-pink-600 font-semibold py-2 transition-colors"
+        className="flex items-center justify-center gap-2 text-primary hover:text-primary/80 font-semibold py-2 transition-colors"
       >
         <History className="w-5 h-5" />
         View Points History
       </Link>
 
       {/* Birthday Section */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+      <div className="glass rounded-lg p-6">
         <div className="flex items-center gap-2 mb-3">
-          <Cake className="w-5 h-5 text-pink-400" />
-          <h3 className="text-lg font-semibold text-gray-800">Birthday</h3>
+          <Cake className="w-5 h-5 text-secondary" />
+          <h3 className="text-lg font-semibold text-[#F4F8FF]">Birthday</h3>
         </div>
         {account.birthday ? (
-          <p className="text-gray-600">
+          <p className="text-[#F4F8FF]/70">
             Birthday:{" "}
-            <span className="font-semibold">
+            <span className="font-semibold text-[#F4F8FF]">
               {new Date(account.birthday).toLocaleDateString("en-US", {
                 month: "long",
                 day: "numeric",
@@ -218,12 +218,12 @@ export default function LoyaltyDashboard() {
               type="date"
               value={birthdayInput}
               onChange={(e) => setBirthdayInput(e.target.value)}
-              className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300"
+              className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-[#F4F8FF] focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
             <button
               onClick={handleSetBirthday}
               disabled={birthdaySaving || !birthdayInput}
-              className="bg-pink-400 hover:bg-pink-500 text-white font-semibold px-4 py-2 rounded-none hover:scale-105 transition-all disabled:opacity-50 text-sm"
+              className="bg-primary hover:bg-primary/90 text-white font-semibold px-4 py-2 rounded-none hover:scale-105 transition-all disabled:opacity-50 text-sm"
             >
               {birthdaySaving ? "Saving..." : "Set Birthday"}
             </button>

@@ -24,7 +24,7 @@ export default function NavbarLoyaltyBadge() {
       className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
     >
       <TierBadge tier={account.tier} size="sm" />
-      <span className="text-sm font-semibold text-gray-700">
+      <span className="text-sm font-semibold text-secondary">
         {account.current_points.toLocaleString()}
       </span>
     </Link>

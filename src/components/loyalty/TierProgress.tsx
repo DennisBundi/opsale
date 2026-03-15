@@ -14,12 +14,6 @@ interface TierProgressProps {
   totalEarned: number;
 }
 
-const tierBarGradient: Record<Tier, string> = {
-  bronze: "from-amber-700 to-amber-500",
-  silver: "from-gray-400 to-gray-300",
-  gold: "from-yellow-500 to-amber-400",
-};
-
 export default function TierProgress({
   currentTier,
   nextTier,
@@ -27,24 +21,20 @@ export default function TierProgress({
   progressPercent,
   totalEarned,
 }: TierProgressProps) {
-  const gradientClass = nextTier
-    ? tierBarGradient[nextTier]
-    : tierBarGradient[currentTier];
-
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+    <div className="glass rounded-lg p-6">
       <div className="flex items-center justify-between mb-2">
         <TierBadge tier={currentTier} size="md" showLabel />
         {nextTier ? (
           <TierBadge tier={nextTier} size="md" showLabel />
         ) : (
-          <span className="text-sm font-semibold text-yellow-600">Max Tier</span>
+          <span className="text-sm font-semibold text-secondary">Max Tier</span>
         )}
       </div>
 
-      <div className="relative w-full h-5 bg-gray-200 rounded-full overflow-hidden">
+      <div className="relative w-full h-5 bg-white/10 rounded-full overflow-hidden">
         <motion.div
-          className={`h-full bg-gradient-to-r ${gradientClass} rounded-full flex items-center justify-center`}
+          className="h-full bg-primary rounded-full flex items-center justify-center"
           initial={{ width: 0 }}
           animate={{ width: `${Math.min(progressPercent, 100)}%` }}
           transition={{ duration: 1, ease: "easeOut" }}
@@ -56,16 +46,16 @@ export default function TierProgress({
           )}
         </motion.div>
         {progressPercent < 15 && (
-          <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-gray-500">
+          <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-[#F4F8FF]/60">
             {Math.round(progressPercent)}%
           </span>
         )}
       </div>
 
-      <p className="text-sm text-gray-500 mt-2 text-center">
+      <p className="text-sm text-[#F4F8FF]/60 mt-2 text-center">
         {nextTier ? (
           <>
-            <span className="font-semibold text-gray-700">{pointsToNext}</span>{" "}
+            <span className="font-semibold text-[#F4F8FF]">{pointsToNext}</span>{" "}
             pts to{" "}
             <span className="font-semibold capitalize">{nextTier}</span>
           </>
@@ -74,7 +64,7 @@ export default function TierProgress({
         )}
       </p>
 
-      <p className="text-xs text-gray-400 text-center mt-1">
+      <p className="text-xs text-[#F4F8FF]/40 text-center mt-1">
         Total earned: {totalEarned.toLocaleString()} pts
       </p>
     </div>

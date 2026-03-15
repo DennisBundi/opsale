@@ -75,7 +75,7 @@ export default function PointsHistory() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6">
+      <h1 className="text-2xl font-semibold text-[#F4F8FF] mb-6">
         Points History
       </h1>
 
@@ -87,8 +87,8 @@ export default function PointsHistory() {
             onClick={() => handleTabChange(tab.value)}
             className={`px-4 py-2 text-sm font-semibold rounded-none whitespace-nowrap transition-all hover:scale-105 ${
               activeTab === tab.value
-                ? "bg-pink-400 text-white"
-                : "bg-white text-gray-600 border border-gray-200 hover:border-pink-300"
+                ? "bg-primary text-white"
+                : "glass text-[#F4F8FF]/70 border border-white/10 hover:border-primary/40"
             }`}
           >
             {tab.label}
@@ -98,17 +98,17 @@ export default function PointsHistory() {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-pink-400" />
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       ) : transactions.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
+        <div className="text-center py-12 text-[#F4F8FF]/40">
           No transactions found.
         </div>
       ) : (
         <div className="space-y-6">
           {grouped.map(([monthKey, txs]) => (
             <div key={monthKey}>
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              <h3 className="text-sm font-semibold text-[#F4F8FF]/50 uppercase tracking-wider mb-3">
                 {formatMonthLabel(monthKey)}
               </h3>
               <div className="space-y-2">
@@ -118,22 +118,22 @@ export default function PointsHistory() {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.03 }}
-                    className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 flex items-center gap-4"
+                    className="glass rounded-lg p-4 flex items-center gap-4"
                   >
                     <div
                       className={`w-10 h-10 rounded-full flex items-center justify-center ${
                         tx.points >= 0
-                          ? "bg-green-100 text-green-600"
-                          : "bg-red-100 text-red-500"
+                          ? "bg-primary/20 text-primary"
+                          : "bg-red-500/20 text-red-400"
                       }`}
                     >
                       {getIcon(tx.type)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-800 truncate">
+                      <p className="text-sm font-medium text-[#F4F8FF] truncate">
                         {tx.description}
                       </p>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-[#F4F8FF]/40">
                         {new Date(tx.created_at).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
@@ -143,13 +143,13 @@ export default function PointsHistory() {
                     </div>
                     <div className="flex items-center gap-1">
                       {tx.points >= 0 ? (
-                        <ArrowUp className="w-3 h-3 text-green-500" />
+                        <ArrowUp className="w-3 h-3 text-primary" />
                       ) : (
-                        <ArrowDown className="w-3 h-3 text-red-500" />
+                        <ArrowDown className="w-3 h-3 text-red-400" />
                       )}
                       <span
                         className={`text-sm font-bold ${
-                          tx.points >= 0 ? "text-green-500" : "text-red-500"
+                          tx.points >= 0 ? "text-secondary" : "text-red-400"
                         }`}
                       >
                         {tx.points >= 0 ? "+" : ""}
@@ -170,17 +170,17 @@ export default function PointsHistory() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-4 py-2 bg-white border border-gray-200 text-gray-600 font-semibold rounded-none hover:scale-105 transition-all disabled:opacity-50"
+            className="px-4 py-2 glass border border-white/10 text-[#F4F8FF]/70 font-semibold rounded-none hover:scale-105 transition-all disabled:opacity-50"
           >
             Previous
           </button>
-          <span className="flex items-center text-sm text-gray-500">
+          <span className="flex items-center text-sm text-[#F4F8FF]/50">
             Page {page}
           </span>
           <button
             onClick={() => setPage((p) => p + 1)}
             disabled={transactions.length < PAGE_SIZE}
-            className="px-4 py-2 bg-white border border-gray-200 text-gray-600 font-semibold rounded-none hover:scale-105 transition-all disabled:opacity-50"
+            className="px-4 py-2 glass border border-white/10 text-[#F4F8FF]/70 font-semibold rounded-none hover:scale-105 transition-all disabled:opacity-50"
           >
             Next
           </button>

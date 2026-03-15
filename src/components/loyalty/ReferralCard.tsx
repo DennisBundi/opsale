@@ -60,7 +60,7 @@ export default function ReferralCard() {
   const handleWhatsApp = () => {
     if (!data) return;
     const message = encodeURIComponent(
-      `Join Leez True Styles and get rewarded! Use my referral code: ${data.referral_code} to earn bonus points on your first order. Shop now at leeztruestyles.com`
+      `Join OpSale and get rewarded! Use my referral code: ${data.referral_code} to earn bonus points on your first order. Shop now at leeztruestyles.com`
     );
     window.open(`https://wa.me/?text=${message}`, "_blank");
   };
@@ -68,14 +68,14 @@ export default function ReferralCard() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-pink-400" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
 
   if (!data) {
     return (
-      <div className="text-center py-20 text-gray-400">
+      <div className="text-center py-20 text-[#F4F8FF]/40">
         Unable to load referral data.
       </div>
     );
@@ -87,22 +87,22 @@ export default function ReferralCard() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg p-8 text-center text-white shadow-lg"
+        className="bg-gradient-to-br from-primary to-primary/70 rounded-lg p-8 text-center text-white shadow-lg"
       >
         <Share2 className="w-10 h-10 mx-auto mb-3 opacity-80" />
         <h2 className="text-2xl font-semibold mb-2">Refer a Friend</h2>
-        <p className="text-pink-100 mb-6 text-sm">
+        <p className="text-white/80 mb-6 text-sm">
           Share your code and earn points when friends make their first purchase
         </p>
         <div className="bg-white/20 backdrop-blur-sm rounded-lg py-4 px-6 mb-6">
-          <p className="text-3xl font-bold tracking-widest">
+          <p className="text-3xl font-bold tracking-widest text-secondary">
             {data.referral_code}
           </p>
         </div>
         <div className="flex gap-3 justify-center">
           <button
             onClick={handleCopy}
-            className="bg-white text-pink-500 font-semibold py-3 px-6 rounded-none hover:scale-105 transition-all flex items-center gap-2"
+            className="bg-white text-primary font-semibold py-3 px-6 rounded-none hover:scale-105 transition-all flex items-center gap-2"
           >
             {copied ? (
               <>
@@ -127,26 +127,26 @@ export default function ReferralCard() {
       </motion.div>
 
       {/* How it Works */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">
+      <div className="glass rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-[#F4F8FF] mb-4">
           How it Works
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {[
             {
-              icon: <UserPlus className="w-8 h-8 text-pink-400" />,
+              icon: <UserPlus className="w-8 h-8 text-secondary" />,
               step: "1",
               title: "Share Your Code",
               desc: "Send your unique referral code to friends and family",
             },
             {
-              icon: <ShoppingBag className="w-8 h-8 text-pink-400" />,
+              icon: <ShoppingBag className="w-8 h-8 text-secondary" />,
               step: "2",
               title: "They Shop",
               desc: "Your friend makes their first purchase using your code",
             },
             {
-              icon: <Gift className="w-8 h-8 text-pink-400" />,
+              icon: <Gift className="w-8 h-8 text-secondary" />,
               step: "3",
               title: "Both Earn Points",
               desc: "You both receive bonus loyalty points as a reward",
@@ -154,8 +154,8 @@ export default function ReferralCard() {
           ].map((item) => (
             <div key={item.step} className="text-center">
               <div className="mx-auto mb-3">{item.icon}</div>
-              <h4 className="font-semibold text-gray-800 mb-1">{item.title}</h4>
-              <p className="text-sm text-gray-500">{item.desc}</p>
+              <h4 className="font-semibold text-[#F4F8FF] mb-1">{item.title}</h4>
+              <p className="text-sm text-[#F4F8FF]/60">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -163,21 +163,21 @@ export default function ReferralCard() {
 
       {/* Referral List */}
       {data.referrals.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">
+        <div className="glass rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-[#F4F8FF] mb-4">
             Your Referrals
           </h3>
           <ul className="space-y-3">
             {data.referrals.map((ref) => (
               <li
                 key={ref.id}
-                className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0"
+                className="flex items-center justify-between py-2 border-b border-white/10 last:border-0"
               >
                 <div>
-                  <p className="text-sm font-medium text-gray-800">
+                  <p className="text-sm font-medium text-[#F4F8FF]">
                     {ref.referred_name}
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-[#F4F8FF]/40">
                     {new Date(ref.created_at).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
@@ -188,8 +188,8 @@ export default function ReferralCard() {
                 <span
                   className={`text-xs font-semibold px-3 py-1 rounded-full ${
                     ref.status === "completed"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-yellow-100 text-yellow-700"
+                      ? "bg-primary/20 text-primary"
+                      : "bg-secondary/20 text-secondary"
                   }`}
                 >
                   {ref.status === "completed" ? "Completed" : "Pending"}
