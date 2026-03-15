@@ -5,6 +5,7 @@ import React, { useState, useRef, Suspense, useTransition } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { login } from '@/app/auth/actions';
+import OpSaleLogo from '@/components/ui/OpSaleLogo';
 
 function SignInContent() {
   const searchParams = useSearchParams();
@@ -36,25 +37,21 @@ function SignInContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-light/40 via-white to-primary/20 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-navy relative overflow-hidden">
       {/* Decorative background blobs */}
-      <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-primary/30 rounded-full blur-3xl opacity-50 pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-secondary/20 rounded-full blur-3xl opacity-50 pointer-events-none" />
+      <div className="absolute top-[-80px] left-[-80px] w-80 h-80 rounded-full pointer-events-none" style={{ background: 'rgba(0,200,150,0.18)', filter: 'blur(60px)' }} />
+      <div className="absolute bottom-[-60px] right-[-60px] w-64 h-64 rounded-full pointer-events-none" style={{ background: 'rgba(245,166,35,0.12)', filter: 'blur(60px)' }} />
 
-      <div className="w-full max-w-md p-8 relative z-[60]" style={{ isolation: 'isolate' }}>
-        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8 sm:p-10 relative z-[60]">
+      <div className="w-full max-w-md px-4 py-8 relative z-10" style={{ isolation: 'isolate' }}>
+        <div className="glass-strong p-8 sm:p-10">
           <div className="text-center mb-10">
-            <Link href="/" className="inline-block hover:opacity-80 transition-opacity">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-secondary-dark to-primary-dark bg-clip-text text-transparent">
-                Leeztruestyles
-              </h1>
-            </Link>
-            <p className="mt-3 text-gray-600 font-medium tracking-wide">
-              Welcome back
-            </p>
+            <div className="flex justify-center mb-4">
+              <OpSaleLogo size="md" showTagline />
+            </div>
+            <p className="mt-3 text-[#F4F8FF]/60 font-body tracking-wide">Welcome back</p>
           </div>
 
-          <form 
+          <form
             ref={formRef}
             onSubmit={handleSubmit}
             className="space-y-6 relative z-[60]"
@@ -63,7 +60,7 @@ function SignInContent() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-semibold text-gray-700 ml-1 mb-2"
+                className="block text-sm font-semibold text-[#F4F8FF]/70 ml-1 mb-2"
               >
                 Email address
               </label>
@@ -74,7 +71,7 @@ function SignInContent() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="block w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-white/50 focus:bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-200 ease-in-out shadow-sm group-hover:shadow-md"
+                  className="block w-full px-5 py-3.5 rounded-2xl border border-white/10 bg-white/5 focus:bg-white/10 text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all duration-200 ease-in-out shadow-sm group-hover:shadow-md"
                   placeholder="name@example.com"
                 />
               </div>
@@ -83,7 +80,7 @@ function SignInContent() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-semibold text-gray-700 ml-1 mb-2"
+                className="block text-sm font-semibold text-[#F4F8FF]/70 ml-1 mb-2"
               >
                 Password
               </label>
@@ -94,7 +91,7 @@ function SignInContent() {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="block w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-white/50 focus:bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-200 ease-in-out shadow-sm group-hover:shadow-md"
+                  className="block w-full px-5 py-3.5 rounded-2xl border border-white/10 bg-white/5 focus:bg-white/10 text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all duration-200 ease-in-out shadow-sm group-hover:shadow-md"
                   placeholder="••••••••"
                 />
               </div>
@@ -121,9 +118,9 @@ function SignInContent() {
                 onMouseUp={(e) => {
                   e.stopPropagation();
                 }}
-                style={{ 
-                  pointerEvents: 'auto', 
-                  cursor: isPending ? 'not-allowed' : 'pointer', 
+                style={{
+                  pointerEvents: 'auto',
+                  cursor: isPending ? 'not-allowed' : 'pointer',
                   zIndex: 70,
                   position: 'relative',
                   isolation: 'isolate',
@@ -152,8 +149,8 @@ function SignInContent() {
                 <div className="w-full border-t border-gray-200" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-white/50 backdrop-blur px-4 text-gray-500 font-medium">
-                  New to Leeztruestyles?
+                <span className="bg-transparent px-4 text-[#F4F8FF]/40 font-medium">
+                  New to OpSale?
                 </span>
               </div>
             </div>
@@ -161,7 +158,7 @@ function SignInContent() {
             <div className="mt-8 text-center">
               <Link
                 href="/signup"
-                className="inline-flex items-center justify-center font-bold text-secondary-dark hover:text-secondary transition-colors"
+                className="inline-flex items-center justify-center font-bold text-primary hover:text-primary-light transition-colors"
               >
                 Create an account
                 <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">

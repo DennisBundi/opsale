@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { signup } from '@/app/auth/actions';
 import { validateRedirect } from '@/lib/security/validateRedirect';
+import OpSaleLogo from '@/components/ui/OpSaleLogo';
 
 import { Suspense } from 'react';
 
@@ -62,16 +63,16 @@ function SignUpContent() {
   // but should rarely be seen since redirect happens quickly
   if (successMessage && !isPending) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-light/40 via-white to-primary/20 p-4">
-        <div className="w-full max-w-md bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8 sm:p-10 text-center animate-in zoom-in-95 duration-300">
+      <div className="min-h-screen flex items-center justify-center bg-navy p-4">
+        <div className="w-full max-w-md glass-strong p-8 sm:p-10 text-center animate-in zoom-in-95 duration-300">
           <div className="rounded-full bg-green-100 p-4 mx-auto w-20 h-20 flex items-center justify-center mb-6 shadow-inner">
             <svg className="w-10 h-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Account Created!</h2>
-          <p className="text-gray-600 mb-8 text-lg">
-            You have successfully signed up. Welcome to Leez True Styles!
+          <h2 className="text-3xl font-bold text-[#F4F8FF] mb-4">Account Created!</h2>
+          <p className="text-[#F4F8FF]/60 mb-8 text-lg">
+            You have successfully signed up. Welcome to OpSale!
           </p>
 
           <div className="mt-6 flex flex-col gap-3">
@@ -88,21 +89,19 @@ function SignUpContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-light/40 via-white to-primary/20 relative overflow-hidden py-12">
+    <div className="min-h-screen flex items-center justify-center bg-navy relative overflow-hidden py-12">
       {/* Decorative background blobs */}
-      <div className="absolute top-[-10%] left-[-5%] w-96 h-96 bg-primary/30 rounded-full blur-3xl opacity-50 pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-secondary/20 rounded-full blur-3xl opacity-50 pointer-events-none" />
+      <div className="absolute top-[-80px] left-[-80px] w-80 h-80 rounded-full pointer-events-none" style={{ background: 'rgba(0,200,150,0.18)', filter: 'blur(60px)' }} />
+      <div className="absolute bottom-[-60px] right-[-60px] w-64 h-64 rounded-full pointer-events-none" style={{ background: 'rgba(245,166,35,0.12)', filter: 'blur(60px)' }} />
 
       <div className="w-full max-w-md p-4 relative z-10">
-        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8 sm:p-10">
+        <div className="glass-strong p-8 sm:p-10">
           <div className="text-center mb-8">
-            <Link href="/" className="inline-block hover:opacity-80 transition-opacity">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-secondary-dark to-primary-dark bg-clip-text text-transparent">
-                Create Account
-              </h1>
-            </Link>
-            <p className="mt-3 text-gray-600 font-medium tracking-wide">
-              Join Leeztruestyles today
+            <div className="flex justify-center mb-4">
+              <OpSaleLogo size="md" showTagline />
+            </div>
+            <p className="mt-3 text-[#F4F8FF]/60 font-body tracking-wide">
+              Create your account
             </p>
           </div>
 
@@ -119,7 +118,7 @@ function SignUpContent() {
             <div>
               <label
                 htmlFor="fullName"
-                className="block text-sm font-semibold text-gray-700 ml-1 mb-2"
+                className="block text-sm font-semibold text-[#F4F8FF]/70 ml-1 mb-2"
               >
                 Full Name
               </label>
@@ -130,7 +129,7 @@ function SignUpContent() {
                   type="text"
                   autoComplete="name"
                   required
-                  className="block w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-white/50 focus:bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-200 ease-in-out shadow-sm group-hover:shadow-md"
+                  className="block w-full px-5 py-3.5 rounded-2xl border border-white/10 bg-white/5 focus:bg-white/10 text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all duration-200 ease-in-out shadow-sm group-hover:shadow-md"
                   placeholder="John Doe"
                 />
               </div>
@@ -139,7 +138,7 @@ function SignUpContent() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-semibold text-gray-700 ml-1 mb-2"
+                className="block text-sm font-semibold text-[#F4F8FF]/70 ml-1 mb-2"
               >
                 Email address
               </label>
@@ -150,7 +149,7 @@ function SignUpContent() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="block w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-white/50 focus:bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-200 ease-in-out shadow-sm group-hover:shadow-md"
+                  className="block w-full px-5 py-3.5 rounded-2xl border border-white/10 bg-white/5 focus:bg-white/10 text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all duration-200 ease-in-out shadow-sm group-hover:shadow-md"
                   placeholder="name@example.com"
                 />
               </div>
@@ -159,7 +158,7 @@ function SignUpContent() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-semibold text-gray-700 ml-1 mb-2"
+                className="block text-sm font-semibold text-[#F4F8FF]/70 ml-1 mb-2"
               >
                 Password
               </label>
@@ -173,10 +172,10 @@ function SignUpContent() {
                   minLength={8}
                   pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}"
                   title="At least 8 characters with uppercase, lowercase, and a number"
-                  className="block w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-white/50 focus:bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-200 ease-in-out shadow-sm group-hover:shadow-md"
+                  className="block w-full px-5 py-3.5 rounded-2xl border border-white/10 bg-white/5 focus:bg-white/10 text-[#F4F8FF] placeholder-[#F4F8FF]/30 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all duration-200 ease-in-out shadow-sm group-hover:shadow-md"
                   placeholder="••••••••"
                 />
-                <p className="mt-2 text-xs text-gray-500 ml-1">At least 8 characters with uppercase, lowercase, and a number</p>
+                <p className="mt-2 text-xs text-[#F4F8FF]/40 ml-1">At least 8 characters with uppercase, lowercase, and a number</p>
               </div>
             </div>
 
@@ -214,10 +213,10 @@ function SignUpContent() {
           <div className="mt-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
+                <div className="w-full border-t border-white/10" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-white/50 backdrop-blur px-4 text-gray-500 font-medium">
+                <span className="bg-transparent px-4 text-[#F4F8FF]/40 font-medium">
                   Already have an account?
                 </span>
               </div>
@@ -226,7 +225,7 @@ function SignUpContent() {
             <div className="mt-8 text-center">
               <Link
                 href="/signin"
-                className="inline-flex items-center justify-center font-bold text-secondary-dark hover:text-secondary transition-colors"
+                className="inline-flex items-center justify-center font-bold text-primary hover:text-primary-light transition-colors"
               >
                 Sign in instead
                 <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
